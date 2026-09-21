@@ -1,0 +1,70 @@
+:root { font-family: 'Manrope Variable', Manrope, sans-serif; color: #0b0b0b; background: #f6f6f2; font-synthesis: none; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; overflow-x: hidden; background: #f6f6f2; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+.wrap { width: min(100% - 8vw, 1500px); margin-inline: auto; }
+.hero { min-height: 80vh; position: relative; display: flex; flex-direction: column; border-bottom: 1px solid #bfc0bb; }
+.site-header { min-height: 122px; display: flex; justify-content: space-between; align-items: center; }
+.brand img { width: 220px; height: auto; display: block; }
+nav { display: flex; align-items: center; gap: clamp(18px, 3.4vw, 54px); font-size: 14px; font-weight: 750; }
+nav a { padding-block: 8px; border-bottom: 1px solid transparent; }
+nav a:hover, nav a:focus-visible { border-color: #f4b600; }
+.nav-join { border-bottom-color: #d9a300; }
+.hero-grid { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 3vw; padding-block: 48px 34px; }
+.hero-copy { align-self: center; padding-bottom: 28px; position: relative; z-index: 1; }
+.eyebrow, .tagline, .sculpture-notes, .wind-meter, .instruction-label, .explore article span, footer { letter-spacing: .19em; text-transform: uppercase; font-size: 10px; font-weight: 700; }
+.eyebrow { color: #53534f; display: flex; gap: 10px; align-items: center; margin: 0 0 24px; }
+.gold-dot { width: 8px; height: 8px; display: inline-block; transform: rotate(45deg); background: #f4b600; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { font-size: clamp(52px, 5.1vw, 88px); letter-spacing: -.075em; line-height: .99; font-weight: 820; margin-bottom: 31px; }
+h1 span { margin-left: 6vw; }
+.tagline { color: #686863; margin-bottom: 40px; font-size: 12px; letter-spacing: .28em; line-height: 1.7; }
+.tagline b { color: #0b0b0b; padding-inline: 10px; }
+.button { display: inline-flex; align-items: center; gap: 26px; background: #111; color: #fff; border: 1px solid #111; border-radius: 999px; padding: 16px 26px; font-size: 14px; font-weight: 750; transition: transform .2s ease, background .2s ease; }
+.button:hover { transform: translateX(4px); background: #242424; }
+.button span { font-size: 19px; line-height: .5; }
+.sculpture-column { min-width: 0; position: relative; }
+.sculpture-stage { height: clamp(420px, 52vh, 640px); position: relative; }
+.sculpture-stage canvas { display: block; width: 100% !important; height: 100% !important; }
+.sculpture-notes { color: #666661; position: absolute; right: -3vw; top: 20%; z-index: 1; display: grid; align-items: center; grid-template-columns: 1fr 1px; column-gap: 16px; text-align: left; line-height: 1.55; }
+.sculpture-notes i { background: #aeb0aa; height: 180px; grid-row: 1 / span 3; grid-column: 2; }
+.sculpture-notes span:last-child { align-self: end; grid-column: 1; }
+.stage-controls { position: absolute; left: 2%; bottom: 4%; display: flex; align-items: center; gap: 13px; }
+.icon-button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #9d9e98; background: #f6f6f2e6; display: grid; place-items: center; cursor: pointer; font-size: 14px; }
+.icon-button:hover { border-color: #0b0b0b; background: #fff; }
+.wind-meter { display: grid; grid-template-columns: auto 78px auto; align-items: center; gap: 8px; color: #555650; white-space: nowrap; }
+.wind-meter i { height: 2px; display: block; background: #d4d3ca; }
+.wind-meter b { background: #f4b600; height: 100%; display: block; transition: width .25s ease; }
+.wind-meter em { color: #a27600; font-style: normal; }
+.hero-instruction { min-height: 84px; display: flex; align-items: center; gap: 22px; }
+.instruction-label { max-width: 180px; color: #4e4f4a; line-height: 1.5; }
+.instruction-line { height: 1px; flex: 1; background: #bfc0bb; position: relative; }
+.instruction-line::after { content: '→'; position: absolute; right: -1px; top: -11px; }
+.hero-instruction button { border: 0; background: transparent; padding: 14px 0 14px 8px; cursor: pointer; font-size: 12px; font-weight: 750; white-space: nowrap; }
+.hero-instruction button:hover { color: #a27600; }
+.hero-instruction button:disabled, .icon-button:disabled { opacity: .4; cursor: default; }
+.hero-instruction button span { padding-left: 12px; font-size: 17px; }
+.explore { padding-block: clamp(80px, 12vw, 170px); display: grid; grid-template-columns: .84fr 1.16fr; gap: 8vw; }
+.section-lead .eyebrow { margin-bottom: 28px; }
+h2 { font-size: clamp(34px, 4vw, 64px); letter-spacing: -.065em; line-height: 1; font-weight: 800; margin-bottom: 0; }
+.explore-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid #aeb0aa; }
+.explore article { min-height: 280px; padding: 24px 25px 20px; border-right: 1px solid #aeb0aa; display: flex; flex-direction: column; }
+.explore article:first-child { border-left: 1px solid #aeb0aa; }
+.explore article span { color: #a27600; }
+h3 { font-size: 25px; letter-spacing: -.05em; margin: auto 0 15px; }
+.explore article p { color: #52534e; font-size: 16px; line-height: 1.65; margin: 0; }
+.join { padding-block: clamp(70px, 10vw, 140px); border-top: 1px solid #bfc0bb; display: grid; grid-template-columns: .8fr 1fr auto; gap: 5vw; align-items: end; }
+.join .eyebrow { align-self: start; }
+.join div p { max-width: 400px; color: #53544f; font-size: 15px; line-height: 1.6; margin: 24px 0 0; }
+.button-gold { background: #f4b600; border-color: #f4b600; color: #0b0b0b; white-space: nowrap; margin-bottom: 3px; }
+.button-gold:hover { background: #dca500; }
+footer { min-height: 75px; display: flex; align-items: center; gap: 25px; border-top: 1px solid #bfc0bb; color: #5d5e58; }
+footer span { margin-right: auto; }
+footer a:hover { color: #0b0b0b; }
+:focus-visible { outline: 2px solid #b38300; outline-offset: 4px; }
+@media (min-width: 901px) and (max-width: 1100px) { .hero-grid { gap: 1vw; } h1 { font-size: 4.9vw; } .tagline { font-size: 10px; letter-spacing: .15em; } .tagline b { padding-inline: 4px; } .explore { grid-template-columns: 1fr; gap: 45px; } .join { grid-template-columns: 1fr 1.5fr; } .join .button { grid-column: 2; justify-self: start; } }
+@media (max-width: 900px) { .wrap { width: min(100% - 44px, 720px); } .site-header { min-height: 94px; } .brand img { width: 172px; } nav { gap: 18px; font-size: 12px; } .hero-grid { grid-template-columns: 1fr; gap: 0; padding-block: 46px 20px; } .hero-copy { padding-bottom: 0; } h1 { font-size: clamp(51px, 10vw, 76px); } h1 span { margin-left: 13vw; } .sculpture-stage { height: 440px; margin-top: -10px; } .sculpture-notes { display: none; } .hero-instruction { min-height: 72px; } .explore { grid-template-columns: 1fr; gap: 50px; } .join { grid-template-columns: 1fr; gap: 27px; } }
+@media (max-width: 580px) { .wrap { width: min(100% - 32px, 480px); } .site-header { align-items: flex-start; padding-top: 22px; min-height: 80px; } .brand img { width: 142px; } nav { gap: 13px; font-size: 10px; padding-top: 6px; } nav a:nth-child(2) { display: none; } .hero-grid { padding-top: 43px; } .eyebrow { font-size: 9px; } h1 { font-size: clamp(48px, 14.6vw, 63px); line-height: .94; margin-bottom: 25px; } h1 span { margin-left: 9vw; } .tagline { font-size: 9px; letter-spacing: .2em; margin-bottom: 28px; } .sculpture-stage { height: 440px; margin-inline: -16px; } .stage-controls { left: 7%; bottom: 3%; } .wind-meter { grid-template-columns: auto 54px auto; gap: 6px; font-size: 8px; } .hero-instruction { gap: 12px; min-height: 78px; } .instruction-label { font-size: 9px; max-width: 145px; } .hero-instruction button { font-size: 11px; } .explore { padding-block: 75px; gap: 42px; } .explore-items { grid-template-columns: 1fr; } .explore article { min-height: 175px; border-left: 1px solid #aeb0aa; border-bottom: 1px solid #aeb0aa; } .explore article:last-child { border-bottom: 0; } h3 { margin: 20px 0 12px; } .join { padding-block: 70px; } footer { flex-wrap: wrap; padding-block: 22px; gap: 13px 20px; } footer span { flex-basis: 100%; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
