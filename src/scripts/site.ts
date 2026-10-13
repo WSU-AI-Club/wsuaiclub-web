@@ -6,6 +6,7 @@
  *   - header compacts after 40px of scroll
  *   - light parallax on [data-parallax] photos
  *   - phone menu sheet (modal dialog, focus trap, Esc, scroll lock)
+ *   - the About Us dropdown in the header ([data-dropdown])
  *   - hides events that have ended ([data-ends]) and keeps "Next meeting" current
  *   - copy-to-clipboard buttons ([data-copy])
  * Under prefers-reduced-motion: reduce, nothing moves and nothing is hidden.
@@ -308,3 +309,101 @@ function initSlideshow(root: HTMLElement) {
 }
 
 document.querySelectorAll<HTMLElement>('[data-slideshow]').forEach(initSlideshow);
+
+/* ── header dropdowns ([data-dropdown], the About Us menu) ──────────── */
+/* Opens on hover (mouse only, 100 ms in, 250 ms out), on click or tap, and
+   by keyboard. Enter, Space or ArrowDown open it and focus the first item;
+   arrows move between items; Esc closes and returns focus to the trigger;
+   Tab out or a click outside closes it. */
+
+function initDropdown(root: HTMLElement) {
+  const trigger = root.querySelector<HTMLButtonElement>('[data-dropdown-trigger]');
+  const items = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-dropdown-item]'));
+  if (!trigger || !items.length) return;
+  let open = false;
+  let pinned = false; // opened by click, tap or keyboard: stays open when the pointer leaves
+  let openTimer = 0;
+  let closeTimer = 0;
+  let skipClick = false;
+
+  const setOpen = (next: boolean) => {
+    open = next;
+    if (!next) pinned = false;
+    root.classList.toggle('is-open', next);
+    trigger.setAttribute('aria-expanded', String(next));
+  };
+  const clearTimers = () => {
+    window.clearTimeout(openTimer);
+    window.clearTimeout(closeTimer);
+  };
+  const focusItem = (i: number) => items[(i + items.length) % items.length].focus();
+
+  root.addEventListener('pointerenter', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    clearTimers();
+    if (!open) openTimer = window.setTimeout(() => setOpen(true), 100);
+  });
+  root.addEventListener('pointerleave', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    clearTimers();
+    if (open && !pinned) closeTimer = window.setTimeout(() => setOpen(false), 250);
+  });
+
+  trigger.addEventListener('click', () => {
+    if (skipClick) {
+      skipClick = false;
+      return;
+    }
+    clearTimers();
+    if (open && !pinned) pinned = true; // hover opened it; a click keeps it open
+    else if (open) setOpen(false);
+    else {
+      setOpen(true);
+      pinned = true;
+    }
+  });
+
+  trigger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      skipClick = e.key === ' ' || e.key === 'Enter';
+      clearTimers();
+      setOpen(true);
+      pinned = true;
+      focusItem(e.key === 'ArrowUp' ? -1 : 0);
+    } else if (e.key === 'Escape' && open) {
+      e.preventDefault();
+      setOpen(false);
+    }
+  });
+  trigger.addEventListener('keyup', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') window.setTimeout(() => (skipClick = false), 0);
+  });
+
+  root.addEventListener('keydown', (e) => {
+    if (e.target === trigger) return; // the trigger's own keys are handled above
+    const i = items.indexOf(document.activeElement as HTMLAnchorElement);
+    if (i < 0) return;
+    if (e.key === 'ArrowDown') (e.preventDefault(), focusItem(i + 1));
+    else if (e.key === 'ArrowUp') (e.preventDefault(), focusItem(i - 1));
+    else if (e.key === 'Home') (e.preventDefault(), focusItem(0));
+    else if (e.key === 'End') (e.preventDefault(), focusItem(-1));
+    else if (e.key === 'Escape') {
+      e.preventDefault();
+      setOpen(false);
+      trigger.focus();
+    }
+  });
+
+  // Tab out of the menu, or click anywhere else: close.
+  root.addEventListener('focusout', (e) => {
+    if (open && !root.contains(e.relatedTarget as Node)) setOpen(false);
+  });
+  document.addEventListener('pointerdown', (e) => {
+    if (open && !root.contains(e.target as Node)) setOpen(false);
+  });
+  // Going back to a cached page: start closed.
+  window.addEventListener('pageshow', () => setOpen(false));
+}
+
+document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach(initDropdown);

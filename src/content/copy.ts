@@ -44,7 +44,7 @@ export const formats: Format[] = [
     title: 'Meet the people using AI in Wichita',
     body: 'Industry visits and joint events with partners on and off campus.',
     photo: 'glass-wall-visit',
-    href: '/about#partnerships',
+    href: '/about#partners',
   },
   {
     id: 'hackathons',
@@ -73,6 +73,15 @@ export const copy = {
     chocolathon: 'Chocolathon',
     menu: 'Menu',
     close: 'Close menu',
+    aboutMenu: {
+      eyebrow: 'About AI Club',
+      items: [
+        { href: '/about', title: 'About AI Club', body: 'Who we are and how we work' },
+        { href: '/team', title: 'Meet the team', body: 'Student leaders and our faculty advisor' },
+        { href: '/advisory-board', title: 'Industry advisory board', body: 'The professionals who advise the club' },
+        { href: '/about#partners', title: 'Partners', body: 'The schools, clubs and companies we work with' },
+      ],
+    },
     primaryLabel: 'Main',
     skip: 'Skip to content',
   },
