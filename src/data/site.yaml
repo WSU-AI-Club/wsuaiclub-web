@@ -19,6 +19,8 @@ links:
   email_list: https://forms.cloud.microsoft/r/SJ8WYc9kxx
   instagram: https://www.instagram.com/wsuaiclub/
   linkedin: https://www.linkedin.com/company/wsu-ai-club/
+  # DTMedia, the club's media partner (photos, video, the logo). Footer credit and About.
+  dtmedia: https://dt-media.vercel.app/
 
 # The regular weekly meeting, shown on Contact and in page footers.
 meeting:
@@ -38,3 +40,6 @@ partners:
     kind: Event sponsor
   - name: Cocoa Dolce
     kind: Chocolathon partner
+  - name: DTMedia
+    kind: Media partner
+    link: https://dt-media.vercel.app/

@@ -54,14 +54,17 @@ groups:
     people:
       - name: Eniola (Zadok) Olaobaju
         role: Vice President
+        photo: eniola-olaobaju
       - name: Jayden Sigg
         role: VP of Finance
+        photo: jayden-sigg
       - name: Ronish Rasaily
         role: VP of Engineering
         linkedin: https://www.linkedin.com/in/ronish-rasaily/
         photo: ronish-rasaily
       - name: Takudzwa Nhamo
         role: VP of Governance & Compliance
+        photo: takudzwa-nhamo
 
   - name: Marketing & media
     people:
@@ -78,7 +81,7 @@ groups:
         linkedin: https://www.linkedin.com/in/nya-vargas-05353631b/
         photo: nya-vargas
       - name: Akindotun Ogunbiyi
-        role: Media
+        role: Media · Founder, DTMedia
         linkedin: https://www.linkedin.com/in/akindotun-ogunbiyi-99442b34a/
         photo: akindotun-ogunbiyi
 
@@ -97,6 +100,7 @@ groups:
     people:
       - name: Dr. Murtaza Nasir
         role: Assistant Professor, Business Analytics, W. Frank Barton School of Business
+        photo: murtaza-nasir
 
   # The advisory board also has its own page, /advisory-board, in this order.
   # bio is one plain line, about 20 words, built only from a public source;
@@ -116,17 +120,18 @@ groups:
         bio: Built Chatterbox, a Wichita-made language-learning app where AI tutors teach through games and practice conversations.
         linkedin: https://www.linkedin.com/in/grant-johnson15/
         photo: grant-johnson
-      # Sources: https://www.wichita.edu/profiles/academics/business/launchprep/LaunchPrep_Mentors/Wentling-Nic.php
+      # Sources: title and founder role confirmed by Michael Goldberg (2026-10-13);
+      #          https://www.wichita.edu/profiles/academics/business/launchprep/LaunchPrep_Mentors/Wentling-Nic.php
       #          https://startlandnews.com/2025/08/nxtus-nxtstage-enterprise/
       - name: Nic Wentling
-        role: CEO, Moonbase Labs
-        bio: Co-founder of Moonbase Labs in Wichita, a Wichita State mechanical engineering graduate and a LaunchPrep mentor at WSU.
+        role: CEO & Founder, Moonbase Labs
+        bio: Founder and CEO of Moonbase Labs in Wichita, a Wichita State mechanical engineering graduate and a LaunchPrep mentor at WSU.
         linkedin: https://www.linkedin.com/in/nic-wentling/
         photo: nic-wentling
       # Source: the club's Chocolathon speaker list (chocolathon repo, api/_content.ts)
       - name: Ramsey Jamoul
         role: Founder & CEO, Unified
-        bio: Founded Unified, which runs the National AI Prompt Championship. The finals are at Groover Labs, Dec 11–13.
+        bio: Founded Unified, which runs the National AI Prompt Championship.
         linkedin: https://www.linkedin.com/in/ramsey-jamoul-423682b8/
         photo: ramsey-jamoul
       # Source: the club's Chocolathon speaker list (chocolathon repo, api/_content.ts)
@@ -135,10 +140,11 @@ groups:
         bio: "Leads AI governance at Cargill. At the Chocolathon she spoke on open source, open weights and open questions."
         linkedin: https://www.linkedin.com/in/ansarifa/
         photo: fareeha-amber-ansari
-      # Source: https://exploration.org/2026/05/19/volunteer-of-the-year-jessica-hinel/
+      # Sources: https://exploration.org/2026/05/19/volunteer-of-the-year-jessica-hinel/
+      #          employer (Boeing) confirmed by Michael Goldberg (2026-10-13)
       - name: Jessica Hinel
         role: AI System Architect, Boeing
-        bio: An AI system architect in Wichita, named Exploration Place's 2026 Volunteer of the Year after more than 330 volunteer hours.
+        bio: AI system architect at Boeing in Wichita, named Exploration Place's 2026 Volunteer of the Year after more than 330 volunteer hours.
         linkedin: https://www.linkedin.com/in/jessicahinel/
         photo: jessica-hinel
       # Source: club records (no public profile found)

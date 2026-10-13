@@ -100,7 +100,7 @@ test('headlines: 10 words or fewer, sentence case, no closing period', () => {
     assert.ok(words.length <= 10, `${where} has ${words.length} words: "${text}"`);
     assert.ok(!/\.$/.test(text.trim()), `${where} ends with a period: "${text}"`);
     // Sentence case: after the first word, a capitalized word must be a name or acronym we allow.
-    const PROPER = /^(AI|Wichita|State|WSU|Woolsey|Hall|Lovable|ChatGPT|Claude|Chocolathon|Cocoa|Dolce|Newman|University|Groover|Labs|NextGen|Entrepreneurs|Innovation|Design|Open|Agent|Hackathon|Club|GroupMe|ShockerSync|LinkedIn|Instagram|Wednesdays|Us|@wsuaiclub|Cargill|Unified)$/;
+    const PROPER = /^(AI|Wichita|State|WSU|Woolsey|Hall|Lovable|ChatGPT|Claude|Chocolathon|Cocoa|Dolce|Newman|University|Groover|Labs|NextGen|Entrepreneurs|Innovation|Design|Open|Agent|Hackathon|Club|GroupMe|ShockerSync|LinkedIn|Instagram|Wednesdays|Us|@wsuaiclub|Cargill|Unified|DTMedia)$/;
     for (const w of words.slice(1)) {
       const bare = w.replace(/[^\p{L}@]/gu, '');
       if (bare && /^\p{Lu}/u.test(bare)) assert.ok(PROPER.test(bare), `${where}: "${w}" breaks sentence case in "${text}"`);

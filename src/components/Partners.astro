@@ -1,12 +1,15 @@
 ---
 /** Partner names in a hairline grid, like a data strip. Logos can replace the names later. */
 import { site } from '../lib/data';
+// One row up to 5 names; 6 or more wrap into even rows of 3 or 4.
+const n = site.partners.length;
+const cols = n <= 5 ? n : n % 3 === 0 ? 3 : 4;
 ---
 
-<ul class="partners" role="list" style={`--n:${Math.min(site.partners.length, 5)}`}>
+<ul class="partners" role="list" style={`--n:${cols}`}>
   {
-    site.partners.map((p) => (
-      <li class="partners__cell" data-reveal>
+    site.partners.map((p, i) => (
+      <li class="partners__cell" data-row-start={i % cols === 0 ? '' : undefined} data-reveal>
         <p class="partners__name">
           {p.link ? (
             <a href={p.link} target="_blank" rel="noopener">
@@ -60,11 +63,13 @@ import { site } from '../lib/data';
     .partners__cell:nth-child(even) {
       border-left: 0;
     }
-    .partners__cell:first-child {
-      padding-left: 0;
-    }
-    .partners__cell:not(:first-child) {
+    .partners__cell:nth-child(n) {
+      padding-left: 24px;
       border-left: 1px solid var(--divider);
+    }
+    .partners__cell[data-row-start]:nth-child(n) {
+      padding-left: 0;
+      border-left: 0;
     }
   }
   .partners__name {

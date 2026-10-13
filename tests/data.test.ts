@@ -67,7 +67,7 @@ test('team.yaml is valid and every listed headshot exists', () => {
     assert.ok(p.bio && p.bio.split(/\s+/).length <= 24, `${p.name} has a one-line bio`);
     assert.ok(p.linkedin, `${p.name} has a LinkedIn link`);
   }
-  assert.match(read('src/data/team.yaml'), /# Source: https:\/\/exploration\.org\//, 'bios cite their sources');
+  assert.match(read('src/data/team.yaml'), /# Sources?: https:\/\/exploration\.org\//, 'bios cite their sources');
   assert.deepEqual(team.homeOrder?.slice(0, 3), ['Michael Goldberg', 'Samuel Doell', 'Eniola (Zadok) Olaobaju']);
 });
 

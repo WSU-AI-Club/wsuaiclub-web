@@ -65,6 +65,12 @@ const year = new Date().getFullYear();
 
     <div class="site-footer__base">
       <p class="eyebrow">© {year} {copy.footer.copyright}</p>
+      <p class="eyebrow">
+        <a class="site-footer__credit" href={site.links.dtmedia} target="_blank" rel="noopener">
+          {copy.footer.credit}
+          <span class="visually-hidden">{` ${copy.newTab}`}</span>
+        </a>
+      </p>
       <p class="eyebrow">wsuaiclub.com</p>
     </div>
   </div>
@@ -139,6 +145,14 @@ const year = new Date().getFullYear();
   }
   .site-footer__muted {
     color: var(--ink-muted);
+  }
+  .site-footer__base .site-footer__credit {
+    font: inherit;
+    letter-spacing: inherit;
+    color: var(--ink-muted);
+  }
+  .site-footer__base .site-footer__credit:hover {
+    color: var(--ink);
   }
   .site-footer__base {
     display: flex;

@@ -207,11 +207,26 @@ export const copy = {
           body: "Thank you to Lovable for sponsoring a workshop, Michael Goldberg's first event as a Lovable Campus Leader at WSU.",
         },
         {
+          eyebrow: 'Media partner',
+          title: 'DTMedia',
+          body: 'Thank you to DTMedia for photographing and filming our events and for designing the AI Club logo.',
+        },
+        {
           eyebrow: 'Chocolathon partner',
           title: 'Cocoa Dolce',
           body: 'Thank you to Cocoa Dolce for the problems, the judges and the chocolate at the Chocolathon.',
         },
       ],
+    },
+    media: {
+      eyebrow: 'Media partner',
+      headline: 'Club media by DTMedia',
+      body: [
+        'DTMedia is a student-run media company founded by Akindotun Ogunbiyi.',
+        'It photographs and films club events, and it designed the AI Club logo.',
+      ],
+      cta: "See DTMedia's work",
+      logoAlt: 'DTMedia logo',
     },
     advisor: {
       eyebrow: 'Faculty advisor',
@@ -410,6 +425,7 @@ export const copy = {
     follow: 'Follow',
     contact: 'Contact',
     copyright: 'AI Club at Wichita State University',
+    credit: 'Photos and logo by DTMedia',
   },
 
   meta: {

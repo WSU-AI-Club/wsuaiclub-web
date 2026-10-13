@@ -8,7 +8,9 @@ import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Slideshow from '../components/Slideshow.astro';
 import { copy } from '../content/copy';
-import { team } from '../lib/data';
+import { site, team } from '../lib/data';
+import { Image } from 'astro:assets';
+import dtmediaMark from '../assets/partners/dtmedia.png';
 import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
@@ -86,11 +88,32 @@ const heroPhotos: PhotoName[] = ['classroom-group', 'glass-wall-visit', 'chocola
     </div>
   </section>
 
+  <section class="section" data-theme="paper" aria-labelledby="media-title">
+    <div class="container">
+      <SectionHead eyebrow={a.media.eyebrow} index="05" headline={a.media.headline} id="media-title" />
+      <div class="card media" data-reveal>
+        <div class="media__mark">
+          <Image src={dtmediaMark} alt={a.media.logoAlt} width={240} densities={[1, 2]} quality={90} loading="lazy" />
+        </div>
+        <div class="media__text">
+          {a.media.body.map((p) => <p class="body-lg">{p}</p>)}
+          <p>
+            <a class="more" href={site.links.dtmedia} target="_blank" rel="noopener">
+              <span>{a.media.cta}</span>
+              <Icon name="external" />
+              <span class="visually-hidden">{` ${copy.newTab}`}</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {
     advisor && (
       <section class="section" data-theme="paper" aria-labelledby="advisor-title">
         <div class="container">
-          <SectionHead eyebrow={a.advisor.eyebrow} index="05" headline={a.advisor.headline} id="advisor-title" />
+          <SectionHead eyebrow={a.advisor.eyebrow} index="06" headline={a.advisor.headline} id="advisor-title" />
           <div class="advisor" data-reveal>
             <Avatar name={advisor.name} photo={advisor.photo} size={120} />
             <div class="advisor__text">
@@ -184,6 +207,46 @@ const heroPhotos: PhotoName[] = ['classroom-group', 'glass-wall-visit', 'chocola
     .thanks {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
+    }
+    .thanks > :last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .media {
+    display: grid;
+    gap: 24px;
+    padding: 24px;
+    align-items: center;
+  }
+  .media__mark {
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--brand-ivory);
+  }
+  .media__mark :global(img) {
+    width: min(200px, 60%);
+    height: auto;
+  }
+  .media__text {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+  }
+  .media__text .body-lg {
+    color: var(--ink-muted);
+    max-width: 38em;
+  }
+  .media__text .body-lg:first-child {
+    color: var(--ink);
+  }
+  @media (min-width: 900px) {
+    .media {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: 48px;
+      padding: 32px;
     }
   }
 

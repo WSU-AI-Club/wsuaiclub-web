@@ -158,6 +158,7 @@ export const siteSchema = z.strictObject({
     email_list: httpsUrl('links.email_list'),
     instagram: httpsUrl('links.instagram'),
     linkedin: httpsUrl('links.linkedin'),
+    dtmedia: httpsUrl('links.dtmedia'),
   }),
   meeting: z.strictObject({
     day: text('meeting.day'),
