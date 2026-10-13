@@ -93,15 +93,6 @@ reduced.addEventListener('change', () => {
   revealables.forEach((el) => el.classList.add('is-in', 'is-done'));
 });
 
-/** Images marked data-lazy-src load the first time their menu opens. */
-function loadLazyImages(scope: ParentNode) {
-  scope.querySelectorAll<HTMLImageElement>('img[data-lazy-src]').forEach((img) => {
-    if (img.dataset.lazySrcset) img.srcset = img.dataset.lazySrcset;
-    img.src = img.dataset.lazySrc!;
-    img.removeAttribute('data-lazy-src');
-  });
-}
-
 /* ── phone menu sheet ───────────────────────────────────────────────── */
 
 const sheet = document.querySelector<HTMLDialogElement>('[data-menu]');
@@ -114,7 +105,6 @@ function focusables(container: HTMLElement) {
 
 function openMenu() {
   if (!sheet || sheet.open) return;
-  loadLazyImages(sheet);
   sheet.showModal();
   root.classList.add('menu-open');
   root.style.overflow = 'hidden';
@@ -337,7 +327,6 @@ function initDropdown(root: HTMLElement) {
   let skipClick = false;
 
   const setOpen = (next: boolean) => {
-    if (next) loadLazyImages(root);
     open = next;
     if (!next) pinned = false;
     root.classList.toggle('is-open', next);
