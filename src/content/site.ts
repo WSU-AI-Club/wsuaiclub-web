@@ -4,7 +4,6 @@
  *
  * STILL EMPTY (the club has not supplied these yet):
  *   - joinFormUrl         student Join CTA falls back to LinkedIn
- *   - contactEmail        faculty and community paths fall back to LinkedIn
  *   - instagramUrl        footer link hidden
  *   - discordUrl          footer link hidden
  *   - nextSession         date, time, room: data strip hidden
@@ -21,7 +20,7 @@ export type Officer = { name: string; role: string };
 export const site = {
   // Links (empty = hidden or falls back)
   joinFormUrl: '',
-  contactEmail: '',
+  contactEmail: 'aiclub@wichita.edu',
   linkedinUrl: 'https://www.linkedin.com/company/wsu-ai-club',
   instagramUrl: '',
   discordUrl: '',
