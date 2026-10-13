@@ -10,7 +10,7 @@ import SectionHead from '../components/SectionHead.astro';
 import Slideshow from '../components/Slideshow.astro';
 import Spark from '../components/Spark.astro';
 import { copy } from '../content/copy';
-import { homeLeaders, site, teamCounts } from '../lib/data';
+import { advisoryBoard, homeLeaders, site, teamCounts } from '../lib/data';
 import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
@@ -93,6 +93,25 @@ const jsonLd = {
           ))
         }
       </ul>
+      {
+        advisoryBoard && (
+          <a class="card board-strip" href="/advisory-board" data-reveal>
+            <span class="board-strip__text">
+              <span class="eyebrow eyebrow--ink">{copy.board.homeStrip.eyebrow}</span>
+              <span class="board-strip__line">{copy.board.homeStrip.line}</span>
+            </span>
+            <span class="board-strip__faces" aria-hidden="true">
+              {advisoryBoard.people.map((p) => (
+                <Avatar name={p.name} photo={p.photo} size={52} />
+              ))}
+            </span>
+            <span class="more board-strip__cta">
+              <span>{copy.board.homeStrip.cta}</span>
+              <Icon name="arrow" />
+            </span>
+          </a>
+        )
+      }
     </div>
   </section>
 
@@ -137,6 +156,48 @@ const jsonLd = {
     .hero :global(.hero__show) {
       aspect-ratio: 5 / 4;
       max-height: 560px;
+    }
+  }
+
+  /* ── advisory board strip ──────────────────────────────────────── */
+  .board-strip {
+    margin-top: clamp(40px, 5vw, 56px);
+    display: grid;
+    gap: 16px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .board-strip__text {
+    display: grid;
+    gap: 6px;
+  }
+  .board-strip__line {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  .board-strip__faces {
+    display: flex;
+    padding-left: 10px;
+  }
+  .board-strip__faces :global(.avatar) {
+    --size: 44px !important;
+    margin-left: -10px;
+    box-shadow: 0 0 0 3px var(--surface-raised);
+  }
+  .board-strip__faces :global(.avatar--initials) {
+    font-size: 15px;
+  }
+  @media (min-width: 900px) {
+    .board-strip {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 32px;
+      padding: 24px 28px;
+    }
+    .board-strip__faces :global(.avatar) {
+      --size: 52px !important;
     }
   }
 

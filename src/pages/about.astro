@@ -48,7 +48,10 @@ const heroPhotos: PhotoName[] = ['classroom-group', 'glass-wall-visit', 'chocola
           {a.studentLed.body.map((p) => <p class="body-lg" data-reveal>{p}</p>)}
         </div>
         <p class="led__cta" data-reveal>
-          <a class="btn btn--primary" href="/team">{a.studentLed.cta}<Icon name="arrow" /></a>
+          <span class="btn-row">
+            <a class="btn btn--primary" href="/team">{a.studentLed.cta}<Icon name="arrow" /></a>
+            <a class="btn btn--secondary" href="/advisory-board">{a.studentLed.board}<Icon name="arrow" /></a>
+          </span>
         </p>
       </div>
       <figure class="led__photo photo-frame" data-reveal>

@@ -31,7 +31,7 @@ test('old event paths redirect (307) to /chocolathon, but never a club page', ()
   for (const old of ['/hq', '/prompts', '/competitors', '/people', '/judge-c7m2x9', '/upload-k4n8pq', '/results-m3v8tq', '/hq/']) {
     assert.ok(re.test(old), `${old} should redirect`);
   }
-  for (const page of ['/', '/about', '/events', '/team', '/contact', '/join']) {
+  for (const page of ['/', '/about', '/events', '/team', '/advisory-board', '/contact', '/join']) {
     assert.ok(!re.test(page), `${page} is a club page and must not redirect`);
   }
 });
@@ -40,5 +40,5 @@ test('nothing on this site claims the /chocolathon path', () => {
   assert.ok(!existsSync(join(ROOT, 'public/chocolathon')));
   const pages = readdirSync(join(ROOT, 'src/pages'));
   assert.ok(!pages.some((p) => p.startsWith('chocolathon')), 'no src/pages/chocolathon*');
-  for (const p of ['index', 'about', 'events', 'team', 'contact', 'join', '404']) assert.ok(pages.includes(`${p}.astro`), `src/pages/${p}.astro`);
+  for (const p of ['index', 'about', 'events', 'team', 'advisory-board', 'contact', 'join', '404']) assert.ok(pages.includes(`${p}.astro`), `src/pages/${p}.astro`);
 });

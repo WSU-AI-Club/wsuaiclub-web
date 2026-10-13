@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
 import PageHero from '../components/PageHero.astro';
 import PersonCard from '../components/PersonCard.astro';
@@ -40,6 +41,14 @@ const slug = (s: string) =>
               <PersonCard person={p} />
             ))}
           </ul>
+          {/advisory/i.test(g.name) && (
+            <p class="team-group__more" data-reveal>
+              <a class="btn btn--primary" href="/advisory-board">
+                {copy.board.teamLink}
+                <Icon name="arrow" />
+              </a>
+            </p>
+          )}
         </div>
       </section>
     ))
@@ -61,6 +70,9 @@ const slug = (s: string) =>
     padding-bottom: 14px;
     border-bottom: var(--stroke-rule) solid var(--ink);
     margin-bottom: 24px;
+  }
+  .team-group__more {
+    margin-top: 24px;
   }
   .team-group__note {
     margin: -4px 0 24px;

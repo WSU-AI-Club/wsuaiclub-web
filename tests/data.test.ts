@@ -57,6 +57,17 @@ test('team.yaml is valid and every listed headshot exists', () => {
   const shane = people.filter((p) => p.name === 'Shane Vithana');
   assert.equal(shane.length, 2, 'Shane Vithana is listed as Technical Consultant and on the advisory board');
   assert.equal(team.homeOrder?.length, 12, 'the home page shows all 12 student leaders');
+  const board = team.groups.find((g) => /advisory/i.test(g.name))!.people;
+  assert.deepEqual(
+    board.map((p) => p.name),
+    ['Dylan Thiessen', 'Grant Johnson', 'Nic Wentling', 'Ramsey Jamoul', 'Fareeha Amber Ansari', 'Jessica Hinel', 'Shane Vithana'],
+  );
+  for (const p of board) {
+    assert.ok(p.photo && headshots.includes(p.photo), `${p.name} has a headshot`);
+    assert.ok(p.bio && p.bio.split(/\s+/).length <= 24, `${p.name} has a one-line bio`);
+    assert.ok(p.linkedin, `${p.name} has a LinkedIn link`);
+  }
+  assert.match(read('src/data/team.yaml'), /# Source: https:\/\/exploration\.org\//, 'bios cite their sources');
   assert.deepEqual(team.homeOrder?.slice(0, 3), ['Michael Goldberg', 'Samuel Doell', 'Eniola (Zadok) Olaobaju']);
 });
 

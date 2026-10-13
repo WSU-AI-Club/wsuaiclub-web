@@ -520,6 +520,7 @@ a:hover .more span,
 
 .avatar {
   --size: 88px;
+  display: block;
   position: relative;
   flex: none;
   width: var(--size);

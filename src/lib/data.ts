@@ -90,3 +90,6 @@ const officers = team.groups.filter(officerGroups).flatMap((g) => g.people);
 export const homeLeaders: Person[] = team.homeOrder
   ? team.homeOrder.map((n) => officers.find((p) => p.name === n) ?? team.groups.flatMap((g) => g.people).find((p) => p.name === n)!)
   : officers;
+
+/** The industry advisory board, in team.yaml order (also the /advisory-board page). */
+export const advisoryBoard = team.groups.find((g) => /advisory/i.test(g.name));

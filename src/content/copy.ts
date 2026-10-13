@@ -67,6 +67,7 @@ export const copy = {
     about: 'About Us',
     events: 'Events',
     team: 'Team',
+    board: 'Advisory board',
     contact: 'Contact',
     join: 'Join',
     chocolathon: 'Chocolathon',
@@ -180,6 +181,7 @@ export const copy = {
         'A faculty advisor and an industry advisory board keep the club close to how AI is used at work.',
       ],
       cta: 'Meet the team',
+      board: 'Meet the advisory board',
     },
     formats: {
       eyebrow: 'How we work',
@@ -267,6 +269,27 @@ export const copy = {
         'student-led-workshop': 'Student-led workshop',
         'barton-atrium-group': 'Koch Atrium, Barton School',
       } as Partial<Record<PhotoName, string>>,
+    },
+  },
+
+  board: {
+    hero: {
+      eyebrow: 'Industry advisory board',
+      headline: 'The people who keep us close to industry',
+      lede: 'Professionals who use AI at work. They connect the club to industry and help close the gap between the classroom and real work.',
+    },
+    linkedin: 'LinkedIn',
+    homeStrip: {
+      eyebrow: 'Industry advisory board',
+      line: 'Professionals who connect the club to industry.',
+      cta: 'Meet the advisory board',
+    },
+    teamLink: 'Meet the advisory board',
+    contact: {
+      eyebrow: 'Work with us',
+      headline: 'Bring your work into the room',
+      lede: 'Speak at a meeting, judge a hackathon or bring a project to our members.',
+      cta: 'Contact the officers',
     },
   },
 
@@ -413,6 +436,10 @@ export const copy = {
     join: {
       title: 'Join | AI Club at Wichita State',
       description: 'Join AI Club on ShockerSync, GroupMe or the email list. Open to students, faculty, alumni and the Wichita community. No experience needed.',
+    },
+    board: {
+      title: 'Industry Advisory Board | AI Club at Wichita State',
+      description: 'The professionals who connect AI Club at Wichita State to industry, from Koch, Cargill, Boeing, Unified, Moonbase Labs and more.',
     },
     notFound: {
       title: 'Page not found | AI Club at Wichita State',
