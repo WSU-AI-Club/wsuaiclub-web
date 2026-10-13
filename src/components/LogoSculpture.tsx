@@ -358,8 +358,8 @@ export default function LogoSculpture({ paused, gust, onEnergy, onReady }: Props
     aria-label="Interactive AI Club sculpture. Move across the logo to create wind; faster movement scatters the leaves. Use Send a gust for a keyboard-accessible demonstration."
     style={{ width: '100%', height: '100%', position: 'relative', touchAction: 'pan-y' }}>
     {status !== 'ready' && <div className="sculpture-fallback" style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', pointerEvents: 'none' }}>
-      <img src="/brand/icon-black.png" alt="" style={{ height: '72%', maxWidth: '76%', objectFit: 'contain' }} />
-      {status === 'loading' && <span style={{ position: 'absolute', bottom: '7%', fontSize: 12, letterSpacing: '.12em', textTransform: 'uppercase' }}>Assembling perspectives</span>}
+      <img src="/brand/mark-black.svg" alt="" style={{ height: '72%', maxWidth: '76%', objectFit: 'contain' }} />
+      {status === 'loading' && <span style={{ position: 'absolute', bottom: '7%', fontFamily: 'var(--font-mono)', fontWeight: 500, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>Loading the emblem</span>}
     </div>}
   </div>;
 }
