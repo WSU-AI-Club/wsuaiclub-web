@@ -1,9 +1,10 @@
 node_modules/
 dist/
+.astro/
 .env
 .env.*
 !.env.example
 *.tsbuildinfo
-*.blend1
 artifacts/
 .DS_Store
+.vercel

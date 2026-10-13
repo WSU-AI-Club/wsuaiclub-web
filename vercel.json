@@ -1,11 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
-    { "source": "/(hq|prompts|competitors|people|team|judge-c7m2x9|upload-k4n8pq|results-m3v8tq)/?", "destination": "/chocolathon/$1", "permanent": false }
+    { "source": "/(hq|prompts|competitors|people|judge-c7m2x9|upload-k4n8pq|results-m3v8tq)/?", "destination": "/chocolathon/$1", "permanent": false }
   ],
   "rewrites": [
     { "source": "/chocolathon", "destination": "https://chocolathon.vercel.app/chocolathon" },
-    { "source": "/chocolathon/:path*", "destination": "https://chocolathon.vercel.app/chocolathon/:path*" },
-    { "source": "/((?!chocolathon).*)", "destination": "/index.html" }
+    { "source": "/chocolathon/:path*", "destination": "https://chocolathon.vercel.app/chocolathon/:path*" }
   ]
 }
