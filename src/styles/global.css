@@ -33,7 +33,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--header-h) + 16px);
+  /* Fixed header: keyboard focus and anchors stop below it. Anchored
+     targets get 16px more air from scroll-margin-top below. */
+  scroll-padding-top: var(--header-h);
   background: var(--brand-black);
 }
 body {
@@ -98,6 +100,13 @@ button {
 [data-theme] {
   background-color: var(--surface);
   color: var(--ink);
+}
+[id] {
+  scroll-margin-top: 16px;
+}
+/* Sections focused by an in-page link don't draw a ring around themselves. */
+[tabindex='-1']:focus {
+  outline: none;
 }
 .visually-hidden {
   position: absolute !important;

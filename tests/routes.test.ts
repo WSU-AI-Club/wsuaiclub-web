@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
+import { copy } from '../src/content/copy.ts';
 
 const ROOT = join(import.meta.dirname, '..');
 const vercel = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
@@ -41,4 +42,23 @@ test('nothing on this site claims the /chocolathon path', () => {
   const pages = readdirSync(join(ROOT, 'src/pages'));
   assert.ok(!pages.some((p) => p.startsWith('chocolathon')), 'no src/pages/chocolathon*');
   for (const p of ['index', 'about', 'events', 'team', 'advisory-board', 'contact', 'join', '404']) assert.ok(pages.includes(`${p}.astro`), `src/pages/${p}.astro`);
+});
+
+test('every header menu anchor has a matching id on its page', () => {
+  const topicIds = copy.contact.topics.items.map((t) => t.id);
+  for (const menu of Object.values(copy.nav.menus)) {
+    for (const item of menu.items) {
+      const [path, hash] = item.href.split('#');
+      if (!hash) continue;
+      const page = readFileSync(join(ROOT, 'src/pages', `${path.slice(1) || 'index'}.astro`), 'utf8');
+      const found = page.includes(`id="${hash}"`) || (path === '/contact' && topicIds.includes(hash));
+      assert.ok(found, `${item.href} has no id="${hash}" on ${path}`);
+    }
+  }
+});
+
+test('the contact sponsor card sits right after the partner card', () => {
+  const ids = copy.contact.topics.items.map((t) => t.id);
+  assert.equal(ids.indexOf('sponsor'), ids.indexOf('partner') + 1);
+  assert.equal(ids[0], 'consulting');
 });

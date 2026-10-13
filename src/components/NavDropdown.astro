@@ -1,0 +1,208 @@
+---
+/**
+ * One header dropdown (About Us, Events, Contact). The trigger is a button
+ * that opens a one-column menu on hover, click/tap and keyboard; without JS
+ * the trigger is a plain link to the page. Behavior: src/scripts/site.ts
+ * ("header dropdowns"). Items come from copy.ts > nav.menus.
+ */
+export type DropdownItem = { href: string; title: string; body?: string };
+export type Dropdown = {
+  id: string;
+  label: string;
+  href: string;
+  eyebrow?: string;
+  /** Which edge of the trigger the panel lines up with. */
+  align?: 'start' | 'end';
+  items: DropdownItem[];
+};
+interface Props {
+  menu: Dropdown;
+  path: string;
+}
+const { menu, path } = Astro.props;
+const pathOf = (href: string) => href.split('#')[0];
+const current = (href: string) => (!href.includes('#') && path === href ? 'page' : undefined);
+// The trigger shows active on its own page and on any page it lists.
+const active = path === menu.href || menu.items.some((i) => !i.href.startsWith('mailto:') && pathOf(i.href) === path);
+const panelId = `${menu.id}-menu`;
+---
+
+<li class:list={['nav-drop', menu.align === 'end' && 'nav-drop--end']} data-dropdown>
+  <a class:list={['nav-drop__link', active && 'is-section']} href={menu.href} aria-current={current(menu.href)}>{menu.label}</a>
+  <button class:list={['nav-drop__trigger', active && 'is-section']} type="button" aria-expanded="false" aria-controls={panelId} data-dropdown-trigger>
+    {menu.label}
+    <svg class="nav-drop__chev" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+      <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+  <div class="nav-drop__panel" id={panelId} data-dropdown-panel>
+    <div class="nav-drop__card" data-theme="paper">
+      {menu.eyebrow && <p class="eyebrow nav-drop__eyebrow">{menu.eyebrow}</p>}
+      <ul>
+        {
+          menu.items.map((item) => (
+            <li>
+              <a class="nav-drop__item" href={item.href} aria-current={current(item.href)} data-dropdown-item>
+                <span class="nav-drop__title">{item.title}</span>
+                {item.body && <span class="nav-drop__body">{item.body}</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</li>
+
+<style>
+  .nav-drop {
+    position: relative;
+  }
+  /* The no-JS link and the JS trigger share one look. */
+  .nav-drop__link,
+  .nav-drop__trigger {
+    position: relative;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-drop__link {
+    display: block;
+  }
+  .nav-drop__trigger {
+    display: none;
+  }
+  :global(.js) .nav-drop__link {
+    display: none;
+  }
+  :global(.js) .nav-drop__trigger {
+    display: inline-flex;
+  }
+  .nav-drop__link::after,
+  .nav-drop__trigger::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-out);
+  }
+  .nav-drop__link:hover::after,
+  .nav-drop__trigger:hover::after,
+  .nav-drop__trigger[aria-expanded='true']::after {
+    transform: scaleX(1);
+  }
+  .nav-drop__link.is-section::after,
+  .nav-drop__trigger.is-section::after {
+    background: var(--spark);
+    transform: scaleX(1);
+  }
+  .nav-drop__chev {
+    transition: transform 0.25s var(--ease-out);
+  }
+  .nav-drop__trigger[aria-expanded='true'] .nav-drop__chev {
+    transform: rotate(180deg);
+  }
+
+  /* The panel's padding-top bridges trigger and card, so moving the pointer
+     down never crosses a gap. Closed = invisible and unfocusable. */
+  .nav-drop__panel {
+    position: absolute;
+    top: 100%;
+    left: -8px;
+    z-index: 60;
+    padding-top: 6px;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.18s ease,
+      transform 0.22s var(--ease-out),
+      visibility 0s linear 0.22s;
+  }
+  .nav-drop--end .nav-drop__panel {
+    left: auto;
+    right: -8px;
+  }
+  .nav-drop.is-open .nav-drop__panel {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.18s ease,
+      transform 0.22s var(--ease-out),
+      visibility 0s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-drop__panel,
+    .nav-drop.is-open .nav-drop__panel {
+      transform: none;
+      transition: none;
+    }
+  }
+  :global(html:not(.js)) .nav-drop__panel {
+    display: none;
+  }
+  .nav-drop__card {
+    width: 320px;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
+    box-shadow:
+      0 0 0 1px var(--line),
+      var(--shadow-panel);
+  }
+  .nav-drop__card ul {
+    display: grid;
+    gap: 2px;
+  }
+  .nav-drop__eyebrow {
+    padding: 8px 12px 6px;
+  }
+  .nav-drop__item {
+    display: grid;
+    gap: 2px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-drop__item:hover,
+  .nav-drop__item:focus-visible {
+    background: var(--surface-sunk);
+  }
+  .nav-drop__item:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+  .nav-drop__title {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.005em;
+  }
+  .nav-drop__item[aria-current='page'] .nav-drop__title::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 8px 2px 0;
+    border-radius: 50%;
+    background: var(--spark);
+  }
+  .nav-drop__body {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink-muted);
+  }
+</style>

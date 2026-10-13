@@ -6,7 +6,8 @@
  *   - header compacts after 40px of scroll
  *   - light parallax on [data-parallax] photos
  *   - phone menu sheet (modal dialog, focus trap, Esc, scroll lock)
- *   - the About Us dropdown in the header ([data-dropdown])
+ *   - the header dropdowns: About Us, Events, Contact ([data-dropdown])
+ *   - same-page anchors in the header and menu scroll smoothly below the header
  *   - hides events that have ended ([data-ends]) and keeps "Next meeting" current
  *   - copy-to-clipboard buttons ([data-copy])
  * Under prefers-reduced-motion: reduce, nothing moves and nothing is hidden.
@@ -116,13 +117,16 @@ function openMenu() {
 function closeMenu() {
   if (!sheet?.open) return;
   sheet.close();
+  root.style.removeProperty('overflow');
 }
 
 sheet?.addEventListener('close', () => {
   root.classList.remove('menu-open');
   root.style.removeProperty('overflow');
   openBtn?.setAttribute('aria-expanded', 'false');
-  openBtn?.focus();
+  // Back to the Menu button, unless a same-page link already moved focus on.
+  const active = document.activeElement;
+  if (!active || active === document.body || active === openBtn || sheet.contains(active)) openBtn?.focus();
 });
 openBtn?.addEventListener('click', openMenu);
 closeBtn?.addEventListener('click', closeMenu);
@@ -316,6 +320,9 @@ document.querySelectorAll<HTMLElement>('[data-slideshow]').forEach(initSlideshow
    arrows move between items; Esc closes and returns focus to the trigger;
    Tab out or a click outside closes it. */
 
+/** Every dropdown's close function: opening one closes the others. */
+const dropdownClosers = new Set<() => void>();
+
 function initDropdown(root: HTMLElement) {
   const trigger = root.querySelector<HTMLButtonElement>('[data-dropdown-trigger]');
   const items = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-dropdown-item]'));
@@ -327,6 +334,7 @@ function initDropdown(root: HTMLElement) {
   let skipClick = false;
 
   const setOpen = (next: boolean) => {
+    if (next) dropdownClosers.forEach((close) => close !== closeThis && close());
     open = next;
     if (!next) pinned = false;
     root.classList.toggle('is-open', next);
@@ -336,6 +344,11 @@ function initDropdown(root: HTMLElement) {
     window.clearTimeout(openTimer);
     window.clearTimeout(closeTimer);
   };
+  const closeThis = () => {
+    clearTimers();
+    if (open) setOpen(false);
+  };
+  dropdownClosers.add(closeThis);
   const focusItem = (i: number) => items[(i + items.length) % items.length].focus();
 
   root.addEventListener('pointerenter', (e) => {
@@ -407,3 +420,28 @@ function initDropdown(root: HTMLElement) {
 }
 
 document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach(initDropdown);
+
+/* ── same-page anchors in the header and the phone menu ─────────────── */
+/* A link to a section of the page you are on closes the open menu and
+   scrolls there smoothly (instantly under reduced motion). The target lands
+   below the fixed header (scroll-padding-top + scroll-margin-top in CSS),
+   and focus moves to it so keyboard users continue from there. */
+
+document.addEventListener('click', (e) => {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const link = (e.target as Element | null)?.closest?.<HTMLAnchorElement>('a[href*="#"]');
+  if (!link || !link.closest('[data-header], [data-menu]')) return;
+  const url = new URL(link.href, location.href);
+  if (url.pathname !== location.pathname || url.hash.length < 2) return;
+  const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+  if (!target) return;
+  e.preventDefault();
+  dropdownClosers.forEach((close) => close());
+  closeMenu();
+  if (location.hash !== url.hash) history.pushState(null, '', url.hash);
+  requestAnimationFrame(() => {
+    target.scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto', block: 'start' });
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  });
+});

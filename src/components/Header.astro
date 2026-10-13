@@ -1,8 +1,8 @@
 ---
 /**
- * Site header: logo · About Us (dropdown) · Events · Contact · Join.
- * About Us opens a menu on hover, click/tap and keyboard; without JS it is
- * a plain link to /about.
+ * Site header: logo · About Us · Events · Contact (three dropdowns,
+ * NavDropdown.astro) · Join. Each dropdown opens on hover, click/tap and
+ * keyboard; without JS its label is a plain link to the page.
  * Phones: logo, Join and a Menu button that opens a full-screen sheet
  * (a modal <dialog>: focus stays inside, Esc closes, the page underneath
  * does not scroll). Without JS the Menu button becomes a link to the footer
@@ -12,26 +12,29 @@ import { copy } from '../content/copy';
 import { site } from '../lib/data';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
+import NavDropdown, { type Dropdown } from './NavDropdown.astro';
 
 interface Props {
   path: string;
 }
 const { path } = Astro.props;
 
-const nav = [
-  { href: '/events', label: copy.nav.events },
-  { href: '/contact', label: copy.nav.contact },
+const m = copy.nav.menus;
+const menus: Dropdown[] = [
+  { id: 'about', label: copy.nav.about, href: '/about', align: 'start', ...m.about },
+  { id: 'events', label: copy.nav.events, href: '/events', align: 'end', ...m.events },
+  {
+    id: 'contact',
+    label: copy.nav.contact,
+    href: '/contact',
+    align: 'end',
+    eyebrow: m.contact.eyebrow,
+    items: [...m.contact.items, { href: `mailto:${site.contact_email}`, title: m.contact.email, body: site.contact_email }],
+  },
 ];
-const aboutItems = copy.nav.aboutMenu.items;
-type SheetLink = { href: string; label: string; children?: typeof aboutItems };
-const sheet: SheetLink[] = [
-  { href: '/about', label: copy.nav.about, children: aboutItems },
-  { href: '/events', label: copy.nav.events },
-  { href: '/contact', label: copy.nav.contact },
-  { href: '/join', label: copy.nav.join },
-];
-const current = (href: string) => (path === href ? 'page' : undefined);
-const inAbout = aboutItems.some((i) => i.href === path);
+// Phone sheet: each menu with its items as sub-links, then Join.
+const sheet = [...menus.map((d) => ({ href: d.href, label: d.label, children: d.items })), { href: '/join', label: copy.nav.join, children: undefined }];
+const current = (href: string) => (!href.includes('#') && path === href ? 'page' : undefined);
 ---
 
 <header class="site-header" data-header>
@@ -42,39 +45,7 @@ const inAbout = aboutItems.some((i) => i.href === path);
 
     <nav class="site-nav" aria-label={copy.nav.primaryLabel}>
       <ul>
-        <li class="nav-drop" data-dropdown>
-          <a class="nav-drop__link" href="/about" aria-current={current('/about')}>{copy.nav.about}</a>
-          <button class:list={['nav-drop__trigger', inAbout && 'is-section']} type="button" aria-expanded="false" aria-controls="about-menu" data-dropdown-trigger>
-            {copy.nav.about}
-            <svg class="nav-drop__chev" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </button>
-          <div class="nav-drop__panel" id="about-menu" data-dropdown-panel>
-            <div class="nav-drop__card" data-theme="paper">
-              <p class="eyebrow nav-drop__eyebrow">{copy.nav.aboutMenu.eyebrow}</p>
-              <ul>
-                {
-                  aboutItems.map((item) => (
-                    <li>
-                      <a class="nav-drop__item" href={item.href} aria-current={current(item.href)} data-dropdown-item>
-                        <span class="nav-drop__title">{item.title}</span>
-                        <span class="nav-drop__body">{item.body}</span>
-                      </a>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          </div>
-        </li>
-        {
-          nav.map((l) => (
-            <li>
-              <a href={l.href} aria-current={current(l.href)}>
-                {l.label}
-              </a>
-            </li>
-          ))
-        }
+        {menus.map((menu) => <NavDropdown menu={menu} path={path} />)}
       </ul>
     </nav>
 
@@ -183,179 +154,10 @@ const inAbout = aboutItems.some((i) => i.href === path);
   .site-nav {
     display: none;
   }
-  .site-nav ul {
+  .site-nav > ul {
     display: flex;
     gap: 4px;
   }
-  .site-nav a {
-    position: relative;
-    display: block;
-    padding: 10px 14px;
-    font-weight: 500;
-    font-size: 15px;
-    text-decoration: none;
-    color: var(--ink);
-    border-radius: var(--radius-sm);
-  }
-  .site-nav a::after {
-    content: '';
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: 4px;
-    height: 2px;
-    background: var(--ink);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s var(--ease-out);
-  }
-  .site-nav a:hover::after {
-    transform: scaleX(1);
-  }
-  .site-nav a[aria-current='page']::after {
-    background: var(--spark);
-    transform: scaleX(1);
-  }
-
-  /* ── About Us dropdown ─────────────────────────────────────── */
-  .nav-drop {
-    position: relative;
-  }
-  :global(.js) .site-nav .nav-drop__link {
-    display: none;
-  }
-  .nav-drop__trigger {
-    position: relative;
-    display: none;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 14px;
-    border: 0;
-    border-radius: var(--radius-sm);
-    background: none;
-    font-weight: 500;
-    font-size: 15px;
-    color: var(--ink);
-  }
-  :global(.js) .nav-drop__trigger {
-    display: inline-flex;
-  }
-  .nav-drop__trigger::after {
-    content: '';
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: 4px;
-    height: 2px;
-    background: var(--ink);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s var(--ease-out);
-  }
-  .nav-drop__trigger:hover::after,
-  .nav-drop__trigger[aria-expanded='true']::after {
-    transform: scaleX(1);
-  }
-  .nav-drop__trigger.is-section::after {
-    background: var(--spark);
-    transform: scaleX(1);
-  }
-  .nav-drop__chev {
-    transition: transform 0.25s var(--ease-out);
-  }
-  .nav-drop__trigger[aria-expanded='true'] .nav-drop__chev {
-    transform: rotate(180deg);
-  }
-  /* The panel's padding-top bridges trigger and card, so moving the pointer
-     down never crosses a gap. Closed = invisible and unfocusable. */
-  .nav-drop__panel {
-    position: absolute;
-    top: 100%;
-    left: -8px;
-    z-index: 60;
-    padding-top: 6px;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition:
-      opacity 0.18s ease,
-      transform 0.22s var(--ease-out),
-      visibility 0s linear 0.22s;
-  }
-  .nav-drop.is-open .nav-drop__panel {
-    visibility: visible;
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity 0.18s ease,
-      transform 0.22s var(--ease-out),
-      visibility 0s;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .nav-drop__panel,
-    .nav-drop.is-open .nav-drop__panel {
-      transform: none;
-      transition: none;
-    }
-  }
-  :global(html:not(.js)) .nav-drop__panel {
-    display: none;
-  }
-  .nav-drop__card {
-    width: 336px;
-    padding: 10px;
-    border-radius: var(--radius-md);
-    background: var(--surface-raised);
-    box-shadow:
-      0 0 0 1px var(--line),
-      var(--shadow-panel);
-  }
-  .site-nav .nav-drop__card ul {
-    display: grid;
-    gap: 2px;
-  }
-  .nav-drop__eyebrow {
-    padding: 8px 12px 6px;
-  }
-  .site-nav a.nav-drop__item {
-    display: grid;
-    gap: 2px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .site-nav a.nav-drop__item::after {
-    display: none;
-  }
-  .nav-drop__item:hover,
-  .nav-drop__item:focus-visible {
-    background: var(--surface-sunk);
-  }
-  .nav-drop__item:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: -2px;
-  }
-  .nav-drop__title {
-    font-weight: 600;
-    font-size: 15px;
-    letter-spacing: -0.005em;
-  }
-  .nav-drop__item[aria-current='page'] .nav-drop__title::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 8px 2px 0;
-    border-radius: 50%;
-    background: var(--spark);
-  }
-  .nav-drop__body {
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--ink-muted);
-  }
-
   .site-header__actions {
     display: flex;
     align-items: center;
@@ -460,14 +262,14 @@ const inAbout = aboutItems.some((i) => i.href === path);
     color: var(--ink-muted);
   }
 
-  /* About Us sub-items, indented under their parent. */
+  /* Menu sub-items, indented under their parent. */
   .menu-sheet__sub {
-    padding: 0 0 12px 48px;
+    padding: 0 0 10px 48px;
     border-bottom: 1px solid var(--divider);
   }
   .menu-sheet__nav .menu-sheet__sub a {
     grid-template-columns: 1fr auto;
-    padding: 9px 0;
+    padding: 7px 0;
     border-bottom: 0;
   }
   .menu-sheet__nav li:has(> .menu-sheet__sub) > a {
@@ -477,7 +279,7 @@ const inAbout = aboutItems.some((i) => i.href === path);
   .menu-sheet__sublabel {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     letter-spacing: -0.02em;
     color: var(--ink);
   }

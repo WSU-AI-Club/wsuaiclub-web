@@ -35,7 +35,7 @@ const socials = [
       <ul class="topics" role="list">
         {
           c.topics.items.map((t, i) => (
-            <li class="card topic" data-reveal>
+            <li class="card topic" id={t.id} data-reveal>
               <div class="card__body">
                 <p class="eyebrow">{String(i + 1).padStart(2, '0')}</p>
                 <h3 class="title">

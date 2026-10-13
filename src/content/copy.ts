@@ -73,14 +73,36 @@ export const copy = {
     chocolathon: 'Chocolathon',
     menu: 'Menu',
     close: 'Close menu',
-    aboutMenu: {
-      eyebrow: 'About AI Club',
-      items: [
-        { href: '/about', title: 'About AI Club', body: 'Who we are and how we work' },
-        { href: '/team', title: 'Meet the team', body: 'Student leaders and our faculty advisor' },
-        { href: '/advisory-board', title: 'Industry advisory board', body: 'The professionals who advise the club' },
-        { href: '/about#partners', title: 'Partners', body: 'The schools, clubs and companies we work with' },
-      ],
+    /** The header dropdowns. Each trigger is also a plain link to its page without JS. */
+    menus: {
+      about: {
+        eyebrow: 'About AI Club',
+        items: [
+          { href: '/about', title: 'About AI Club', body: 'Who we are and how we work' },
+          { href: '/team', title: 'Meet the team', body: 'Student leaders and our faculty advisor' },
+          { href: '/advisory-board', title: 'Industry advisory board', body: 'The professionals who advise the club' },
+          { href: '/about#partners', title: 'Partners', body: 'The schools, clubs and companies we work with' },
+        ],
+      },
+      events: {
+        eyebrow: 'Events',
+        items: [
+          { href: '/events#upcoming', title: 'Upcoming events', body: 'Dates, places and RSVPs' },
+          { href: '/events#hackathons', title: 'Hackathons', body: 'Chocolathon and partner hackathons' },
+          { href: '/events#speakers', title: 'Past speakers', body: 'Who has spoken at AI Club' },
+          { href: '/events#photos', title: 'Photos', body: 'From recent meetings and events' },
+        ],
+      },
+      contact: {
+        eyebrow: 'Contact',
+        items: [
+          { href: '/contact#consulting', title: 'Consulting and projects', body: 'Paid AI projects with our members' },
+          { href: '/contact#speak', title: 'Speak at a meeting', body: 'Share how you use AI at work' },
+          { href: '/contact#partner', title: 'Partner or sponsor', body: 'Co-host an event or sponsor a hackathon' },
+        ],
+        /** Last item: a mailto to site.yaml > contact_email, which is also its line. */
+        email: 'Email the officers',
+      },
     },
     primaryLabel: 'Main',
     skip: 'Skip to content',
@@ -333,26 +355,31 @@ export const copy = {
       subjectLabel: 'Subject',
       items: [
         {
+          id: 'consulting',
           title: 'Consulting and projects',
           body: 'Have a problem AI could help with? Our members take on paid consulting and project work. Tell us what you need.',
           subject: 'Consulting project inquiry',
         },
         {
+          id: 'speak',
           title: 'Speak at a meeting',
           body: 'Show members how you use AI at work, then take their questions.',
           subject: 'Speaking at AI Club',
         },
         {
+          id: 'partner',
           title: 'Partner on an event',
           body: 'Co-host a workshop, a visit or a joint meeting with your club, class or company.',
           subject: 'Event partnership',
         },
         {
+          id: 'sponsor',
           title: 'Sponsor a hackathon',
           body: 'Bring a real problem, judges or prizes to our next hackathon.',
           subject: 'Hackathon sponsorship',
         },
         {
+          id: 'other',
           title: 'Everything else',
           body: 'Questions, press, or something we did not think of.',
           subject: 'Hello from the website',
