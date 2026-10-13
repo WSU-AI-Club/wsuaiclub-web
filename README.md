@@ -1,60 +1,80 @@
-# WSU AI Club
+# wsuaiclub.com
 
-The future home of **wsuaiclub.com**. A modern club landing page with a custom Blender emblem and a Three.js wind interaction.
+The website of AI Club at Wichita State: a static Astro site with six pages
+(`/`, `/about`, `/events`, `/team`, `/contact`, `/join`) and a branded 404.
+`/chocolathon` is not part of this repo: Vercel proxies it to the Chocolathon
+event site (see `vercel.json`).
 
-## Run locally
+## Editing the site (officers)
 
-Use Node.js 22.12+ (Node 24 recommended).
+Most changes are one file, edited in the GitHub web editor (open the file,
+click the pencil, change it, "Commit changes"). Each file starts with a
+comment that explains every field.
+
+| To change | Edit |
+| --- | --- |
+| Upcoming events, past hackathons, past speakers | `src/data/events.yaml` |
+| Team members, roles, LinkedIn links, headshots | `src/data/team.yaml` (headshots go in `src/assets/team/`) |
+| Links, contact email, meeting time, semester numbers, partners | `src/data/site.yaml` |
+| Page copy (headlines, ledes, buttons) | `src/content/copy.ts` |
+| Photo alt text and crop focus | `src/lib/photo-meta.ts` |
+
+Every push rebuilds the site. A bad edit (a typo in a field name, a date like
+"Oct 14", a missing photo) fails the build with a message naming the file,
+the entry and the fix; the live site keeps the last good version.
+
+Events show only if their date is today or later when the site was built;
+the browser also hides events that have already ended.
+
+## Run it
+
+Node 22.12 or newer.
 
 ```sh
 npm ci
-npm run dev
+npm run dev       # http://127.0.0.1:5178
+npm test          # voice lint, data-file checks, routing guards
+npm run build     # static site in dist/
+npm run preview   # serve dist/ at http://127.0.0.1:5178
+npm run check     # TypeScript and Astro diagnostics
 ```
 
-Open http://127.0.0.1:5178. Production check: `npm run build`. Spring behavior tests: `npm test`.
+## Adding a photo
 
-## The interaction
+```sh
+npm run photo -- "C:\path\to\IMG_1234.jpeg" build-night-oct
+```
 
-The supplied mark becomes ten independent beveled pieces: six wheat blades, two chevrons, a stem, and a gold spark. Slow pointer movement subtly turns the sculpture. Faster sweeps apply stronger local impulses to nearby pieces; the pieces twist and separate in depth, then return through damped springs. A **Send a gust** button offers the same interaction by keyboard or tap. Motion can be paused, and the operating system's reduced-motion preference is respected.
+This writes `src/assets/photos/build-night-oct.jpg` (2400px long edge, JPEG
+82, rotation fixed, location data stripped). Then add an entry with alt text
+and a focal point to `src/lib/photo-meta.ts`. Never commit camera originals.
+Astro turns each photo into AVIF and WebP at several widths at build time.
 
-This is a real-time interaction, not a looping video. Blender supplies the editable model, materials, and an optional authored preview; Three.js owns the pointer-responsive choreography.
+## How it is built
 
-## Project structure
+- **Astro 7, static output.** No framework on the client. One small script
+  (`src/scripts/site.ts`, about 2 KB gzipped) runs the scroll reveals,
+  count-up numbers, header compaction, hero parallax, the phone menu and the
+  "hide past events" filter. Every page is complete without it, and under
+  `prefers-reduced-motion` nothing moves.
+- **Brand tokens.** `src/brand/tokens.json` is the single source for color,
+  type, spacing, radius, stroke and shadow. `src/lib/tokens.ts` turns it into
+  CSS custom properties with two section themes, Paper (ivory) and Ink
+  (black): `<section data-theme="ink">`.
+- **Fonts.** Geist, Geist Mono and Newsreader, self-hosted from
+  `@fontsource-variable`.
+- **Logo.** `public/brand/` holds the supplied files. The header layers
+  `lockup-horizontal-black-nospark.svg` (the supplied lockup with the spark
+  group removed) under the spark drawn from the same path
+  (`src/components/SparkSymbol.astro`), so the spark can make its one
+  quarter-turn on load.
+- **Data.** `src/lib/schema.ts` validates the YAML files with zod (shared by
+  the build and `npm test`); `src/lib/data.ts` loads them for the pages.
+- **Icons and link preview.** `npm run icons` renders `favicon-32.png` and
+  `apple-touch-icon.png` from the mark; `npm run og` renders `og-image.png`.
 
-- `src/App.tsx`, `src/styles.css`: responsive landing page and accessible controls.
-- `src/components/LogoSculpture.tsx`: model loading, lighting, rendering, gusts, and cleanup.
-- `src/lib/wind.ts`: bounded, frame-rate-independent spring model.
-- `src/lib/wind.test.ts`: gust intensity, localization, settling, stability, and frame-rate checks.
-- `public/brand/`: supplied logo artwork.
-- `public/models/club-emblem.glb`: web-ready Blender export.
-- `blender/build_emblem.py`: reproducible model generation from the supplied artwork.
-- `blender/club-emblem.blend`: editable Blender source.
-- `blender/asset-report.json`: asset validation results.
+## Deploy
 
-## Blender
-
-Open `blender/club-emblem.blend` in Blender. To regenerate the model, run Blender in background mode with `--python blender/build_emblem.py`. Blender 5.2 was used for the initial export. Each named piece is independently addressable; keep those node names when replacing the GLB. Web front faces lie in XY and face +Z.
-
-## Vercel, when ready
-
-Import `MichaelGold11/wsuaiclub-web`, select **Vite**, and use:
-
-- Build command: `npm run build`
-- Output directory: `dist`
-- Install command: `npm ci`
-- Node.js: 24
-- Environment variables: none
-
-No domain or deployment changes are made by this repository. The existing Chocolathon site is linked at `https://chocolathon.vercel.app`. Before assigning wsuaiclub.com to this app, plan how `/chocolathon` and any existing event routes will continue to reach the event project.
-
-The membership CTA currently leads to the club's verified LinkedIn page, not a new signup backend. Replace it with the preferred enrollment destination when that flow is decided.
-
-## Visual direction
-
-Approved combination: **Parallax Assembly** geometry and gallery-like page, plus **Prairie Instrument** wind behavior. Use the supplied black/white/gold identity. Maintain the recognizable assembled silhouette, preserve typography and normal HTML navigation independently of WebGL, and provide the source logo if WebGL or the model fails.
-
-## References
-
-- [Three.js GLTFLoader](https://threejs.org/docs/pages/GLTFLoader.html)
-- [Three.js RoomEnvironment](https://threejs.org/docs/pages/RoomEnvironment.html)
-- [WSU AI Club on LinkedIn](https://www.linkedin.com/company/wsu-ai-club)
+Vercel, framework preset Astro, output `dist`. `vercel.json` turns on clean
+URLs, keeps the 307 redirects from the old event paths to `/chocolathon/...`
+and proxies `/chocolathon` to `chocolathon.vercel.app`.
