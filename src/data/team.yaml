@@ -20,25 +20,6 @@
 #
 # To add a headshot: upload a square .webp (256x256 or larger) to
 # src/assets/team on GitHub ("Add file" > "Upload files"), then set photo.
-#
-# HOME PAGE ORDER
-#   homeOrder lists the student leaders shown on the home page, in order.
-#   Each name must match a name under groups exactly; role, photo and
-#   LinkedIn come from there.
-
-homeOrder:
-  - Michael Goldberg
-  - Samuel Doell
-  - Eniola (Zadok) Olaobaju
-  - Ronish Rasaily
-  - Jayden Sigg
-  - Takudzwa Nhamo
-  - Alexis Gandanzara
-  - Jeena Moore-Kirby
-  - Nya Vargas
-  - Akindotun Ogunbiyi
-  - Aurora Parnell
-  - Shane Vithana
 
 groups:
   - name: Founders

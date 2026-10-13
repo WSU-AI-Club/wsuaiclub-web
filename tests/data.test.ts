@@ -56,7 +56,6 @@ test('team.yaml is valid and every listed headshot exists', () => {
   );
   const shane = people.filter((p) => p.name === 'Shane Vithana');
   assert.equal(shane.length, 2, 'Shane Vithana is listed as Technical Consultant and on the advisory board');
-  assert.equal(team.homeOrder?.length, 12, 'the home page shows all 12 student leaders');
   const board = team.groups.find((g) => /advisory/i.test(g.name))!.people;
   assert.deepEqual(
     board.map((p) => p.name),
@@ -68,7 +67,6 @@ test('team.yaml is valid and every listed headshot exists', () => {
     assert.ok(p.linkedin, `${p.name} has a LinkedIn link`);
   }
   assert.match(read('src/data/team.yaml'), /# Sources?: https:\/\/exploration\.org\//, 'bios cite their sources');
-  assert.deepEqual(team.homeOrder?.slice(0, 3), ['Michael Goldberg', 'Samuel Doell', 'Eniola (Zadok) Olaobaju']);
 });
 
 test('site.yaml is valid', () => {
@@ -181,17 +179,14 @@ test('an RSVP link must be a full https address', () => {
 `, assets), 'rsvp must start with https://');
 });
 
-test('homeOrder names must match people in the groups', () => {
-  failsWith(
-    () => parseTeam(`homeOrder:
-  - Nobody Here
+test('an unknown team field is caught (homeOrder was retired in round 8)', () => {
+  failsWith(() => parseTeam(`homeOrder:
+  - A Person
 groups:
   - name: Founders
     people:
       - name: A Person
-`, assets),
-    'homeOrder: "Nobody Here" is not anyone listed under groups',
-  );
+`, assets), 'unknown field "homeOrder"');
 });
 
 /* ── formatting ─────────────────────────────────────────────────────── */

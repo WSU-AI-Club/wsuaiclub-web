@@ -8,8 +8,9 @@
  * does not scroll). Without JS the Menu button becomes a link to the footer
  * navigation. Behavior lives in src/scripts/site.ts.
  */
+import { getImage } from 'astro:assets';
 import { copy } from '../content/copy';
-import { site } from '../lib/data';
+import { PHOTOS, site } from '../lib/data';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 
@@ -32,6 +33,14 @@ const sheet: SheetLink[] = [
 ];
 const current = (href: string) => (path === href ? 'page' : undefined);
 const inAbout = aboutItems.some((i) => i.href === path);
+const feature = copy.nav.aboutMenu.feature;
+// The team photo in the menu: small WebP files, loaded only when a menu first opens.
+const teamPhoto = PHOTOS['classroom-group'];
+const [small, large] = await Promise.all(
+  [300, 600].map((width) => getImage({ src: teamPhoto, width, format: 'webp', quality: 58 })),
+);
+const lazySrc = small.src;
+const lazySrcset = `${small.src} 300w, ${large.src} 600w`;
 ---
 
 <header class="site-header" data-header>
@@ -50,6 +59,7 @@ const inAbout = aboutItems.some((i) => i.href === path);
           </button>
           <div class="nav-drop__panel" id="about-menu" data-dropdown-panel>
             <div class="nav-drop__card" data-theme="paper">
+              <div class="nav-drop__links">
               <p class="eyebrow nav-drop__eyebrow">{copy.nav.aboutMenu.eyebrow}</p>
               <ul>
                 {
@@ -63,6 +73,16 @@ const inAbout = aboutItems.some((i) => i.href === path);
                   ))
                 }
               </ul>
+              </div>
+              <div class="nav-drop__feature">
+                <img class="nav-drop__photo" alt="" width="300" height="188" data-lazy-src={lazySrc} data-lazy-srcset={lazySrcset} sizes="276px" decoding="async" />
+                <p class="eyebrow">{feature.eyebrow}</p>
+                <p class="nav-drop__line">{feature.line}</p>
+                <a class="btn btn--primary btn--sm nav-drop__cta" href="/team" aria-current={current('/team')} data-dropdown-item>
+                  {feature.cta}
+                  <Icon name="arrow" />
+                </a>
+              </div>
             </div>
           </div>
         </li>
@@ -118,6 +138,16 @@ const inAbout = aboutItems.some((i) => i.href === path);
                       </a>
                     </li>
                   ))}
+                  <li class="menu-sheet__feature">
+                    <img class="menu-sheet__photo" alt="" width="300" height="188" data-lazy-src={lazySrc} data-lazy-srcset={lazySrcset} sizes="96px" decoding="async" />
+                    <div class="menu-sheet__feature-text">
+                      <p class="menu-sheet__feature-line">{feature.line}</p>
+                      <a class="btn btn--primary btn--sm" href="/team">
+                        {feature.cta}
+                        <Icon name="arrow" />
+                      </a>
+                    </div>
+                  </li>
                 </ul>
               )}
             </li>
@@ -219,6 +249,9 @@ const inAbout = aboutItems.some((i) => i.href === path);
 
   /* ── About Us dropdown ─────────────────────────────────────── */
   .nav-drop {
+    position: static;
+  }
+  .site-nav {
     position: relative;
   }
   :global(.js) .site-nav .nav-drop__link {
@@ -271,7 +304,7 @@ const inAbout = aboutItems.some((i) => i.href === path);
   .nav-drop__panel {
     position: absolute;
     top: 100%;
-    left: -8px;
+    right: -8px;
     z-index: 60;
     padding-top: 6px;
     visibility: hidden;
@@ -302,7 +335,9 @@ const inAbout = aboutItems.some((i) => i.href === path);
     display: none;
   }
   .nav-drop__card {
-    width: 348px;
+    display: grid;
+    grid-template-columns: 348px 300px;
+    gap: 6px;
     padding: 10px;
     border-radius: var(--radius-md);
     background: var(--surface-raised);
@@ -354,6 +389,44 @@ const inAbout = aboutItems.some((i) => i.href === path);
     font-size: 13px;
     line-height: 1.4;
     color: var(--ink-muted);
+  }
+  .nav-drop__feature {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-sunk);
+  }
+  .nav-drop__photo {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    height: auto;
+    object-fit: cover;
+    object-position: 50% 62%;
+    border-radius: var(--radius-sm);
+    background: var(--line);
+    filter: grayscale(0.15);
+    margin-bottom: 4px;
+  }
+  .nav-drop__line {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .site-nav a.nav-drop__cta {
+    display: inline-flex;
+    align-self: flex-start;
+    margin-top: auto;
+    padding: 0 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--surface);
+  }
+  .site-nav a.nav-drop__cta::after {
+    display: none;
   }
 
   .site-header__actions {
@@ -487,6 +560,47 @@ const inAbout = aboutItems.some((i) => i.href === path);
   .menu-sheet__nav .menu-sheet__sub svg {
     width: 16px;
     height: 16px;
+  }
+  .menu-sheet__feature {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
+    box-shadow: 0 0 0 1px var(--line);
+  }
+  .menu-sheet__photo {
+    width: 96px;
+    height: 72px;
+    object-fit: cover;
+    object-position: 50% 62%;
+    border-radius: var(--radius-sm);
+    background: var(--line);
+  }
+  .menu-sheet__feature-text {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+  }
+  .menu-sheet__feature-line {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .menu-sheet__nav .menu-sheet__feature a {
+    display: inline-flex;
+    padding: 0 14px;
+    border-bottom: 0;
+    color: var(--surface);
+  }
+  .menu-sheet__nav .menu-sheet__feature a svg {
+    width: 14px;
+    height: 14px;
+    color: currentColor;
   }
   .menu-sheet__nav a[aria-current='page'] .eyebrow {
     color: var(--spark-text);

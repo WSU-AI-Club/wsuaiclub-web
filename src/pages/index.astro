@@ -1,22 +1,19 @@
 ---
-import Avatar from '../components/Avatar.astro';
 import FormatCards from '../components/FormatCards.astro';
 import Hackathons from '../components/Hackathons.astro';
 import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
-import Name from '../components/Name.astro';
 import Partners from '../components/Partners.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Slideshow from '../components/Slideshow.astro';
 import Spark from '../components/Spark.astro';
 import { copy } from '../content/copy';
-import { advisoryBoard, homeLeaders, site, teamCounts } from '../lib/data';
+import { site } from '../lib/data';
 import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
 const h = copy.home;
 const heroPhotos: PhotoName[] = ['barton-atrium-group', 'chocolathon-auditorium', 'classroom-group', 'chatterbox-demo', 'glass-wall-visit', 'lovable-workshop', 'groover-labs-speaker'];
-const teamLine = `${teamCounts.officers} student officers, ${teamCounts.faculty === 1 ? 'a faculty advisor' : `${teamCounts.faculty} faculty advisors`} and ${teamCounts.advisors} industry advisors.`;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -56,62 +53,22 @@ const jsonLd = {
 
   <section class="section" data-theme="paper" aria-labelledby="formats-title">
     <div class="container">
-      <SectionHead eyebrow={h.formats.eyebrow} index="01 / 04" headline={h.formats.headline} lede={h.formats.lede} id="formats-title" />
+      <SectionHead eyebrow={h.formats.eyebrow} index="01 / 03" headline={h.formats.headline} lede={h.formats.lede} id="formats-title" />
       <FormatCards />
     </div>
   </section>
 
   <section class="section" data-theme="paper" aria-labelledby="hack-title">
     <div class="container">
-      <SectionHead eyebrow={h.hackathons.eyebrow} index="02 / 04" headline={h.hackathons.headline} lede={h.hackathons.lede} id="hack-title" />
+      <SectionHead eyebrow={h.hackathons.eyebrow} index="02 / 03" headline={h.hackathons.headline} lede={h.hackathons.lede} id="hack-title" />
       <Hackathons />
     </div>
   </section>
 
   <section class="section" data-theme="paper" aria-labelledby="partners-title">
     <div class="container">
-      <SectionHead eyebrow={h.partners.eyebrow} index="03 / 04" headline={h.partners.headline} lede={h.partners.lede} id="partners-title" />
+      <SectionHead eyebrow={h.partners.eyebrow} index="03 / 03" headline={h.partners.headline} lede={h.partners.lede} id="partners-title" />
       <Partners />
-    </div>
-  </section>
-
-  <section class="section" data-theme="paper" aria-labelledby="team-title">
-    <div class="container">
-      <SectionHead eyebrow={h.team.eyebrow} index="04 / 04" headline={h.team.headline} lede={teamLine} id="team-title">
-        <a class="btn btn--primary" href="/team">{h.team.cta}<Icon name="arrow" /></a>
-      </SectionHead>
-      <ul class="leaders" role="list">
-        {
-          homeLeaders.map((p) => (
-            <li class="leaders__item" data-reveal>
-              <Avatar name={p.name} photo={p.photo} size={96} />
-              <p class="leaders__name">
-                <Name name={p.name} />
-              </p>
-              {p.role && <p class="label">{p.role}</p>}
-            </li>
-          ))
-        }
-      </ul>
-      {
-        advisoryBoard && (
-          <a class="card board-strip" href="/advisory-board" data-reveal>
-            <span class="board-strip__text">
-              <span class="eyebrow eyebrow--ink">{copy.board.homeStrip.eyebrow}</span>
-              <span class="board-strip__line">{copy.board.homeStrip.line}</span>
-            </span>
-            <span class="board-strip__faces" aria-hidden="true">
-              {advisoryBoard.people.map((p) => (
-                <Avatar name={p.name} photo={p.photo} size={52} />
-              ))}
-            </span>
-            <span class="more board-strip__cta">
-              <span>{copy.board.homeStrip.cta}</span>
-              <Icon name="arrow" />
-            </span>
-          </a>
-        )
-      }
     </div>
   </section>
 
@@ -159,91 +116,4 @@ const jsonLd = {
     }
   }
 
-  /* ── advisory board strip ──────────────────────────────────────── */
-  .board-strip {
-    margin-top: clamp(40px, 5vw, 56px);
-    display: grid;
-    gap: 16px;
-    padding: 20px;
-    text-decoration: none;
-    color: inherit;
-  }
-  .board-strip__text {
-    display: grid;
-    gap: 6px;
-  }
-  .board-strip__line {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    line-height: 1.3;
-  }
-  .board-strip__faces {
-    display: flex;
-    padding-left: 10px;
-  }
-  .board-strip__faces :global(.avatar) {
-    --size: 44px !important;
-    margin-left: -10px;
-    box-shadow: 0 0 0 3px var(--surface-raised);
-  }
-  .board-strip__faces :global(.avatar--initials) {
-    font-size: 15px;
-  }
-  @media (min-width: 900px) {
-    .board-strip {
-      grid-template-columns: minmax(0, 1fr) auto auto;
-      align-items: center;
-      gap: 32px;
-      padding: 24px 28px;
-    }
-    .board-strip__faces :global(.avatar) {
-      --size: 52px !important;
-    }
-  }
-
-  /* ── the 12 student leaders ───────────────────────────────────── */
-  .leaders {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 16px;
-  }
-  .leaders__item {
-    display: grid;
-    gap: 6px;
-    align-content: start;
-    justify-items: start;
-  }
-  .leaders__item :global(.avatar) {
-    --size: 76px !important;
-    margin-bottom: 6px;
-  }
-  .leaders__name {
-    font-family: var(--font-serif);
-    font-size: 1.1875rem;
-    line-height: 1.2;
-    text-wrap: balance;
-  }
-  .leaders .label {
-    line-height: 1.45;
-  }
-  @media (min-width: 640px) {
-    .leaders {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 32px 20px;
-    }
-  }
-  @media (min-width: 900px) {
-    .leaders {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-  @media (min-width: 1200px) {
-    .leaders {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 40px 24px;
-    }
-    .leaders__item :global(.avatar) {
-      --size: 96px !important;
-    }
-  }
 </style>

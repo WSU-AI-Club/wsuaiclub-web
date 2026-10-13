@@ -135,7 +135,6 @@ const person = z.strictObject({
 });
 
 export const teamSchema = z.strictObject({
-  homeOrder: z.array(text('a name in homeOrder')).optional(),
   groups: z
     .array(
       z.strictObject({
@@ -273,23 +272,17 @@ export function parseEvents(source: string, assets: Assets, file = 'src/data/eve
 }
 
 export function parseTeam(source: string, assets: Assets, file = 'src/data/team.yaml'): TeamData {
-  return validate(file, teamSchema, parseYaml(file, source), (d) => {
-    const names = new Set(d.groups.flatMap((g) => g.people.map((p) => p.name)));
-    return [
-      ...d.groups.flatMap((g, gi) =>
-        g.people.flatMap((p, pi) =>
-          p.photo && !assets.headshots.includes(p.photo)
-            ? [
-                `groups #${gi + 1} ("${g.name}") > people #${pi + 1} ("${p.name}") > photo: there is no headshot named "${p.photo}" in src/assets/team. Leave photo empty for an initials tile.`,
-              ]
-            : [],
-        ),
+  return validate(file, teamSchema, parseYaml(file, source), (d) =>
+    d.groups.flatMap((g, gi) =>
+      g.people.flatMap((p, pi) =>
+        p.photo && !assets.headshots.includes(p.photo)
+          ? [
+              `groups #${gi + 1} ("${g.name}") > people #${pi + 1} ("${p.name}") > photo: there is no headshot named "${p.photo}" in src/assets/team. Leave photo empty for an initials tile.`,
+            ]
+          : [],
       ),
-      ...(d.homeOrder ?? [])
-        .filter((n) => !names.has(n))
-        .map((n) => `homeOrder: "${n}" is not anyone listed under groups. Spell the name exactly as it appears in a group.`),
-    ];
-  });
+    ),
+  );
 }
 
 export function parseSite(source: string, file = 'src/data/site.yaml'): SiteData {

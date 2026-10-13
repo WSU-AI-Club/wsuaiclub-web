@@ -26,7 +26,7 @@ const BANNED = [
 const emoji = /(?![©®™])\p{Extended_Pictographic}/u;
 const HEADLINE_KEYS = new Set(['headline', 'title']);
 /** YAML fields that hold links, file names or codes rather than copy. */
-const NOT_COPY = new Set(['link', 'linkedin', 'photo', 'photos', 'flyer', 'rsvp', 'contact_email', 'date', 'start', 'end', 'type', 'homeOrder']);
+const NOT_COPY = new Set(['link', 'linkedin', 'photo', 'photos', 'flyer', 'rsvp', 'contact_email', 'date', 'start', 'end', 'type']);
 
 type Line = { where: string; key: string; text: string };
 

@@ -8,7 +8,7 @@ import siteSource from '../data/site.yaml?raw';
 import teamSource from '../data/team.yaml?raw';
 import { PHOTO_NAMES, type PhotoName } from './photo-meta.ts';
 import { clockToMinutes, formatDate, isoAt, shortDate, timeRange, todayInWichita } from './format.ts';
-import { parseEvents, parseSite, parseTeam, type PastEvent, type Person, type UpcomingEvent } from './schema.ts';
+import { parseEvents, parseSite, parseTeam, type PastEvent, type UpcomingEvent } from './schema.ts';
 
 export { initials, longDate, shortDate } from './format.ts';
 
@@ -84,12 +84,6 @@ export const teamCounts = {
   advisors: team.groups.find((g) => /advisory/i.test(g.name))?.people.length ?? 0,
   faculty: team.groups.find((g) => /faculty/i.test(g.name))?.people.length ?? 0,
 };
-
-/** The student leaders on the home page, in team.yaml > homeOrder (all officers if it is missing). */
-const officers = team.groups.filter(officerGroups).flatMap((g) => g.people);
-export const homeLeaders: Person[] = team.homeOrder
-  ? team.homeOrder.map((n) => officers.find((p) => p.name === n) ?? team.groups.flatMap((g) => g.people).find((p) => p.name === n)!)
-  : officers;
 
 /** The industry advisory board, in team.yaml order (also the /advisory-board page). */
 export const advisoryBoard = team.groups.find((g) => /advisory/i.test(g.name));

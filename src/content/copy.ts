@@ -81,6 +81,11 @@ export const copy = {
         { href: '/advisory-board', title: 'Industry advisory board', body: 'The professionals who advise the club' },
         { href: '/about#partners', title: 'Partners', body: 'The schools, clubs and companies we work with' },
       ],
+      feature: {
+        eyebrow: 'Team',
+        line: 'Student-led, with a faculty advisor and an industry board',
+        cta: 'Meet the team',
+      },
     },
     primaryLabel: 'Main',
     skip: 'Skip to content',
@@ -119,11 +124,6 @@ export const copy = {
       eyebrow: 'Partners',
       headline: 'Thank you to our partners',
       lede: 'The schools, clubs and companies we worked with in 2026.',
-    },
-    team: {
-      eyebrow: 'Team',
-      headline: 'Run by students, backed by industry',
-      cta: 'Meet the team',
     },
   },
 
@@ -303,11 +303,6 @@ export const copy = {
       lede: 'Professionals who use AI at work. They connect the club to industry and help close the gap between the classroom and real work.',
     },
     linkedin: 'LinkedIn',
-    homeStrip: {
-      eyebrow: 'Industry advisory board',
-      line: 'Professionals who connect the club to industry.',
-      cta: 'Meet the advisory board',
-    },
     teamLink: 'Meet the advisory board',
     contact: {
       eyebrow: 'Work with us',
