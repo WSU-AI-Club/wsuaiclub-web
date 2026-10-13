@@ -1,0 +1,169 @@
+# EVENTS: everything the Events page and the "Next meeting" strips show.
+#
+# HOW TO EDIT (in the GitHub web editor, no tools needed)
+#   1. Open this file on GitHub and click the pencil icon ("Edit this file").
+#   2. To add an event, copy a whole block under `upcoming:` (from the dash to
+#      the last line of that event), paste it, and change the values.
+#   3. Click "Commit changes". The site rebuilds itself in about a minute.
+#   If a value is wrong (a misspelled field, a date like "Oct 14", a time
+#   without AM/PM), the rebuild stops, the live site stays as it was, and the
+#   error message in Vercel names the event and the field to fix.
+#
+# UPCOMING EVENT FIELDS
+#   title   what it is, the way a student would say it       AI Club Meeting: AI 101
+#   date    year-month-day                                    2026-10-28
+#   start   12-hour time in Central time, in quotes            "5:00 PM"
+#   end     optional, same format                              "8:00 PM"
+#   place   building and room, as the building writes it       Woolsey Hall 110A
+#   type    one of: meeting, workshop, speaker, build-night, hackathon, social, tabling, other
+#   link    optional, usually the ShockerSync event page
+#   note    optional, one short line
+#
+# WHAT VISITORS SEE
+#   The site lists only events dated today or later on the day it was built.
+#   Every push to GitHub rebuilds the site, so any commit refreshes the list.
+#   Each page also hides events that have already ended in the visitor's
+#   browser, so a stale entry never shows even between rebuilds.
+#   Order does not matter; the site sorts by date and time.
+#
+# Seeded on 2026-10-12 from the club's ShockerSync listing
+# (wichita.campuslabs.com/engage/organization/aiclub/events), times converted
+# from UTC to Central. ShockerSync gives no room for the weekly meetings, only
+# "Woolsey Hall". It also lists the regular 5:00 PM meeting on Oct 28; AI 101
+# is that week's meeting, so only AI 101 is listed here.
+
+upcoming:
+  - title: AI Club Meeting
+    date: 2026-10-14
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531687
+
+  - title: AI Club Meeting
+    date: 2026-10-21
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531688
+
+  - title: AI Club Informational Tabling
+    date: 2026-10-22
+    start: "10:30 AM"
+    end: "1:30 PM"
+    place: Rhatigan Student Center
+    type: tabling
+    link: https://wichita.campuslabs.com/engage/event/12857836
+    note: Find out what AI Club is, who it is for, and what AI 101 covers.
+
+  - title: "AI Club Meeting: AI 101"
+    date: 2026-10-28
+    start: "5:00 PM"
+    end: "8:00 PM"
+    place: Woolsey Hall 110A
+    type: workshop
+    link: https://wichita.campuslabs.com/engage/event/12857840
+    note: An entry-level meeting with breakout groups on the basics of AI. Bring your questions.
+
+  - title: AI Club Meeting
+    date: 2026-11-04
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531690
+
+  - title: AI Club Meeting
+    date: 2026-11-11
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531691
+
+  - title: AI Club Meeting
+    date: 2026-11-18
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531692
+
+  - title: AI Club Meeting
+    date: 2026-11-25
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531693
+
+  - title: AI Club Meeting
+    date: 2026-12-02
+    start: "5:00 PM"
+    end: "7:00 PM"
+    place: Woolsey Hall
+    type: meeting
+    link: https://wichita.campuslabs.com/engage/event/12531694
+
+# PAST EVENT FIELDS (shown under Hackathons on the home and Events pages)
+#   title   required
+#   date    optional, year-month-day
+#   place   optional
+#   type    same list as above
+#   role    host (we ran it) or partner (we partnered on it)
+#   blurb   optional, one or two short sentences
+#   photo   optional, a photo name from src/lib/photo-meta.ts (e.g. chocolathon-opening)
+#   link    optional, a full https:// address or a page on this site like /chocolathon
+#   facts   optional, up to 4 label/value pairs shown as a data strip
+
+past:
+  - title: Chocolathon
+    date: 2026-09-19
+    place: Woolsey Hall, WSU
+    type: hackathon
+    role: host
+    blurb: A one-day hackathon with Cocoa Dolce. Teams built something Cocoa Dolce could use, or pitched a plan it could act on.
+    photo: chocolathon-team-presenting
+    link: /chocolathon
+    facts:
+      - label: Date
+        value: Sep 19, 2026
+      - label: Place
+        value: Woolsey Hall, WSU
+      - label: Tracks
+        value: Build · Pitch
+      - label: Gallery
+        value: 17 projects
+
+  - title: Open Agent Hackathon 2026
+    type: hackathon
+    role: partner
+
+# PAST SPEAKERS (Events page). role is optional: leave it out rather than guess.
+
+speakers:
+  - group: Spring 2026 speakers
+    speakers:
+      - name: Grant Johnson
+        role: "Creator of Chatterbox: Language Learning"
+      - name: Fareeha Amber Ansari
+        role: AI Governance Lead, Cargill
+      - name: Nic Wentling
+      - name: Rob Gerlach
+      - name: Eyal Redler
+      - name: Omer Nagar
+      - name: Ramsey Jamoul
+        role: Founder & CEO, Unified
+      - name: Shan Vithana
+      - name: Jared Goering
+
+  - group: Chocolathon speakers
+    speakers:
+      - name: Cody Herrin
+        role: Continuous Improvement and Innovation Manager, Capital III
+      - name: Fareeha Amber Ansari
+        role: AI Governance Lead, Cargill
+      - name: Ramsey Jamoul
+        role: Founder & CEO, Unified

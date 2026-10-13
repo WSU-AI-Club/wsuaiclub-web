@@ -1,0 +1,62 @@
+# SITE: links, the contact email, where we meet, the semester numbers and
+# the partners strip. Used on every page.
+#
+# HOW TO EDIT (in the GitHub web editor, no tools needed)
+#   1. Open this file on GitHub and click the pencil icon ("Edit this file").
+#   2. Change a value after the colon. Keep the spacing at the start of each
+#      line exactly as it is; YAML reads the indentation.
+#   3. Click "Commit changes". The site rebuilds itself in about a minute.
+#   If something is wrong (a link without https://, a number in quotes, a
+#   misspelled field), the rebuild stops, the live site stays as it was, and
+#   the error message names the field to fix.
+
+contact_email: aiclub@wichita.edu
+
+links:
+  shockersync: https://wichita.campuslabs.com/engage/organization/aiclub
+  shockersync_events: https://wichita.campuslabs.com/engage/organization/aiclub/events
+  groupme: https://groupme.com/join_group/117942519/FoekrrGF
+  email_list: https://forms.cloud.microsoft/r/SJ8WYc9kxx
+  instagram: https://www.instagram.com/wsuaiclub/
+  linkedin: https://www.linkedin.com/company/wsu-ai-club/
+
+# The regular weekly meeting, shown on Contact and in page footers.
+meeting:
+  day: Wednesdays
+  time: 5:00–7:00 PM
+  place: Woolsey Hall
+
+# The numbers band on the home and About pages. value is a plain number
+# (no quotes). prefix is optional, e.g. "~" for "about".
+stats:
+  term: Spring 2026
+  note: Students, faculty and Wichita community members came most weeks.
+  items:
+    - value: 9
+      label: Industry speakers
+    - value: 15
+      label: Meetings
+    - value: 6
+      label: Student-led workshops and discussions
+    - value: 20
+      prefix: "~"
+      label: People each week
+    - value: 3
+      label: Partnerships
+    - value: 1
+      label: Lovable-sponsored event
+
+# The partners strip. kind is the short mono label under each name.
+partners:
+  - name: Newman University
+    kind: Cross-university partner
+  - name: Groover Labs
+    kind: Community partner
+  - name: NextGen Entrepreneurs
+    kind: Campus club partner
+  - name: WSU Innovation Design
+    kind: Campus club partner
+  - name: Lovable
+    kind: Event sponsor
+  - name: Cocoa Dolce
+    kind: Chocolathon partner

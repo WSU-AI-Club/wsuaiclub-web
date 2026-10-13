@@ -1,0 +1,101 @@
+# TEAM: the people on the Team page and the faces on the home page.
+#
+# HOW TO EDIT (in the GitHub web editor, no tools needed)
+#   1. Open this file on GitHub and click the pencil icon ("Edit this file").
+#   2. Change a name or role, or copy a person's block (from the dash to their
+#      last line) to add someone. Groups show in the order written here.
+#   3. Click "Commit changes". The site rebuilds itself in about a minute.
+#   If something is wrong (a misspelled field, a photo that is not there),
+#   the rebuild stops, the live site stays as it was, and the error message
+#   names the person and the field to fix.
+#
+# PERSON FIELDS
+#   name      as they spell it on LinkedIn
+#   role      optional; leave it out rather than guess
+#   linkedin  optional, the full https://www.linkedin.com/in/... address
+#   photo     optional, the file name of a square headshot in src/assets/team
+#             without ".webp" (e.g. michael-goldberg). Leave it out and the
+#             site draws an initials tile. Headshots show in black and white.
+#
+# To add a headshot: upload a square .webp (256x256 or larger) to
+# src/assets/team on GitHub ("Add file" > "Upload files"), then set photo.
+
+groups:
+  - name: Founders
+    people:
+      - name: Michael Goldberg
+        role: Co-Founder & President
+        linkedin: https://www.linkedin.com/in/goldberg-michael/
+        photo: michael-goldberg
+      - name: Samuel Doell
+        role: Co-Founder
+
+  - name: Executive board
+    people:
+      - name: Eniola (Zadok) Olaobaju
+        role: Vice President
+      - name: Jayden Sigg
+        role: VP of Finance
+      - name: Ronish Rasaily
+        role: VP of Engineering
+        linkedin: https://www.linkedin.com/in/ronish-rasaily/
+        photo: ronish-rasaily
+      - name: Takudzwa Nhamo
+        role: VP of Governance & Compliance
+
+  - name: Marketing & media
+    people:
+      - name: Alexis Gandanzara
+        role: Director of Marketing
+        linkedin: https://www.linkedin.com/in/alexis-gandanzara/
+        photo: alexis-gandanzara
+      - name: Jeena Moore-Kirby
+        role: Director of Social Media
+        linkedin: https://www.linkedin.com/in/jeena-moore-kirby/
+        photo: jeena-moore-kirby
+      - name: Nya Vargas
+        role: Graphic Design
+        linkedin: https://www.linkedin.com/in/nya-vargas-05353631b/
+        photo: nya-vargas
+      - name: Akindotun Ogunbiyi
+        role: Media
+        linkedin: https://www.linkedin.com/in/akindotun-ogunbiyi-99442b34a/
+        photo: akindotun-ogunbiyi
+
+  - name: Events & technology
+    people:
+      - name: Aurora Parnell
+        role: Event Coordinator
+        linkedin: https://www.linkedin.com/in/aurora-parnell/
+        photo: aurora-parnell
+      - name: Shane Vithana
+        role: Technical Consultant
+        linkedin: https://www.linkedin.com/in/shanvithana/
+        photo: shane-vithana
+
+  - name: Faculty advisor
+    people:
+      - name: Dr. Murtaza Nasir
+        role: Assistant Professor, Business Analytics, W. Frank Barton School of Business
+
+  - name: Industry advisory board
+    note: Professionals who advise the club officers.
+    people:
+      - name: Ramsey Jamoul
+        role: Founder & CEO, Unified
+        linkedin: https://www.linkedin.com/in/ramsey-jamoul-423682b8/
+        photo: ramsey-jamoul
+      - name: Fareeha Amber Ansari
+        role: AI Governance Lead, Cargill
+        linkedin: https://www.linkedin.com/in/ansarifa/
+        photo: fareeha-amber-ansari
+      - name: Grant Johnson
+        role: "Creator of Chatterbox: Language Learning"
+        linkedin: https://www.linkedin.com/in/grant-johnson15/
+        photo: grant-johnson
+      - name: Nic Wentling
+      - name: Dylan Thiessen
+      - name: Jessica Hinel
+      - name: Shane Vithana
+        linkedin: https://www.linkedin.com/in/shanvithana/
+        photo: shane-vithana
