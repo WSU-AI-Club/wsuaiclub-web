@@ -19,6 +19,25 @@
 #
 # To add a headshot: upload a square .webp (256x256 or larger) to
 # src/assets/team on GitHub ("Add file" > "Upload files"), then set photo.
+#
+# HOME PAGE ORDER
+#   homeOrder lists the student leaders shown on the home page, in order.
+#   Each name must match a name under groups exactly; role, photo and
+#   LinkedIn come from there.
+
+homeOrder:
+  - Samuel Doell
+  - Michael Goldberg
+  - Eniola (Zadok) Olaobaju
+  - Ronish Rasaily
+  - Jayden Sigg
+  - Takudzwa Nhamo
+  - Alexis Gandanzara
+  - Jeena Moore-Kirby
+  - Nya Vargas
+  - Akindotun Ogunbiyi
+  - Aurora Parnell
+  - Shane Vithana
 
 groups:
   - name: Founders
@@ -94,8 +113,15 @@ groups:
         linkedin: https://www.linkedin.com/in/grant-johnson15/
         photo: grant-johnson
       - name: Nic Wentling
+        role: CEO, Moonbase Labs
+        linkedin: https://www.linkedin.com/in/nic-wentling/
       - name: Dylan Thiessen
+        role: Innovation Design Leader, Koch
+        linkedin: https://www.linkedin.com/in/dylanthiessen/
       - name: Jessica Hinel
+        role: AI System Architect, Boeing
+        linkedin: https://www.linkedin.com/in/jessicahinel/
       - name: Shane Vithana
+        role: AI Consultant
         linkedin: https://www.linkedin.com/in/shanvithana/
         photo: shane-vithana

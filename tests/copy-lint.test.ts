@@ -26,7 +26,7 @@ const BANNED = [
 const emoji = /(?![©®™])\p{Extended_Pictographic}/u;
 const HEADLINE_KEYS = new Set(['headline', 'title']);
 /** YAML fields that hold links, file names or codes rather than copy. */
-const NOT_COPY = new Set(['link', 'linkedin', 'photo', 'contact_email', 'date', 'start', 'end', 'type', 'role_code']);
+const NOT_COPY = new Set(['link', 'linkedin', 'photo', 'photos', 'flyer', 'rsvp', 'contact_email', 'date', 'start', 'end', 'type', 'homeOrder']);
 
 type Line = { where: string; key: string; text: string };
 
@@ -119,6 +119,22 @@ test('the approved lines stay verbatim', () => {
     [copy.nav.about, copy.nav.events, copy.nav.contact, copy.nav.join],
     ['About Us', 'Events', 'Contact', 'Join'],
   );
+});
+
+test('the five formats stay general: no company or tool names', () => {
+  const NAMES = /(Lovable|ChatGPT|Claude|Cursor|n8n|Cargill|Unified|OpenAI|Gemini|Copilot)/i;
+  for (const f of formats) for (const [k, v] of Object.entries(f)) if (k !== 'photo' && k !== 'href') assert.ok(!NAMES.test(v), `formats.${f.id}.${k} names a company or tool: "${v}"`);
+});
+
+test('no recaps: the semester numbers are gone', () => {
+  assert.ok(!('numbers' in copy.home) && !('numbers' in copy.about));
+  assert.ok(!/stats/.test(readFileSync(join(ROOT, 'src/data/site.yaml'), 'utf8').replace(/^#.*$/gm, '')));
+});
+
+test('event headings and ledes do not pin the day or the hour', () => {
+  for (const l of [copy.events.hero.headline, copy.events.hero.lede, copy.events.upcoming.lede, copy.home.formats.lede]) {
+    assert.ok(!/Wednesday|5:00|7:00|225/.test(l), `"${l}" names a day, hour or room`);
+  }
 });
 
 test('meta titles and descriptions are a sane length', () => {

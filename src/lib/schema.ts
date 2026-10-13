@@ -64,6 +64,12 @@ const upcomingEvent = z
     type: eventType,
     link: blank(link),
     note: optionalText,
+    ledBy: optionalText,
+    partner: optionalText,
+    rsvp: blank(httpsUrl('rsvp')),
+    rsvpLabel: optionalText,
+    flyer: optionalText,
+    flyerAlt: optionalText,
   })
   .refine((e) => !e.end || clockToMinutes(e.end) > clockToMinutes(e.start), {
     error: 'end time must be later than the start time',
@@ -80,11 +86,22 @@ const pastEvent = z.strictObject({
   role: z.enum(['host', 'partner'], { error: 'role must be host or partner' }),
   blurb: optionalText,
   photo: optionalText,
+  photos: z.array(z.string().trim().min(1)).optional(),
+  flyer: optionalText,
+  flyerAlt: optionalText,
   link: blank(link),
+  linkLabel: optionalText,
   facts: z.array(fact).max(4, { error: 'use at most 4 facts' }).optional(),
 });
 
-const speaker = z.strictObject({ name: text('name'), role: optionalText });
+const linkedinUrl = blank(
+  z
+    .string()
+    .trim()
+    .regex(/^https:\/\/(www\.)?linkedin\.com\/[^\s]+$/, { error: 'linkedin must be a full https://www.linkedin.com/... address' }),
+);
+
+const speaker = z.strictObject({ name: text('name'), role: optionalText, linkedin: linkedinUrl, photo: optionalText });
 
 const speakerGroup = z.strictObject({
   group: text('group'),
@@ -112,6 +129,7 @@ const person = z.strictObject({
 });
 
 export const teamSchema = z.strictObject({
+  homeOrder: z.array(text('a name in homeOrder')).optional(),
   groups: z
     .array(
       z.strictObject({
@@ -139,19 +157,6 @@ export const siteSchema = z.strictObject({
     day: text('meeting.day'),
     time: text('meeting.time'),
     place: text('meeting.place'),
-  }),
-  stats: z.strictObject({
-    term: text('stats.term'),
-    note: optionalText,
-    items: z
-      .array(
-        z.strictObject({
-          value: z.number({ error: 'value must be a number, without quotes' }).int().nonnegative(),
-          prefix: optionalText,
-          label: text('label'),
-        }),
-      )
-      .min(2, { error: 'list at least 2 stats' }),
   }),
   partners: z
     .array(
@@ -235,30 +240,49 @@ function validate<S extends z.ZodType>(file: string, schema: S, data: unknown, e
   return result.data;
 }
 
-export type Assets = { photos: string[]; headshots: string[] };
+export type Assets = { photos: string[]; headshots: string[]; flyers?: string[] };
 
 export function parseEvents(source: string, assets: Assets, file = 'src/data/events.yaml'): EventsData {
-  return validate(file, eventsSchema, parseYaml(file, source), (d) =>
-    d.past.flatMap((e, i) =>
-      e.photo && !assets.photos.includes(e.photo)
-        ? [`past #${i + 1} ("${e.title}") > photo: there is no photo named "${e.photo}". Use one of: ${assets.photos.join(', ')}`]
-        : [],
+  const flyers = assets.flyers ?? [];
+  const noFlyer = (where: string, name: string) =>
+    `${where} > flyer: there is no flyer named "${name}" in src/assets/flyers. Use one of: ${flyers.join(', ') || '(none yet)'}`;
+  const noPhoto = (where: string, name: string) => `${where} > photo: there is no photo named "${name}". Use one of: ${assets.photos.join(', ')}`;
+  return validate(file, eventsSchema, parseYaml(file, source), (d) => [
+    ...d.upcoming.flatMap((e, i) => (e.flyer && !flyers.includes(e.flyer) ? [noFlyer(`upcoming #${i + 1} ("${e.title}", ${e.date})`, e.flyer)] : [])),
+    ...d.past.flatMap((e, i) => {
+      const where = `past #${i + 1} ("${e.title}")`;
+      return [
+        ...(e.photo && !assets.photos.includes(e.photo) ? [noPhoto(where, e.photo)] : []),
+        ...(e.photos ?? []).filter((p) => !assets.photos.includes(p)).map((p) => noPhoto(`${where} > photos`, p)),
+        ...(e.flyer && !flyers.includes(e.flyer) ? [noFlyer(where, e.flyer)] : []),
+      ];
+    }),
+    ...d.speakers.flatMap((g, gi) =>
+      g.speakers.flatMap((s, si) =>
+        s.photo && !assets.photos.includes(s.photo) ? [noPhoto(`speakers #${gi + 1} ("${g.group}") > speakers #${si + 1} ("${s.name}")`, s.photo)] : [],
+      ),
     ),
-  );
+  ]);
 }
 
 export function parseTeam(source: string, assets: Assets, file = 'src/data/team.yaml'): TeamData {
-  return validate(file, teamSchema, parseYaml(file, source), (d) =>
-    d.groups.flatMap((g, gi) =>
-      g.people.flatMap((p, pi) =>
-        p.photo && !assets.headshots.includes(p.photo)
-          ? [
-              `groups #${gi + 1} ("${g.name}") > people #${pi + 1} ("${p.name}") > photo: there is no headshot named "${p.photo}" in src/assets/team. Leave photo empty for an initials tile.`,
-            ]
-          : [],
+  return validate(file, teamSchema, parseYaml(file, source), (d) => {
+    const names = new Set(d.groups.flatMap((g) => g.people.map((p) => p.name)));
+    return [
+      ...d.groups.flatMap((g, gi) =>
+        g.people.flatMap((p, pi) =>
+          p.photo && !assets.headshots.includes(p.photo)
+            ? [
+                `groups #${gi + 1} ("${g.name}") > people #${pi + 1} ("${p.name}") > photo: there is no headshot named "${p.photo}" in src/assets/team. Leave photo empty for an initials tile.`,
+              ]
+            : [],
+        ),
       ),
-    ),
-  );
+      ...(d.homeOrder ?? [])
+        .filter((n) => !names.has(n))
+        .map((n) => `homeOrder: "${n}" is not anyone listed under groups. Spell the name exactly as it appears in a group.`),
+    ];
+  });
 }
 
 export function parseSite(source: string, file = 'src/data/site.yaml'): SiteData {

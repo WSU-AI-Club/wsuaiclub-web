@@ -1,29 +1,45 @@
 ---
 /**
- * Hackathons band: the hosted events from events.yaml > past as feature
- * cards (photo, blurb, data strip, link), partner events as a slim row.
+ * Hackathons band, from events.yaml > past. Hosted events get a feature card
+ * (a slideshow when `photos` is listed, blurb, data strip, link); partner
+ * events get a smaller card with their flyer and facts.
  */
+import { Picture } from 'astro:assets';
 import { copy } from '../content/copy';
-import { longDate, pastEvents } from '../lib/data';
+import { FLYERS, longDate, pastEvents } from '../lib/data';
 import type { PhotoName } from '../lib/photo-meta';
 import Icon from './Icon.astro';
 import Photo from './Photo.astro';
+import Slideshow from './Slideshow.astro';
 
 const hackathons = pastEvents.filter((e) => e.type === 'hackathon');
 const hosted = hackathons.filter((e) => e.role === 'host');
 const partnered = hackathons.filter((e) => e.role === 'partner');
 const t = copy.hackathon;
 const isExternal = (href: string) => /^https:/.test(href);
+const ext = (href: string) => (isExternal(href) ? { target: '_blank', rel: 'noopener' } : {});
 ---
 
 <div class="hack">
   {
     hosted.map((e) => (
       <article class="card hack__feature" data-reveal>
-        {e.photo && (
+        {e.photos && e.photos.length > 1 ? (
           <div class="card__media hack__media">
-            <Photo name={e.photo as PhotoName} sizes="(min-width: 1024px) 56vw, 100vw" widths={[480, 800, 1200, 1600]} />
+            <Slideshow
+              class="hack__show"
+              photos={e.photos as PhotoName[]}
+              label={copy.slideshow.chocolathon}
+              sizes="(min-width: 1440px) 756px, (min-width: 1024px) 56vw, calc(100vw - 32px)"
+              widths={[480, 800, 1200, 1600]}
+            />
           </div>
+        ) : (
+          e.photo && (
+            <div class="card__media hack__media">
+              <Photo name={e.photo as PhotoName} sizes="(min-width: 1024px) 56vw, 100vw" widths={[480, 800, 1200, 1600]} />
+            </div>
+          )
         )}
         <div class="card__body hack__body">
           <p class="eyebrow">
@@ -32,7 +48,7 @@ const isExternal = (href: string) => /^https:/.test(href);
           </p>
           <h3 class="title title--lg">
             {e.link ? (
-              <a class="stretch" href={e.link} {...(isExternal(e.link) ? { target: '_blank', rel: 'noopener' } : {})}>
+              <a class="stretch" href={e.link} {...ext(e.link)}>
                 {e.title}
               </a>
             ) : (
@@ -53,7 +69,7 @@ const isExternal = (href: string) => /^https:/.test(href);
           {e.link && (
             <p class="card__foot">
               <span class="more">
-                <span>{t.cta}</span>
+                <span>{e.linkLabel ?? t.cta}</span>
                 <Icon name="arrow" />
               </span>
             </p>
@@ -63,21 +79,46 @@ const isExternal = (href: string) => /^https:/.test(href);
     ))
   }
   {
-    partnered.map((e) => (
-      <article class="card hack__partner" data-reveal>
-        <p class="eyebrow">{t.partner}</p>
-        <h3 class="title">
-          {e.link ? (
-            <a class="stretch" href={e.link} target="_blank" rel="noopener">
-              {e.title}
+    partnered.map((e) => {
+      const flyer = e.flyer ? FLYERS[e.flyer] : undefined;
+      return (
+        <article class:list={['card', 'hack__partner', flyer && 'hack__partner--flyer']} data-reveal>
+          {flyer && (
+            <a class="hack__flyer" href={flyer.src} target="_blank" rel="noopener">
+              <Picture src={flyer} alt={e.flyerAlt ?? `Flyer for ${e.title}`} widths={[320, 480, 720]} sizes="(min-width: 900px) 280px, calc(100vw - 72px)" formats={['avif', 'webp']} quality={70} loading="lazy" decoding="async" />
+              <span class="visually-hidden">{` ${t.flyer} ${copy.newTab}`}</span>
             </a>
-          ) : (
-            e.title
           )}
-        </h3>
-        {e.date && <p class="data">{longDate(e.date)}</p>}
-      </article>
-    ))
+          <div class="hack__partner-body">
+            <p class="eyebrow">
+              {t.partner}
+              {e.date && ` · ${longDate(e.date)}`}
+            </p>
+            <h3 class="title">{e.title}</h3>
+            {e.blurb && <p class="body">{e.blurb}</p>}
+            {e.facts && (
+              <dl class="strip hack__facts">
+                {e.facts.map((f) => (
+                  <div class="strip__cell">
+                    <dt class="label">{f.label}</dt>
+                    <dd class="strip__value hack__small-value">{f.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {e.link && (
+              <p>
+                <a class="more" href={e.link} {...ext(e.link)}>
+                  <span>{e.linkLabel ?? t.cta}</span>
+                  <Icon name={isExternal(e.link) ? 'external' : 'arrow'} />
+                  {isExternal(e.link) && <span class="visually-hidden">{` ${copy.newTab}`}</span>}
+                </a>
+              </p>
+            )}
+          </div>
+        </article>
+      );
+    })
   }
 </div>
 
@@ -101,12 +142,20 @@ const isExternal = (href: string) => /^https:/.test(href);
   @media (min-width: 1024px) {
     .hack__media {
       aspect-ratio: auto;
-      min-height: 460px;
+      min-height: 480px;
     }
   }
-  .hack__media :global(img) {
+  .hack__media > :global(.pic img),
+  .hack__media > :global(picture img) {
     position: absolute;
     inset: 0;
+  }
+  /* The slideshow fills the card's photo cell; the card supplies the radius. */
+  .hack__media :global(.hack__show) {
+    position: absolute;
+    inset: 0;
+    border-radius: 0;
+    z-index: 2;
   }
   .hack__body {
     gap: 14px;
@@ -132,19 +181,49 @@ const isExternal = (href: string) => /^https:/.test(href);
     padding-top: 14px;
     border-top: 1px solid var(--divider);
   }
+
   .hack__partner {
+    padding: 20px;
+    gap: 20px;
+  }
+  .hack__partner-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+  .hack__partner:not(.hack__partner--flyer) {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 8px 20px;
-    padding: 20px;
   }
-  @media (min-width: 1024px) {
-    .hack__partner {
-      padding: 24px 32px;
+  .hack__flyer {
+    display: block;
+    position: relative;
+    z-index: 2;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--line);
+    max-width: 420px;
+  }
+  .hack__flyer :global(img) {
+    width: 100%;
+    height: auto;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .hack__flyer:hover :global(img) {
+    transform: scale(1.02);
+  }
+  .hack__small-value {
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  }
+  @media (min-width: 900px) {
+    .hack__partner--flyer {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+      padding: 24px;
     }
-  }
-  .hack__partner .title a {
-    color: inherit;
   }
 </style>

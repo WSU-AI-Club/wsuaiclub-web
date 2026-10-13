@@ -2,10 +2,13 @@
 /**
  * Upcoming events from src/data/events.yaml (today or later at build time).
  * Each row carries its end time; site.ts hides rows that have ended and
- * shows the empty state if none are left.
+ * shows the empty state if none are left. The title links to the event page
+ * (ShockerSync); RSVP goes to `rsvp` when set, otherwise the same page.
+ * Events with a flyer show it beside the details.
  */
+import { Picture } from 'astro:assets';
 import { copy } from '../content/copy';
-import { site, upcomingEvents } from '../lib/data';
+import { FLYERS, site, upcomingEvents } from '../lib/data';
 import Icon from './Icon.astro';
 
 const list = upcomingEvents();
@@ -18,40 +21,63 @@ const typeLabel = copy.eventTypes;
   {
     list.length > 0 && (
       <ol class="events__list" role="list" data-event-list>
-        {list.map((e) => (
-          <li class="card event" data-ends={e.endsAt} data-reveal>
-            <p class="event__date" aria-hidden="true">
-              <span class="label">{e.weekday}</span>
-              <span class="event__day">{e.day}</span>
-              <span class="label">{e.month}</span>
-            </p>
-            <div class="event__body">
-              <p class="event__meta">
-                <span class="tag">{typeLabel[e.type]}</span>
+        {list.map((e) => {
+          const flyer = e.flyer ? FLYERS[e.flyer] : undefined;
+          const rsvp = e.rsvp ?? e.link;
+          return (
+            <li class:list={['card', 'event', flyer && 'event--flyer']} data-ends={e.endsAt} data-reveal>
+              <p class="event__date" aria-hidden="true">
+                <span class="label">{e.weekday}</span>
+                <span class="event__day">{e.day}</span>
+                <span class="label">{e.month}</span>
               </p>
-              <h3 class="title">
-                {e.link ? (
-                  <a class="stretch" href={e.link} target="_blank" rel="noopener">
-                    {e.title}
-                    <span class="visually-hidden">, {e.dateLabel}, on ShockerSync {copy.newTab}</span>
-                  </a>
-                ) : (
-                  e.title
+              <div class="event__body">
+                <p class="event__meta">
+                  <span class="tag">{typeLabel[e.type]}</span>
+                </p>
+                <h3 class="title">
+                  {e.link ? (
+                    <a class="event__title" href={e.link} target="_blank" rel="noopener">
+                      {e.title}
+                      <span class="visually-hidden">{`, ${e.dateLabel}, ${t.details} ${copy.newTab}`}</span>
+                    </a>
+                  ) : (
+                    e.title
+                  )}
+                </h3>
+                <p class="data event__when">
+                  <time datetime={e.startsAt}>{e.timeLabel}</time> · {e.place}
+                </p>
+                {e.partner && (
+                  <p class="event__led">
+                    <span class="label">{t.with}</span> {e.partner}
+                  </p>
                 )}
-              </h3>
-              <p class="data event__when">
-                <time datetime={e.startsAt}>{e.timeLabel}</time> · {e.place}
-              </p>
-              {e.note && <p class="body event__note">{e.note}</p>}
-            </div>
-            {e.link && (
-              <span class="event__go more" aria-hidden="true">
-                <span>{t.rsvp}</span>
-                <Icon name="external" />
-              </span>
-            )}
-          </li>
-        ))}
+                {e.ledBy && (
+                  <p class="event__led">
+                    <span class="label">{t.ledBy}</span> {e.ledBy}
+                  </p>
+                )}
+                {e.note && <p class="body event__note">{e.note}</p>}
+                {rsvp && (
+                  <p class="event__actions">
+                    <a class="btn btn--sm btn--primary" href={rsvp} target="_blank" rel="noopener">
+                      {e.rsvpLabel ?? t.rsvp}
+                      <Icon name="external" />
+                      <span class="visually-hidden">{`: ${e.title}, ${e.dateLabel} ${copy.newTab}`}</span>
+                    </a>
+                  </p>
+                )}
+              </div>
+              {flyer && (
+                <a class="event__flyer" href={flyer.src} target="_blank" rel="noopener">
+                  <Picture src={flyer} alt={e.flyerAlt ?? `${t.flyer}: ${e.title}`} widths={[320, 480, 720]} sizes="(min-width: 900px) 240px, calc(100vw - 72px)" formats={['avif', 'webp']} quality={72} loading="lazy" decoding="async" />
+                  <span class="visually-hidden">{` ${t.openFlyer} ${copy.newTab}`}</span>
+                </a>
+              )}
+            </li>
+          );
+        })}
       </ol>
     )
   }
@@ -97,41 +123,75 @@ const typeLabel = copy.eventTypes;
     display: grid;
     gap: 6px;
     min-width: 0;
+    justify-items: start;
   }
   .event__meta {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 6px 8px;
   }
-  .event .title a {
+  .event__title {
     color: inherit;
+    text-decoration: none;
+  }
+  .event__title:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
   }
   .event__when {
     color: var(--ink-muted);
   }
-  .event__note {
-    max-width: 52ch;
-  }
-  .event__go {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+  .event__led {
     font-size: 15px;
+    line-height: 1.45;
   }
-  .event__go span:first-child {
-    display: none;
+  .event__led .label {
+    margin-right: 6px;
   }
-  .event .title {
-    padding-right: 24px;
+  .event__note {
+    max-width: 58ch;
+  }
+  .event__actions {
+    margin-top: 6px;
+  }
+  .event__flyer {
+    grid-column: 1 / -1;
+    display: block;
+    max-width: 320px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+  .event__flyer :global(img) {
+    width: 100%;
+    height: auto;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .event__flyer:hover :global(img) {
+    transform: scale(1.02);
+  }
+  @media (min-width: 640px) {
+    .event__flyer {
+      grid-column: 2;
+    }
   }
   @media (min-width: 900px) {
     .events__list {
       gap: 16px;
     }
     .event {
-      grid-template-columns: 88px minmax(0, 1fr) auto;
-      align-items: center;
+      grid-template-columns: 88px minmax(0, 1fr);
+      align-items: start;
       gap: 28px;
       padding: 20px 28px 20px 20px;
+    }
+    .event--flyer {
+      grid-template-columns: 88px minmax(0, 1fr) 240px;
+      padding-right: 20px;
+    }
+    .event__flyer {
+      grid-column: 3;
+      grid-row: 1;
     }
     .event__date {
       padding: 12px 0 10px;
@@ -139,15 +199,18 @@ const typeLabel = copy.eventTypes;
     .event__day {
       font-size: 2.25rem;
     }
-    .event__go {
-      position: static;
-      grid-column: 3;
+    .event:not(.event--flyer) .event__body {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 24px;
     }
-    .event__go span:first-child {
-      display: inline;
+    .event:not(.event--flyer) .event__body > :not(.event__actions) {
+      grid-column: 1;
     }
-    .event .title {
-      padding-right: 0;
+    .event:not(.event--flyer) .event__actions {
+      grid-column: 2;
+      grid-row: 1 / span 4;
+      align-self: center;
+      margin-top: 0;
     }
   }
   .events__empty {

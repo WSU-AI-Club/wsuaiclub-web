@@ -14,6 +14,11 @@ import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
 const e = copy.events;
+const speakerPhotos = [...new Map(events.speakers.flatMap((g) => g.speakers).filter((s) => s.photo).map((s) => [s.photo, s])).values()] as {
+  name: string;
+  role?: string;
+  photo: PhotoName;
+}[];
 const wide = new Set<PhotoName>(['chocolathon-parameters-talk']);
 const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).map(([name, caption]) => ({ name, caption, wide: wide.has(name) }));
 ---
@@ -60,20 +65,40 @@ const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).ma
       <SectionHead eyebrow={e.speakers.eyebrow} index="04" headline={e.speakers.headline} lede={e.speakers.lede} id="speakers-title" />
       <div class="speakers">
         {
-          events.speakers.map((g) => (
-            <div class="speakers__group" data-reveal>
+          events.speakers.map((g, gi) => (
+            <div class:list={['speakers__group', gi === 0 && 'speakers__group--lead']} data-reveal>
               <h3 class="eyebrow speakers__title">
                 {g.group} · {String(g.speakers.length).padStart(2, '0')}
               </h3>
               <ul role="list">
                 {g.speakers.map((s) => (
                   <li class="speakers__row">
-                    <span class="speakers__name">{s.name}</span>
+                    {s.linkedin ? (
+                      <a class="speakers__name" href={s.linkedin} target="_blank" rel="noopener">
+                        {s.name}
+                        <span class="visually-hidden">{`, LinkedIn ${copy.newTab}`}</span>
+                      </a>
+                    ) : (
+                      <span class="speakers__name">{s.name}</span>
+                    )}
                     {s.role && <span class="label">{s.role}</span>}
                   </li>
                 ))}
               </ul>
             </div>
+          ))
+        }
+        {
+          speakerPhotos.map((s) => (
+            <figure class="speakers__photo" data-reveal>
+              <div class="photo-frame speakers__frame">
+                <Photo name={s.photo} sizes="(min-width: 900px) 40vw, calc(100vw - 32px)" widths={[480, 800, 1200]} />
+              </div>
+              <figcaption>
+                <span class="speakers__cap-name">{s.name}</span>
+                {s.role && <span class="label">{s.role}</span>}
+              </figcaption>
+            </figure>
           ))
         }
       </div>
@@ -145,7 +170,11 @@ const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).ma
   @media (min-width: 900px) {
     .speakers {
       grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-      gap: 56px;
+      gap: 40px 56px;
+      align-items: start;
+    }
+    .speakers__group--lead {
+      grid-row: span 2;
     }
   }
   .speakers__title {
@@ -157,18 +186,47 @@ const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).ma
     gap: 4px;
     padding-block: 14px;
     border-bottom: 1px solid var(--divider);
+    align-content: start;
   }
   .speakers__name {
     font-family: var(--font-serif);
     font-size: clamp(1.3125rem, 1.15rem + 0.6vw, 1.75rem);
     line-height: 1.15;
+    color: var(--ink);
+    text-decoration: none;
+    justify-self: start;
+  }
+  a.speakers__name {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.35s var(--ease-out);
+  }
+  a.speakers__name:hover {
+    background-size: 100% 1px;
+  }
+  .speakers .label {
+    line-height: 1.45;
   }
   @media (min-width: 900px) {
-    .speakers__group:first-child ul {
+    .speakers__group--lead ul {
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 32px;
     }
+  }
+  .speakers__photo {
+    display: grid;
+    gap: 12px;
+  }
+  .speakers__frame {
+    aspect-ratio: 4 / 3;
+  }
+  .speakers__photo figcaption {
+    display: grid;
+    gap: 4px;
+  }
+  .speakers__cap-name {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
   }
 
   .gallery {
@@ -227,13 +285,9 @@ const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).ma
     .gallery__item--wide {
       grid-column: span 2;
     }
+    /* Two columns wide, the same height as its 4:3 neighbors. */
     .gallery__item--wide .gallery__frame {
-      aspect-ratio: auto;
-      height: 100%;
-    }
-    .gallery__item--wide figure {
-      height: 100%;
-      grid-template-rows: 1fr auto;
+      aspect-ratio: 8 / 3;
     }
   }
   .gallery__frame :global(img) {

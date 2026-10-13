@@ -3,7 +3,7 @@
 import { site } from '../lib/data';
 ---
 
-<ul class="partners" role="list">
+<ul class="partners" role="list" style={`--n:${Math.min(site.partners.length, 5)}`}>
   {
     site.partners.map((p) => (
       <li class="partners__cell" data-reveal>
@@ -41,9 +41,15 @@ import { site } from '../lib/data';
   .partners__cell:nth-child(even) {
     border-left: 1px solid var(--divider);
   }
+  /* An odd last name on phones takes the full row. */
+  @media (max-width: 899px) {
+    .partners__cell:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
   @media (min-width: 900px) {
     .partners {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
     }
     .partners__cell {
       padding: 28px 24px 30px;
@@ -54,10 +60,10 @@ import { site } from '../lib/data';
     .partners__cell:nth-child(even) {
       border-left: 0;
     }
-    .partners__cell:nth-child(3n + 1) {
+    .partners__cell:first-child {
       padding-left: 0;
     }
-    .partners__cell:not(:nth-child(3n + 1)) {
+    .partners__cell:not(:first-child) {
       border-left: 1px solid var(--divider);
     }
   }

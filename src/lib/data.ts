@@ -22,11 +22,18 @@ export const HEADSHOTS: Record<string, ImageMetadata> = Object.fromEntries(
   Object.entries(import.meta.glob<ImageMetadata>('../assets/team/*.webp', { eager: true, import: 'default' })).map(([p, m]) => [fileName(p), m]),
 );
 
+export const FLYERS: Record<string, ImageMetadata> = Object.fromEntries(
+  Object.entries(import.meta.glob<ImageMetadata>('../assets/flyers/*.{png,jpg,jpeg,webp}', { eager: true, import: 'default' })).map(([p, m]) => [
+    fileName(p),
+    m,
+  ]),
+);
+
 for (const name of PHOTO_NAMES) {
   if (!PHOTOS[name]) throw new Error(`src/lib/photo-meta.ts lists "${name}" but src/assets/photos/${name}.jpg is missing.`);
 }
 
-const assets = { photos: PHOTO_NAMES as string[], headshots: Object.keys(HEADSHOTS) };
+const assets = { photos: PHOTO_NAMES as string[], headshots: Object.keys(HEADSHOTS), flyers: Object.keys(FLYERS) };
 
 export const site = parseSite(siteSource);
 export const events = parseEvents(eventsSource, assets);
@@ -78,5 +85,8 @@ export const teamCounts = {
   faculty: team.groups.find((g) => /faculty/i.test(g.name))?.people.length ?? 0,
 };
 
-/** Officers with a headshot, in team-file order, for the home page row of faces. */
-export const officersWithPhotos: Person[] = team.groups.filter(officerGroups).flatMap((g) => g.people.filter((p) => p.photo));
+/** The student leaders on the home page, in team.yaml > homeOrder (all officers if it is missing). */
+const officers = team.groups.filter(officerGroups).flatMap((g) => g.people);
+export const homeLeaders: Person[] = team.homeOrder
+  ? team.homeOrder.map((n) => officers.find((p) => p.name === n) ?? team.groups.flatMap((g) => g.people).find((p) => p.name === n)!)
+  : officers;

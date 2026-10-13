@@ -5,17 +5,17 @@ import Hackathons from '../components/Hackathons.astro';
 import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
 import Name from '../components/Name.astro';
-import NextMeeting from '../components/NextMeeting.astro';
 import Partners from '../components/Partners.astro';
-import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
+import Slideshow from '../components/Slideshow.astro';
 import Spark from '../components/Spark.astro';
-import Stats from '../components/Stats.astro';
 import { copy } from '../content/copy';
-import { officersWithPhotos, site, teamCounts } from '../lib/data';
+import { homeLeaders, site, teamCounts } from '../lib/data';
+import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
 const h = copy.home;
+const heroPhotos: PhotoName[] = ['barton-atrium-group', 'classroom-group', 'chatterbox-demo', 'glass-wall-visit', 'lovable-workshop', 'groover-labs-speaker'];
 const teamLine = `${teamCounts.officers} student officers, ${teamCounts.faculty === 1 ? 'a faculty advisor' : `${teamCounts.faculty} faculty advisors`} and ${teamCounts.advisors} industry advisors.`;
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -43,58 +43,51 @@ const jsonLd = {
           <a class="btn btn--secondary" href="/events">{h.hero.secondary}</a>
         </div>
       </div>
-      <figure class="hero__media">
-        <div class="hero__frame scrim">
-          <div class="hero__parallax" data-parallax="56">
-            <Photo
-              name="barton-atrium-group"
-              priority
-              sizes="(min-width: 1024px) 56vw, 100vw"
-              widths={[640, 960, 1280, 1600, 2000, 2400]}
-            />
-          </div>
-        </div>
-      </figure>
-    </div>
-    <div class="container hero__strip">
-      <NextMeeting />
+      <Slideshow
+        class="hero__show"
+        photos={heroPhotos}
+        label={copy.slideshow.home}
+        priority
+        sizes="(min-width: 1440px) 624px, (min-width: 1024px) 46vw, calc(100vw - 32px)"
+        widths={[480, 640, 960, 1280, 1600]}
+      />
     </div>
   </section>
 
   <section class="section" data-theme="paper" aria-labelledby="formats-title">
     <div class="container">
-      <SectionHead eyebrow={h.formats.eyebrow} index="01 / 05" headline={h.formats.headline} lede={h.formats.lede} id="formats-title" />
+      <SectionHead eyebrow={h.formats.eyebrow} index="01 / 04" headline={h.formats.headline} lede={h.formats.lede} id="formats-title" />
       <FormatCards />
     </div>
   </section>
 
-  <Stats eyebrow={h.numbers.eyebrow} headline={h.numbers.headline} index="02 / 05" />
-
   <section class="section" data-theme="paper" aria-labelledby="hack-title">
     <div class="container">
-      <SectionHead eyebrow={h.hackathons.eyebrow} index="03 / 05" headline={h.hackathons.headline} lede={h.hackathons.lede} id="hack-title" />
+      <SectionHead eyebrow={h.hackathons.eyebrow} index="02 / 04" headline={h.hackathons.headline} lede={h.hackathons.lede} id="hack-title" />
       <Hackathons />
     </div>
   </section>
 
   <section class="section" data-theme="paper" aria-labelledby="partners-title">
     <div class="container">
-      <SectionHead eyebrow={h.partners.eyebrow} index="04 / 05" headline={h.partners.headline} lede={h.partners.lede} id="partners-title" />
+      <SectionHead eyebrow={h.partners.eyebrow} index="03 / 04" headline={h.partners.headline} lede={h.partners.lede} id="partners-title" />
       <Partners />
     </div>
   </section>
 
   <section class="section" data-theme="paper" aria-labelledby="team-title">
     <div class="container">
-      <SectionHead eyebrow={h.team.eyebrow} index="05 / 05" headline={h.team.headline} lede={teamLine} id="team-title">
+      <SectionHead eyebrow={h.team.eyebrow} index="04 / 04" headline={h.team.headline} lede={teamLine} id="team-title">
         <a class="btn btn--primary" href="/team">{h.team.cta}<Icon name="arrow" /></a>
       </SectionHead>
-      <ul class="faces" role="list" data-reveal>
+      <ul class="leaders" role="list">
         {
-          officersWithPhotos.map((p) => (
-            <li class="faces__item">
-              <Avatar name={p.name} photo={p.photo} size={112} />
-              <p class="faces__name"><Name name={p.name} /></p>
+          homeLeaders.map((p) => (
+            <li class="leaders__item" data-reveal>
+              <Avatar name={p.name} photo={p.photo} size={96} />
+              <p class="leaders__name">
+                <Name name={p.name} />
+              </p>
               {p.role && <p class="label">{p.role}</p>}
             </li>
           ))
@@ -107,20 +100,18 @@ const jsonLd = {
 </Base>
 
 <style>
-  /* ── hero ─────────────────────────────────────────────────────── */
+  /* ── hero: copy, then a contained slideshow (side by side on desktop) ── */
   .hero {
-    position: relative;
-    overflow: clip;
-    padding-top: clamp(28px, 5vw, 72px);
+    padding-block: clamp(28px, 5vw, 80px) clamp(40px, 6vw, 88px);
   }
   .hero__grid {
     display: grid;
+    gap: 32px;
   }
   .hero__copy {
     display: grid;
     gap: 18px;
     justify-items: start;
-    padding-bottom: 32px;
   }
   .hero__title {
     max-width: 11ch;
@@ -131,134 +122,67 @@ const jsonLd = {
   .hero .btn-row {
     margin-top: 6px;
   }
-  .hero__media {
-    margin-inline: calc(-1 * var(--gutter));
-  }
-  .hero__frame {
-    position: relative;
-    aspect-ratio: 6 / 5;
-    overflow: hidden;
-    background: var(--surface-raised);
-  }
-  .hero__frame.scrim::after {
-    background: linear-gradient(180deg, rgba(11, 11, 12, 0.1) 0%, rgba(11, 11, 12, 0) 35%, rgba(11, 11, 12, 0) 62%, rgba(11, 11, 12, 0.96) 100%);
-  }
-  .hero__parallax {
-    position: absolute;
-    inset: 0;
-    will-change: transform;
-  }
-  .hero__parallax :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .hero__strip {
-    position: relative;
-    z-index: 1;
-    margin-top: -36px;
-    padding-bottom: clamp(32px, 5vw, 56px);
-  }
-  @media (min-width: 640px) {
-    .hero__frame {
-      aspect-ratio: 16 / 10;
-    }
+  .hero :global(.hero__show) {
+    aspect-ratio: 4 / 3;
   }
   @media (min-width: 1024px) {
-    .hero {
-      padding-top: clamp(48px, 6vw, 88px);
-    }
     .hero__grid {
       grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-      gap: 48px;
-      align-items: end;
-    }
-    .hero__copy {
-      padding-bottom: 48px;
+      gap: 56px;
+      align-items: center;
     }
     .hero__title {
       max-width: none;
     }
-    .hero__media {
-      margin-inline: 0 calc(-1 * max(var(--gutter), (100vw - var(--max)) / 2));
-    }
-    .hero__frame {
-      aspect-ratio: 1.24;
-      max-height: 640px;
-      width: 100%;
-      border-radius: var(--radius-md) 0 0 var(--radius-md);
-    }
-    .hero__frame.scrim::after {
-      background: linear-gradient(180deg, rgba(11, 11, 12, 0) 55%, rgba(11, 11, 12, 0.7) 100%);
-    }
-    .hero__strip {
-      margin-top: 40px;
+    .hero :global(.hero__show) {
+      aspect-ratio: 5 / 4;
+      max-height: 560px;
     }
   }
 
-  /* ── team preview ─────────────────────────────────────────────── */
-  /* Phones: an overlapping row of faces. 640px and up: a grid with names. */
-  .faces {
-    display: flex;
-    padding-left: 12px;
+  /* ── the 12 student leaders ───────────────────────────────────── */
+  .leaders {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
   }
-  .faces__item {
-    margin-left: -12px;
+  .leaders__item {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    justify-items: start;
   }
-  .faces__item :global(.avatar) {
-    --size: 58px !important;
-    box-shadow: 0 0 0 3px var(--surface);
+  .leaders__item :global(.avatar) {
+    --size: 76px !important;
+    margin-bottom: 6px;
   }
-  .faces__name,
-  .faces__item .label {
-    position: absolute !important;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
+  .leaders__name {
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .leaders .label {
+    line-height: 1.45;
   }
   @media (min-width: 640px) {
-    .faces {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 28px 16px;
-      padding-left: 0;
-    }
-    .faces__item {
-      display: grid;
-      gap: 6px;
-      align-content: start;
-      justify-items: start;
-      margin-left: 0;
-    }
-    .faces__item :global(.avatar) {
-      --size: 96px !important;
-      margin-bottom: 8px;
-      box-shadow: none;
-    }
-    .faces__name,
-    .faces__item .label {
-      position: static !important;
-      width: auto;
-      height: auto;
-      overflow: visible;
-      clip: auto;
-      white-space: normal;
-    }
-    .faces__name {
-      font-family: var(--font-serif);
-      font-size: 1.1875rem;
-      line-height: 1.2;
+    .leaders {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 32px 20px;
     }
   }
-  @media (min-width: 1024px) {
-    .faces {
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-      gap: 24px;
+  @media (min-width: 900px) {
+    .leaders {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-    .faces__item :global(.avatar) {
-      --size: 112px !important;
+  }
+  @media (min-width: 1200px) {
+    .leaders {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 40px 24px;
+    }
+    .leaders__item :global(.avatar) {
+      --size: 96px !important;
     }
   }
 </style>

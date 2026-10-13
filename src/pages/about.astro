@@ -6,22 +6,28 @@ import JoinBand from '../components/JoinBand.astro';
 import PageHero from '../components/PageHero.astro';
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
-import Stats from '../components/Stats.astro';
+import Slideshow from '../components/Slideshow.astro';
 import { copy } from '../content/copy';
 import { team } from '../lib/data';
+import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
 const a = copy.about;
 const advisor = team.groups.find((g) => /faculty/i.test(g.name))?.people[0];
+// A different set and order from the home hero.
+const heroPhotos: PhotoName[] = ['classroom-group', 'glass-wall-visit', 'chocolathon-parameters-talk', 'student-led-workshop', 'groover-labs-speaker', 'chocolathon-opening'];
 ---
 
 <Base title={copy.meta.about.title} description={copy.meta.about.description} path="/about">
   <PageHero eyebrow={a.hero.eyebrow} headline={a.hero.headline} lede={a.hero.lede}>
-    <figure class="about-photo photo-frame" data-reveal>
-      <div class="about-photo__parallax" data-parallax="40">
-        <Photo name="classroom-group" priority sizes="(min-width: 1440px) 1296px, 100vw" widths={[640, 960, 1280, 1600, 2000, 2400]} />
-      </div>
-    </figure>
+    <Slideshow
+      class="about-show"
+      photos={heroPhotos}
+      label={copy.slideshow.about}
+      priority
+      sizes="(min-width: 1440px) 1296px, calc(100vw - 32px)"
+      widths={[640, 960, 1280, 1600, 2000, 2400]}
+    />
   </PageHero>
 
   <section class="section" data-theme="paper" aria-labelledby="why-title">
@@ -46,7 +52,7 @@ const advisor = team.groups.find((g) => /faculty/i.test(g.name))?.people[0];
         </p>
       </div>
       <figure class="led__photo photo-frame" data-reveal>
-        <Photo name="student-led-workshop" sizes="(min-width: 1024px) 50vw, 100vw" widths={[480, 800, 1200, 1600, 2016]} />
+        <Photo name="chatterbox-demo" sizes="(min-width: 1024px) 50vw, 100vw" widths={[480, 800, 1200, 1600]} />
       </figure>
     </div>
   </section>
@@ -58,11 +64,9 @@ const advisor = team.groups.find((g) => /faculty/i.test(g.name))?.people[0];
     </div>
   </section>
 
-  <Stats eyebrow={a.numbers.eyebrow} headline={a.numbers.headline} index="04" />
-
   <section class="section" data-theme="paper" id="partnerships" aria-labelledby="partnerships-title">
     <div class="container">
-      <SectionHead eyebrow={a.partnerships.eyebrow} index="05" headline={a.partnerships.headline} id="partnerships-title" />
+      <SectionHead eyebrow={a.partnerships.eyebrow} index="04" headline={a.partnerships.headline} id="partnerships-title" />
       <ul class="thanks" role="list">
         {
           a.partnerships.items.map((p) => (
@@ -83,7 +87,7 @@ const advisor = team.groups.find((g) => /faculty/i.test(g.name))?.people[0];
     advisor && (
       <section class="section" data-theme="paper" aria-labelledby="advisor-title">
         <div class="container">
-          <SectionHead eyebrow={a.advisor.eyebrow} index="06" headline={a.advisor.headline} id="advisor-title" />
+          <SectionHead eyebrow={a.advisor.eyebrow} index="05" headline={a.advisor.headline} id="advisor-title" />
           <div class="advisor" data-reveal>
             <Avatar name={advisor.name} photo={advisor.photo} size={120} />
             <div class="advisor__text">
@@ -115,29 +119,19 @@ const advisor = team.groups.find((g) => /faculty/i.test(g.name))?.people[0];
 </Base>
 
 <style>
-  .about-photo {
-    position: relative;
+  :global(.about-show) {
     margin-top: clamp(32px, 5vw, 64px);
     aspect-ratio: 4 / 3;
   }
   @media (min-width: 640px) {
-    .about-photo {
+    :global(.about-show) {
       aspect-ratio: 16 / 9;
     }
   }
   @media (min-width: 1024px) {
-    .about-photo {
+    :global(.about-show) {
       aspect-ratio: 21 / 9;
     }
-  }
-  .about-photo__parallax {
-    position: absolute;
-    inset: 0;
-  }
-  .about-photo__parallax :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 
   .why__text {

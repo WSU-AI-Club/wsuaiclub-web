@@ -18,7 +18,7 @@ export const formats: Format[] = [
     id: 'workshops',
     eyebrow: 'Workshops',
     title: 'Build with the tools people use at work',
-    body: 'Hands-on sessions with tools like Lovable, ChatGPT and Claude. Bring a laptop. No experience needed.',
+    body: 'Hands-on sessions where everyone builds along. Bring a laptop. No experience needed.',
     photo: 'lovable-workshop',
     href: '/events#upcoming',
   },
@@ -26,7 +26,7 @@ export const formats: Format[] = [
     id: 'speakers',
     eyebrow: 'Industry speakers',
     title: 'People who deploy AI show how',
-    body: 'Speakers from companies like Cargill and Unified walk through real work and take your questions.',
+    body: 'People who use AI in their jobs walk through real work and take your questions.',
     photo: 'groover-labs-speaker',
     href: '/events#speakers',
   },
@@ -50,7 +50,7 @@ export const formats: Format[] = [
     id: 'hackathons',
     eyebrow: 'Hackathons',
     title: 'Build it, then pitch it',
-    body: "Teams work on a partner's real problems in one day. The Chocolathon ended with 17 projects in the gallery.",
+    body: 'Teams take on real problems from partners, then build or pitch a solution.',
     photo: 'chocolathon-team-presenting',
     href: '/events#hackathons',
   },
@@ -98,11 +98,7 @@ export const copy = {
     formats: {
       eyebrow: 'What we do',
       headline: 'Learn it, build it, argue about it',
-      lede: 'Every Wednesday at Woolsey Hall brings a speaker, a workshop or a build night. Every major is welcome.',
-    },
-    numbers: {
-      eyebrow: 'Recap',
-      headline: 'One semester, by the numbers',
+      lede: 'Every week at Woolsey Hall, the AI Club brings a speaker, a workshop, or a build night. Every major and all community members are welcome.',
     },
     hackathons: {
       eyebrow: 'Hackathons',
@@ -135,10 +131,23 @@ export const copy = {
 
   newTab: '(opens in a new tab)',
 
+  slideshow: {
+    pause: 'Pause slideshow',
+    play: 'Play slideshow',
+    prev: 'Previous photo',
+    next: 'Next photo',
+    slide: 'Photo',
+    of: 'of',
+    home: 'Photos from AI Club meetings and events',
+    about: 'Photos of AI Club members and guests',
+    chocolathon: 'Photos from the Chocolathon',
+  },
+
   hackathon: {
     hosted: 'Hosted',
     partner: 'Partner',
     cta: 'See the event',
+    flyer: 'Open the full flyer',
   },
 
   joinBand: {
@@ -160,25 +169,21 @@ export const copy = {
       headline: 'Close the gap between class and work',
       body: [
         "Most of what you need to know about using AI at work isn't on a syllabus yet. So we bring in the people deploying it, run hands-on sessions with the tools they use, and leave time for the hard questions.",
-        'Every major is welcome, and so are faculty and people from the Wichita community. About 20 of them came each week last spring.',
+        'Every major is welcome, and so are faculty and people from the Wichita community.',
       ],
     },
     studentLed: {
       eyebrow: 'Student-led',
       headline: 'Students run it',
       body: [
-        'Officers plan the calendar and members lead the workshops: 6 student-led workshops and discussions last spring.',
+        'Officers plan the calendar, and members lead workshops and discussions.',
         'A faculty advisor and an industry advisory board keep the club close to how AI is used at work.',
       ],
       cta: 'Meet the team',
     },
     formats: {
       eyebrow: 'How we work',
-      headline: 'What a semester looks like',
-    },
-    numbers: {
-      eyebrow: 'Recap',
-      headline: 'One semester, by the numbers',
+      headline: 'Five ways to take part',
     },
     partnerships: {
       eyebrow: 'Partnerships',
@@ -190,9 +195,9 @@ export const copy = {
           body: 'Thank you for our cross-university and community partnership this spring.',
         },
         {
-          eyebrow: 'On-campus clubs',
-          title: 'NextGen Entrepreneurs and WSU Innovation Design',
-          body: 'Thank you to the two student organizations we partnered with this spring.',
+          eyebrow: 'On-campus club',
+          title: 'WSU Innovation Design',
+          body: 'Thank you to the WSU Innovation Design student organization for partnering with us.',
         },
         {
           eyebrow: 'Sponsored event',
@@ -220,16 +225,21 @@ export const copy = {
   events: {
     hero: {
       eyebrow: 'Events · Fall 2026',
-      headline: 'Wednesdays at Woolsey Hall',
-      lede: 'We meet every Wednesday from 5:00 to 7:00 PM. Every major is welcome, and so is the Wichita community.',
+      headline: 'Weekly meetings at Woolsey Hall',
+      lede: 'Every major is welcome, and so is the Wichita community. Each event lists its own date, time and place.',
       primary: 'Join AI Club',
       secondary: 'All dates on ShockerSync',
     },
     upcoming: {
       eyebrow: 'Upcoming',
       headline: 'On the calendar',
-      lede: 'Dates, times and rooms come from ShockerSync. RSVP there.',
+      lede: "RSVP links go to ShockerSync or to the event's own form.",
       rsvp: 'RSVP',
+      details: 'Details',
+      ledBy: 'Led by',
+      with: 'With',
+      flyer: 'Flyer',
+      openFlyer: 'Open the full flyer',
     },
     formats: {
       eyebrow: 'What we run',
@@ -309,11 +319,11 @@ export const copy = {
     },
     where: {
       eyebrow: 'Where we meet',
-      headline: 'Wednesdays at Woolsey Hall',
+      headline: 'The weekly meeting',
       day: 'Day',
       time: 'Time',
       place: 'Place',
-      note: 'Rooms can change from week to week. Each event on ShockerSync has the room.',
+      note: 'This is the usual weekly meeting. Other events happen on other days, around campus and Wichita, and each one lists its own time and place on the Events page and ShockerSync.',
       cta: 'See events',
     },
     social: {
@@ -382,7 +392,7 @@ export const copy = {
     },
     events: {
       title: 'Events | AI Club at Wichita State',
-      description: 'Weekly meetings on Wednesdays at Woolsey Hall, plus workshops, industry speakers and hackathons. Upcoming dates, past speakers and photos.',
+      description: 'Weekly meetings at Woolsey Hall, plus workshops, speakers and hackathons around campus and Wichita. Upcoming dates, past speakers and photos.',
     },
     team: {
       title: 'Team | AI Club at Wichita State',

@@ -49,6 +49,30 @@ export const PHOTO_META = {
     alt: 'A speaker presents a slide titled "How Parameters Learn?" to a lecture hall during the Chocolathon.',
     focus: '40% 50%',
   },
+  'chocolathon-cocoa-dolce-talk': {
+    alt: 'A speaker at the Woolsey Hall podium addresses the Chocolathon, with the Cocoa Dolce logo on the screen behind him.',
+    focus: '50% 38%',
+  },
+  'chocolathon-manufacturing-talk': {
+    alt: 'A speaker in front of a slide comparing manufacturing plants talks to Chocolathon teams working on laptops.',
+    focus: '50% 42%',
+  },
+  'chocolathon-auditorium': {
+    alt: 'Chocolathon participants fill the rows of the Frank A. Boettger Auditorium, with laptops and boxes on the desks.',
+    focus: '50% 52%',
+  },
+  'chocolathon-build-your-box-demo': {
+    alt: 'Three students at the Barton School of Business podium demo a Build Your Box chocolate-ordering app on the big screen.',
+    focus: '50% 52%',
+  },
+  'chocolathon-laptop-detail': {
+    alt: 'Over a shoulder at the Chocolathon: a laptop shows a Cocoa Dolce web page that reads "Create something unforgettable."',
+    focus: '50% 50%',
+  },
+  'speaker-lauren-dunford': {
+    alt: 'Lauren Dunford, CEO and co-founder of Guidewheel, stands with four AI Club members on a balcony of the Barton School of Business atrium.',
+    focus: '50% 62%',
+  },
 } as const satisfies Record<string, PhotoMeta>;
 
 export type PhotoName = keyof typeof PHOTO_META;

@@ -15,7 +15,8 @@ const read = (f: string) => readFileSync(join(ROOT, f), 'utf8');
 const headshots = readdirSync(join(ROOT, 'src/assets/team'))
   .filter((f) => f.endsWith('.webp'))
   .map((f) => f.replace(/\.webp$/, ''));
-const assets = { photos: PHOTO_NAMES as string[], headshots };
+const flyers = readdirSync(join(ROOT, 'src/assets/flyers')).map((f) => f.replace(/\.[a-z]+$/i, ''));
+const assets = { photos: PHOTO_NAMES as string[], headshots, flyers };
 
 function failsWith(fn: () => unknown, ...fragments: string[]) {
   assert.throws(fn, (err: unknown) => {
@@ -34,7 +35,14 @@ test('events.yaml is valid', () => {
   const keys = ev.upcoming.map((e) => `${e.date} ${e.start} ${e.title}`);
   assert.equal(new Set(keys).size, keys.length, 'an event is listed twice');
   assert.ok(ev.past.some((e) => e.title === 'Chocolathon' && e.link === '/chocolathon'));
-  assert.ok(ev.past.some((e) => e.title === 'Open Agent Hackathon 2026' && e.role === 'partner' && !e.link && !e.date));
+  assert.ok(ev.past.some((e) => e.title === 'Open Agent Hackathon 2026' && e.role === 'partner' && e.flyer === 'open-agent-hackathon-2026'));
+  const newman = ev.upcoming.find((e) => e.date === '2026-10-21')!;
+  assert.equal(newman.place, 'Groover Labs, Wichita');
+  assert.match(newman.rsvp ?? '', /^https:\/\/forms\.cloud\.microsoft\/pages\/responsepage\.aspx\?id=/);
+  assert.equal(ev.upcoming.find((e) => e.title === 'AI Club Meeting: AI 101')?.rsvp, 'https://forms.cloud.microsoft/r/KR7fqdkLj0');
+  const names = ev.speakers.flatMap((g) => g.speakers.map((s) => s.name));
+  assert.ok(names.includes('Shane Vithana') && !names.includes('Shan Vithana'));
+  assert.ok(!JSON.stringify(ev).includes('225'), 'keep the room general: Woolsey Hall, not a room number');
 });
 
 test('team.yaml is valid and every listed headshot exists', () => {
@@ -48,6 +56,8 @@ test('team.yaml is valid and every listed headshot exists', () => {
   );
   const shane = people.filter((p) => p.name === 'Shane Vithana');
   assert.equal(shane.length, 2, 'Shane Vithana is listed as Technical Consultant and on the advisory board');
+  assert.equal(team.homeOrder?.length, 12, 'the home page shows all 12 student leaders');
+  assert.deepEqual(team.homeOrder?.slice(0, 3), ['Samuel Doell', 'Michael Goldberg', 'Eniola (Zadok) Olaobaju']);
 });
 
 test('site.yaml is valid', () => {
@@ -143,9 +153,34 @@ test('a site link without https fails', () => {
   failsWith(() => parseSite(site), 'links.groupme must start with https://');
 });
 
-test('a stat value in quotes fails', () => {
-  const site = read('src/data/site.yaml').replace('- value: 9', '- value: "9"');
-  failsWith(() => parseSite(site), 'value must be a number');
+test('an unknown field in site.yaml fails', () => {
+  failsWith(() => parseSite(`${read('src/data/site.yaml')}
+stats:
+  term: Spring
+`), 'unknown field "stats"');
+});
+
+test('a flyer that does not exist is caught', () => {
+  failsWith(() => parseEvents(`${good}    flyer: no-such-flyer
+`, assets), 'upcoming #1', 'no flyer named "no-such-flyer"');
+});
+
+test('an RSVP link must be a full https address', () => {
+  failsWith(() => parseEvents(`${good}    rsvp: forms.cloud.microsoft/r/x
+`, assets), 'rsvp must start with https://');
+});
+
+test('homeOrder names must match people in the groups', () => {
+  failsWith(
+    () => parseTeam(`homeOrder:
+  - Nobody Here
+groups:
+  - name: Founders
+    people:
+      - name: A Person
+`, assets),
+    'homeOrder: "Nobody Here" is not anyone listed under groups',
+  );
 });
 
 /* ── formatting ─────────────────────────────────────────────────────── */

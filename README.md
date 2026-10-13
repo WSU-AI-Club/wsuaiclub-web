@@ -13,9 +13,9 @@ comment that explains every field.
 
 | To change | Edit |
 | --- | --- |
-| Upcoming events, past hackathons, past speakers | `src/data/events.yaml` |
-| Team members, roles, LinkedIn links, headshots | `src/data/team.yaml` (headshots go in `src/assets/team/`) |
-| Links, contact email, meeting time, semester numbers, partners | `src/data/site.yaml` |
+| Upcoming events (RSVP links, flyers, partners), hackathons, past speakers | `src/data/events.yaml` (flyers go in `src/assets/flyers/`) |
+| Team members, roles, LinkedIn links, headshots, home-page order | `src/data/team.yaml` (headshots go in `src/assets/team/`) |
+| Links, contact email, weekly meeting, partners | `src/data/site.yaml` |
 | Page copy (headlines, ledes, buttons) | `src/content/copy.ts` |
 | Photo alt text and crop focus | `src/lib/photo-meta.ts` |
 
@@ -24,7 +24,9 @@ Every push rebuilds the site. A bad edit (a typo in a field name, a date like
 the entry and the fix; the live site keeps the last good version.
 
 Events show only if their date is today or later when the site was built;
-the browser also hides events that have already ended.
+the browser also hides events that have already ended. Slideshow photo sets
+are listed in `src/pages/index.astro` and `src/pages/about.astro`, and in
+`events.yaml > past > photos` for the Chocolathon card.
 
 ## Run it
 
@@ -53,9 +55,10 @@ Astro turns each photo into AVIF and WebP at several widths at build time.
 ## How it is built
 
 - **Astro 7, static output.** No framework on the client. One small script
-  (`src/scripts/site.ts`, about 2 KB gzipped) runs the scroll reveals,
-  count-up numbers, header compaction, hero parallax, the phone menu and the
-  "hide past events" filter. Every page is complete without it, and under
+  (`src/scripts/site.ts`, about 3 KB gzipped) runs the scroll reveals, the
+  photo slideshows (`src/components/Slideshow.astro`: crossfade every 5 s,
+  pause/play, arrows, pauses on hover, focus, hidden tab or offscreen),
+  header compaction, the phone menu and the "hide past events" filter. Every page is complete without it, and under
   `prefers-reduced-motion` nothing moves.
 - **Brand tokens.** `src/brand/tokens.json` is the single source for color,
   type, spacing, radius, stroke and shadow. `src/lib/tokens.ts` turns it into

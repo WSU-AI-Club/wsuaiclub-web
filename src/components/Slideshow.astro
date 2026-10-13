@@ -1,0 +1,199 @@
+---
+/**
+ * A crossfading photo slideshow, used for the home hero, the About hero and
+ * the Chocolathon card.
+ *
+ * - Advances about every 5 s; pauses on hover, on keyboard focus, when the
+ *   tab is hidden and when it is scrolled offscreen.
+ * - A visible pause/play button (WCAG 2.2.2), previous/next buttons, the
+ *   arrow keys, and a mono counter ("01 / 06").
+ * - Only the first image loads with the page; each next image loads just
+ *   before it is shown.
+ * - Reduced motion: no auto-advance (the buttons still work).
+ * - Without JS: the first photo, no controls.
+ * Size it from the caller (aspect-ratio or height on the class you pass).
+ * Behavior: src/scripts/site.ts ("slideshows").
+ */
+import { copy } from '../content/copy';
+import type { PhotoName } from '../lib/photo-meta';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+
+interface Props {
+  photos: PhotoName[];
+  label: string;
+  sizes: string;
+  widths?: number[];
+  /** Load the first photo with high priority (the page's main image). */
+  priority?: boolean;
+  /** Milliseconds per photo. */
+  interval?: number;
+  class?: string;
+}
+const { photos, label, sizes, widths = [640, 960, 1280, 1600, 2000], priority = false, interval = 5000 } = Astro.props;
+const t = copy.slideshow;
+const total = String(photos.length).padStart(2, '0');
+---
+
+<div class:list={['show', Astro.props.class]} data-slideshow data-interval={interval} role="region" aria-roledescription="carousel" aria-label={label}>
+  <div class="show__frame" data-show-frame aria-live="off">
+    {
+      photos.map((name, i) => (
+        <div
+          class:list={['show__slide', i === 0 && 'is-active is-loaded']}
+          data-slide
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${t.slide} ${i + 1} ${t.of} ${photos.length}`}
+          aria-hidden={i === 0 ? undefined : 'true'}
+        >
+          <Photo name={name} sizes={sizes} widths={widths} priority={priority && i === 0} />
+        </div>
+      ))
+    }
+  </div>
+  {
+    photos.length > 1 && (
+      <div class="show__bar" data-show-bar>
+        <button class="show__btn" type="button" data-show-toggle aria-label={t.pause} data-label-pause={t.pause} data-label-play={t.play}>
+          <svg class="show__icon-pause" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+            <path d="M5 3.5v9M11 3.5v9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+          <svg class="show__icon-play" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+            <path d="M5.5 3.5v9l7-4.5z" fill="currentColor" />
+          </svg>
+        </button>
+        <p class="show__count" aria-hidden="true">
+          <span data-show-current>01</span> / {total}
+        </p>
+        <div class="show__nav">
+          <button class="show__btn show__btn--prev" type="button" data-show-prev aria-label={t.prev}>
+            <Icon name="arrow" />
+          </button>
+          <button class="show__btn" type="button" data-show-next aria-label={t.next}>
+            <Icon name="arrow" />
+          </button>
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .show {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--surface-sunk);
+    isolation: isolate;
+  }
+  .show__frame {
+    position: absolute;
+    inset: 0;
+  }
+  .show__slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+  .show__slide.is-loaded {
+    display: block;
+  }
+  .show__slide.is-active {
+    opacity: 1;
+    z-index: 1;
+  }
+  .show__slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .show__slide.is-active :global(img) {
+      animation: show-settle 6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+  }
+  @keyframes show-settle {
+    from {
+      transform: scale(1.05);
+    }
+  }
+  /* Scrim under the controls: ivory type always sits on a dark ground. */
+  .show:has(.show__bar)::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 96px;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(11, 11, 12, 0), rgba(11, 11, 12, 0.72));
+    pointer-events: none;
+  }
+  :global(html:not(.js)) .show::after,
+  :global(html:not(.js)) .show__bar {
+    display: none;
+  }
+  .show__bar {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: var(--brand-ivory);
+  }
+  .show__btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(245, 242, 234, 0.55);
+    background: rgba(11, 11, 12, 0.45);
+    color: var(--brand-ivory);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transition:
+      background-color 0.2s,
+      border-color 0.2s;
+  }
+  .show__btn:hover {
+    background: rgba(11, 11, 12, 0.7);
+    border-color: var(--brand-ivory);
+  }
+  .show__btn:focus-visible {
+    outline: 2px solid var(--brand-gold);
+    outline-offset: 2px;
+  }
+  .show__btn :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+  .show__btn--prev :global(svg) {
+    transform: rotate(180deg);
+  }
+  .show__icon-play {
+    display: none;
+  }
+  .show[data-paused] .show__icon-play {
+    display: block;
+  }
+  .show[data-paused] .show__icon-pause {
+    display: none;
+  }
+  .show__count {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+  .show__nav {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+</style>

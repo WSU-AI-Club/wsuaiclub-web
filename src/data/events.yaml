@@ -16,8 +16,16 @@
 #   end     optional, same format                              "8:00 PM"
 #   place   building and room, as the building writes it       Woolsey Hall 110A
 #   type    one of: meeting, workshop, speaker, build-night, hackathon, social, tabling, other
-#   link    optional, usually the ShockerSync event page
-#   note    optional, one short line
+#   link    optional, usually the ShockerSync event page (the title links here)
+#   note    optional, a sentence or two
+#   ledBy   optional, who leads it, with title and organization
+#   partner optional, who we run it with, spelled the way they write it
+#   rsvp    optional, a full https:// link for RSVPs; leave it out and the
+#           RSVP button uses link (the ShockerSync page)
+#   rsvpLabel  optional button text (default: RSVP)
+#   flyer   optional, the file name of a flyer image in src/assets/flyers,
+#           without the extension (upload it there with "Add file")
+#   flyerAlt   optional, what the flyer says, for screen readers
 #
 # WHAT VISITORS SEE
 #   The site lists only events dated today or later on the day it was built.
@@ -30,7 +38,8 @@
 # (wichita.campuslabs.com/engage/organization/aiclub/events), times converted
 # from UTC to Central. ShockerSync gives no room for the weekly meetings, only
 # "Woolsey Hall". It also lists the regular 5:00 PM meeting on Oct 28; AI 101
-# is that week's meeting, so only AI 101 is listed here.
+# is that week's meeting, so only AI 101 is listed here. Oct 21 follows its
+# flyer (Groover Labs), where ShockerSync still says Woolsey Hall.
 
 upcoming:
   - title: AI Club Meeting
@@ -41,13 +50,19 @@ upcoming:
     type: meeting
     link: https://wichita.campuslabs.com/engage/event/12531687
 
-  - title: AI Club Meeting
+  - title: Set up your own AI agent
     date: 2026-10-21
     start: "5:00 PM"
     end: "7:00 PM"
-    place: Woolsey Hall
-    type: meeting
+    place: Groover Labs, Wichita
+    type: workshop
     link: https://wichita.campuslabs.com/engage/event/12531688
+    note: "Bring a laptop and leave with an agent you can text. Hermes Agent is free and open source: it runs on your own machine, remembers what you tell it, and answers you over Telegram. Free, and no coding experience needed."
+    ledBy: Robert Dickson, Chief Information Officer, Wichita Public Schools
+    partner: Coding Club, Newman University and The Newman Institute for AI & the Common Good
+    rsvp: https://forms.cloud.microsoft/pages/responsepage.aspx?id=-opGf6U8bESPi6vltcH7dQgYfparhuRJgQSjeKquoxBUM1pFUTVRRUhYVUpKWkNHV0JONlhKNUdIWC4u&route=shorturl
+    flyer: newman-hermes-agent-workshop
+    flyerAlt: "Flyer: A hands-on Hermes Agent workshop. Set up your own AI agent. Led by Robert Dickson, Chief Information Officer, Wichita Public Schools. Wed, Oct 21, 5 to 7 PM, Groover Labs, Wichita. With AI Club, Coding Club at Newman University and The Newman Institute for AI & the Common Good. RSVP by scanning the code."
 
   - title: AI Club Informational Tabling
     date: 2026-10-22
@@ -66,6 +81,7 @@ upcoming:
     type: workshop
     link: https://wichita.campuslabs.com/engage/event/12857840
     note: An entry-level meeting with breakout groups on the basics of AI. Bring your questions.
+    rsvp: https://forms.cloud.microsoft/r/KR7fqdkLj0
 
   - title: AI Club Meeting
     date: 2026-11-04
@@ -107,7 +123,8 @@ upcoming:
     type: meeting
     link: https://wichita.campuslabs.com/engage/event/12531694
 
-# PAST EVENT FIELDS (shown under Hackathons on the home and Events pages)
+# HACKATHON FIELDS (the Hackathons section on the home and Events pages;
+# hosted events get a big card, partner events a smaller one)
 #   title   required
 #   date    optional, year-month-day
 #   place   optional
@@ -115,7 +132,11 @@ upcoming:
 #   role    host (we ran it) or partner (we partnered on it)
 #   blurb   optional, one or two short sentences
 #   photo   optional, a photo name from src/lib/photo-meta.ts (e.g. chocolathon-opening)
+#   photos  optional, a list of photo names: the card becomes a slideshow
+#   flyer   optional, a flyer image in src/assets/flyers (name without extension)
+#   flyerAlt   optional, what the flyer says, for screen readers
 #   link    optional, a full https:// address or a page on this site like /chocolathon
+#   linkLabel  optional text for that link
 #   facts   optional, up to 4 label/value pairs shown as a data strip
 
 past:
@@ -125,7 +146,15 @@ past:
     type: hackathon
     role: host
     blurb: A one-day hackathon with Cocoa Dolce. Teams built something Cocoa Dolce could use, or pitched a plan it could act on.
-    photo: chocolathon-team-presenting
+    photos:
+      - chocolathon-opening
+      - chocolathon-team-presenting
+      - chocolathon-cocoa-dolce-talk
+      - chocolathon-manufacturing-talk
+      - chocolathon-parameters-talk
+      - chocolathon-auditorium
+      - chocolathon-build-your-box-demo
+      - chocolathon-laptop-detail
     link: /chocolathon
     facts:
       - label: Date
@@ -140,30 +169,65 @@ past:
   - title: Open Agent Hackathon 2026
     type: hackathon
     role: partner
+    blurb: Build an agent that does real work. Connect data, understand context, and turn intelligence into action. Registration closes Oct 22.
+    flyer: open-agent-hackathon-2026
+    flyerAlt: "Flyer: Open Agent Hackathon 2026. Build an agent that does real work. Up to $20,000 in prizes. Registration closes 22 October. 22 to 27 October 2026, 144 hours, fully online, teams of 1 to 5. hackathon.genai.works"
+    link: https://hackathon.genai.works
+    linkLabel: hackathon.genai.works
+    facts:
+      - label: Dates
+        value: Oct 22–27, 2026
+      - label: Format
+        value: 144 hours, fully online
+      - label: Teams
+        value: 1 to 5 people
+      - label: Prizes
+        value: Up to $20,000
 
-# PAST SPEAKERS (Events page). role is optional: leave it out rather than guess.
+# PAST SPEAKERS (Events page). role, linkedin and photo are optional: leave
+# them out rather than guess. The name links to LinkedIn when one is listed;
+# a photo (a name from src/lib/photo-meta.ts) shows beside the list.
 
 speakers:
   - group: Spring 2026 speakers
     speakers:
       - name: Grant Johnson
         role: "Creator of Chatterbox: Language Learning"
+        linkedin: https://www.linkedin.com/in/grant-johnson15/
       - name: Fareeha Amber Ansari
         role: AI Governance Lead, Cargill
+        linkedin: https://www.linkedin.com/in/ansarifa/
+      - name: Lauren Dunford
+        role: CEO & Co-Founder, Guidewheel
+        linkedin: https://www.linkedin.com/in/lauren-dunford-6887ab7/
+        photo: speaker-lauren-dunford
       - name: Nic Wentling
+        role: CEO, Moonbase Labs
+        linkedin: https://www.linkedin.com/in/nic-wentling/
       - name: Rob Gerlach
+        role: AVP, Tech Commercialization, Wichita State
       - name: Eyal Redler
+        role: Managing Partner, The Garage
+        linkedin: https://www.linkedin.com/in/eyal-redler-0a92b1159/
       - name: Omer Nagar
+        role: Co-Founder & CEO, The Garage
       - name: Ramsey Jamoul
         role: Founder & CEO, Unified
-      - name: Shan Vithana
+        linkedin: https://www.linkedin.com/in/ramsey-jamoul-423682b8/
+      - name: Shane Vithana
+        role: AI Consultant
+        linkedin: https://www.linkedin.com/in/shanvithana/
       - name: Jared Goering
+        role: College of Innovation and Design, Wichita State
 
   - group: Chocolathon speakers
     speakers:
       - name: Cody Herrin
-        role: Continuous Improvement and Innovation Manager, Capital III
+        role: Continuous Improvement & Innovation, Capital III
+        linkedin: https://www.linkedin.com/in/codyherrin/
       - name: Fareeha Amber Ansari
         role: AI Governance Lead, Cargill
+        linkedin: https://www.linkedin.com/in/ansarifa/
       - name: Ramsey Jamoul
         role: Founder & CEO, Unified
+        linkedin: https://www.linkedin.com/in/ramsey-jamoul-423682b8/

@@ -2,7 +2,7 @@
  * The site's only script. Everything here is an enhancement: every page is
  * complete and readable without it.
  *   - scroll reveals: [data-reveal] rises 24px and fades in once (60ms stagger)
- *   - count-up: [data-count] numbers count up once when they come into view
+ *   - slideshows: [data-slideshow] crossfades with pause/play (Slideshow.astro)
  *   - header compacts after 40px of scroll
  *   - light parallax on [data-parallax] photos
  *   - phone menu sheet (modal dialog, focus trap, Esc, scroll lock)
@@ -31,8 +31,6 @@ function reveal(el: HTMLElement, delay = 0) {
   el.style.setProperty('--d', `${delay}ms`);
   el.classList.add('is-in');
   settle(el, delay);
-  if (el.matches('[data-count]')) countUp(el, delay);
-  el.querySelectorAll<HTMLElement>('[data-count]').forEach((c) => countUp(c, delay));
 }
 
 const revealables = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
@@ -53,43 +51,6 @@ if (!motionOK() || !('IntersectionObserver' in window)) {
     { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
   );
   revealables.forEach((el) => io.observe(el));
-}
-
-/* ── count-up ───────────────────────────────────────────────────────── */
-
-const counted = new WeakSet<HTMLElement>();
-
-function countUp(el: HTMLElement, delay: number) {
-  if (counted.has(el)) return;
-  counted.add(el);
-  const target = Number(el.dataset.count);
-  if (!Number.isFinite(target) || !motionOK()) return;
-  const duration = 1200;
-  el.textContent = '0';
-  window.setTimeout(() => {
-    const start = performance.now();
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = String(Math.round(target * eased));
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, delay + 120);
-}
-
-// Numbers outside any [data-reveal] still count when they scroll in.
-if (motionOK() && 'IntersectionObserver' in window) {
-  const lone = Array.from(document.querySelectorAll<HTMLElement>('[data-count]')).filter((el) => !el.closest('[data-reveal]'));
-  const cio = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        cio.unobserve(e.target);
-        countUp(e.target as HTMLElement, 0);
-      }
-    });
-  });
-  lone.forEach((el) => cio.observe(el));
 }
 
 /* ── header compaction + parallax (one rAF-throttled scroll handler) ── */
@@ -247,3 +208,103 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
     }
   });
 });
+
+/* ── slideshows ([data-slideshow], see Slideshow.astro) ─────────────── */
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+function initSlideshow(root: HTMLElement) {
+  const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+  const toggle = root.querySelector<HTMLButtonElement>('[data-show-toggle]');
+  const counter = root.querySelector<HTMLElement>('[data-show-current]');
+  const frame = root.querySelector<HTMLElement>('[data-show-frame]');
+  if (slides.length < 2 || !toggle) return;
+  const interval = Number(root.dataset.interval) || 5000;
+  let index = 0;
+  let seq = 0;
+  let userPaused = !motionOK(); // reduced motion: never auto-advance on its own
+  let hovering = false;
+  let focused = false;
+  let onscreen = false;
+  let timer = 0;
+
+  const load = (i: number) => slides[i].classList.add('is-loaded');
+  const render = () => {
+    root.toggleAttribute('data-paused', userPaused);
+    toggle.setAttribute('aria-label', (userPaused ? toggle.dataset.labelPlay : toggle.dataset.labelPause) || '');
+    // Announce slide changes only while the user is in control.
+    frame?.setAttribute('aria-live', userPaused ? 'polite' : 'off');
+  };
+
+  function go(target: number) {
+    const i = (target + slides.length) % slides.length;
+    if (i === index) return;
+    const mine = ++seq;
+    load(i);
+    const img = slides[i].querySelector('img');
+    const ready = img && !img.complete ? Promise.race([img.decode().catch(() => undefined), new Promise((r) => setTimeout(r, 1500))]) : Promise.resolve();
+    ready.then(() =>
+      requestAnimationFrame(() => {
+        if (mine !== seq) return;
+        slides.forEach((s, j) => {
+          s.classList.toggle('is-active', j === i);
+          if (j === i) s.removeAttribute('aria-hidden');
+          else s.setAttribute('aria-hidden', 'true');
+        });
+        index = i;
+        if (counter) counter.textContent = pad2(i + 1);
+        load((i + 1) % slides.length); // fetch the next photo before it is needed
+      }),
+    );
+  }
+
+  const playing = () => !userPaused && !hovering && !focused && onscreen && !document.hidden;
+  function schedule() {
+    window.clearTimeout(timer);
+    if (playing()) timer = window.setTimeout(() => (go(index + 1), schedule()), interval);
+  }
+
+  toggle.addEventListener('click', () => {
+    userPaused = !userPaused;
+    render();
+    schedule();
+  });
+  root.querySelector('[data-show-prev]')?.addEventListener('click', () => (go(index - 1), schedule()));
+  root.querySelector('[data-show-next]')?.addEventListener('click', () => (go(index + 1), schedule()));
+  root.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      go(index + (e.key === 'ArrowRight' ? 1 : -1));
+      schedule();
+    }
+  });
+  root.addEventListener('pointerenter', (e) => {
+    if (e.pointerType === 'mouse') (hovering = true), schedule();
+  });
+  root.addEventListener('pointerleave', () => ((hovering = false), schedule()));
+  root.addEventListener('focusin', () => ((focused = true), schedule()));
+  root.addEventListener('focusout', (e) => {
+    if (!root.contains(e.relatedTarget as Node)) (focused = false), schedule();
+  });
+  document.addEventListener('visibilitychange', schedule);
+  reduced.addEventListener('change', () => {
+    if (reduced.matches) (userPaused = true), render(), schedule();
+  });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entry]) => {
+        onscreen = entry.isIntersecting;
+        if (onscreen) load(1); // the second photo loads once the slideshow is in view
+        schedule();
+      },
+      { threshold: 0.25 },
+    ).observe(root);
+  } else {
+    onscreen = true;
+    load(1);
+  }
+  render();
+  schedule();
+}
+
+document.querySelectorAll<HTMLElement>('[data-slideshow]').forEach(initSlideshow);

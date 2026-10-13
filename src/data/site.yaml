@@ -1,5 +1,5 @@
-# SITE: links, the contact email, where we meet, the semester numbers and
-# the partners strip. Used on every page.
+# SITE: links, the contact email, the weekly meeting and the partners strip.
+# Used on every page.
 #
 # HOW TO EDIT (in the GitHub web editor, no tools needed)
 #   1. Open this file on GitHub and click the pencil icon ("Edit this file").
@@ -26,34 +26,12 @@ meeting:
   time: 5:00–7:00 PM
   place: Woolsey Hall
 
-# The numbers band on the home and About pages. value is a plain number
-# (no quotes). prefix is optional, e.g. "~" for "about".
-stats:
-  term: Spring 2026
-  note: Students, faculty and Wichita community members came most weeks.
-  items:
-    - value: 9
-      label: Industry speakers
-    - value: 15
-      label: Meetings
-    - value: 6
-      label: Student-led workshops and discussions
-    - value: 20
-      prefix: "~"
-      label: People each week
-    - value: 3
-      label: Partnerships
-    - value: 1
-      label: Lovable-sponsored event
-
 # The partners strip. kind is the short mono label under each name.
 partners:
   - name: Newman University
     kind: Cross-university partner
   - name: Groover Labs
     kind: Community partner
-  - name: NextGen Entrepreneurs
-    kind: Campus club partner
   - name: WSU Innovation Design
     kind: Campus club partner
   - name: Lovable
