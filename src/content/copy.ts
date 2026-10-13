@@ -77,7 +77,6 @@ export const copy = {
       eyebrow: 'About AI Club',
       items: [
         { href: '/about', title: 'About AI Club', body: 'Who we are and how we work' },
-        { href: '/team', title: 'Meet the team', body: 'Student leaders and our faculty advisor' },
         { href: '/advisory-board', title: 'Industry advisory board', body: 'The professionals who advise the club' },
         { href: '/about#partners', title: 'Partners', body: 'The schools, clubs and companies we work with' },
       ],

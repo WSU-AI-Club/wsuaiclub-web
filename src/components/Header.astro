@@ -32,7 +32,9 @@ const sheet: SheetLink[] = [
   { href: '/join', label: copy.nav.join },
 ];
 const current = (href: string) => (path === href ? 'page' : undefined);
-const inAbout = aboutItems.some((i) => i.href === path);
+// /team has no link of its own in the menu: the team card is its entry.
+const onTeam = path === '/team';
+const inAbout = onTeam || aboutItems.some((i) => i.href === path);
 const feature = copy.nav.aboutMenu.feature;
 // The team photo in the menu: small WebP files, loaded only when a menu first opens.
 const teamPhoto = PHOTOS['classroom-group'];
@@ -74,7 +76,7 @@ const lazySrcset = `${small.src} 300w, ${large.src} 600w`;
                 }
               </ul>
               </div>
-              <div class="nav-drop__feature">
+              <div class:list={['nav-drop__feature', onTeam && 'is-current']}>
                 <img class="nav-drop__photo" alt="" width="300" height="188" data-lazy-src={lazySrc} data-lazy-srcset={lazySrcset} sizes="276px" decoding="async" />
                 <p class="eyebrow">{feature.eyebrow}</p>
                 <p class="nav-drop__line">{feature.line}</p>
@@ -138,11 +140,11 @@ const lazySrcset = `${small.src} 300w, ${large.src} 600w`;
                       </a>
                     </li>
                   ))}
-                  <li class="menu-sheet__feature">
+                  <li class:list={['menu-sheet__feature', onTeam && 'is-current']}>
                     <img class="menu-sheet__photo" alt="" width="300" height="188" data-lazy-src={lazySrc} data-lazy-srcset={lazySrcset} sizes="96px" decoding="async" />
                     <div class="menu-sheet__feature-text">
                       <p class="menu-sheet__feature-line">{feature.line}</p>
-                      <a class="btn btn--primary btn--sm" href="/team">
+                      <a class="btn btn--primary btn--sm" href="/team" aria-current={current('/team')}>
                         {feature.cta}
                         <Icon name="arrow" />
                       </a>
@@ -398,6 +400,9 @@ const lazySrcset = `${small.src} 300w, ${large.src} 600w`;
     border-radius: var(--radius-sm);
     background: var(--surface-sunk);
   }
+  .nav-drop__feature.is-current {
+    box-shadow: inset 0 0 0 2px var(--spark);
+  }
   .nav-drop__photo {
     width: 100%;
     aspect-ratio: 16 / 10;
@@ -571,6 +576,9 @@ const lazySrcset = `${small.src} 300w, ${large.src} 600w`;
     border-radius: var(--radius-md);
     background: var(--surface-raised);
     box-shadow: 0 0 0 1px var(--line);
+  }
+  .menu-sheet__feature.is-current {
+    box-shadow: 0 0 0 2px var(--spark);
   }
   .menu-sheet__photo {
     width: 96px;
