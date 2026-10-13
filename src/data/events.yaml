@@ -10,7 +10,7 @@
 #   error message in Vercel names the event and the field to fix.
 #
 # UPCOMING EVENT FIELDS
-#   title   what it is, the way a student would say it       AI Club Meeting: AI 101
+#   title   what it is, the way a visitor would say it       AI Club Meeting: AI 101
 #   date    year-month-day                                    2026-10-28
 #   start   12-hour time in Central time, in quotes            "5:00 PM"
 #   end     optional, same format                              "8:00 PM"

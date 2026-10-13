@@ -148,6 +148,18 @@ const socials = [
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
     }
+    /* The first subject (consulting) leads, full width. */
+    .topic:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+  .topic:first-child .title {
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    letter-spacing: -0.03em;
+  }
+  .topic:first-child .body {
+    max-width: 44em;
+    color: var(--ink);
   }
   .topic .title a,
   .social .title a {

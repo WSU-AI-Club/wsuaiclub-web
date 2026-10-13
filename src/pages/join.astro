@@ -1,6 +1,5 @@
 ---
 import Icon from '../components/Icon.astro';
-import NextMeeting from '../components/NextMeeting.astro';
 import PageHero from '../components/PageHero.astro';
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
@@ -9,141 +8,195 @@ import { site } from '../lib/data';
 import Base from '../layouts/Base.astro';
 
 const j = copy.join;
-const o = j.others.items;
-const others = [
-  { ...o.groupme, href: site.links.groupme },
-  { ...o.email, href: site.links.email_list },
-  { ...o.instagram, href: site.links.instagram },
-  { ...o.linkedin, href: site.links.linkedin },
+const c = j.channels;
+const channels = [
+  { ...c.shockersync, href: site.links.shockersync },
+  { ...c.groupme, href: site.links.groupme },
+  { ...c.email, href: site.links.email_list },
+  { ...c.instagram, href: site.links.instagram },
+  { ...c.linkedin, href: site.links.linkedin },
 ];
+const s = j.paths.students;
+const e = j.paths.everyone;
+const ext = { target: '_blank', rel: 'noopener' };
 ---
 
 <Base title={copy.meta.join.title} description={copy.meta.join.description} path="/join">
   <PageHero eyebrow={j.hero.eyebrow} headline={j.hero.headline} lede={j.hero.lede} theme="ink">
-    <article class="member card" data-theme="paper" data-reveal>
-      <div class="member__media">
-        <Photo name="lovable-workshop" decorative sizes="(min-width: 1024px) 44vw, 100vw" widths={[480, 800, 1200, 1600]} />
-      </div>
-      <div class="card__body member__body">
-        <p class="eyebrow eyebrow--ink">{j.member.eyebrow}</p>
-        <h2 class="title title--lg">{j.member.title}</h2>
-        <p class="body body-lg">{j.member.body}</p>
-        <p class="card__foot">
-          <a class="btn btn--primary" href={site.links.shockersync} target="_blank" rel="noopener">
-            {j.member.cta}
-            <Icon name="external" />
-            <span class="visually-hidden">{` ${copy.newTab}`}</span>
-          </a>
-        </p>
-      </div>
-    </article>
-    <div class="join-strip">
-      <NextMeeting spark={false} />
-    </div>
+    <ul class="channels" role="list">
+      {
+        channels.map((ch, i) => (
+          <li class="card channel" data-theme="paper" data-reveal>
+            <div class="card__body">
+              <div class="channel__top">
+                <p class="eyebrow">{ch.eyebrow}</p>
+                <p class="eyebrow" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+              </div>
+              <h2 class="title channel__title">
+                <a class="stretch" href={ch.href} {...ext}>
+                  {ch.title}
+                  <span class="visually-hidden">{` ${copy.newTab}`}</span>
+                </a>
+              </h2>
+              <p class="body">{ch.body}</p>
+              <p class="card__foot">
+                <span class="more">
+                  <span>{ch.cta}</span>
+                  <Icon name="external" />
+                </span>
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
   </PageHero>
 
-  <section class="section" data-theme="paper" aria-labelledby="others-title">
+  <section class="section" data-theme="paper" aria-labelledby="paths-title">
     <div class="container">
-      <SectionHead eyebrow={j.others.eyebrow} index="01" headline={j.others.headline} id="others-title" />
-      <ul class="ways" role="list">
-        {
-          others.map((w) => (
-            <li class="card way" data-reveal>
-              <div class="card__body">
-                <p class="eyebrow">{w.eyebrow}</p>
-                <h3 class="title">
-                  <a class="stretch" href={w.href} target="_blank" rel="noopener">
-                    {w.title}
-                    <span class="visually-hidden">{` ${copy.newTab}`}</span>
-                  </a>
-                </h3>
-                <p class="body">{w.body}</p>
-                <p class="card__foot">
-                  <span class="more">
-                    <span>{w.cta}</span>
-                    <Icon name="external" />
-                  </span>
-                </p>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <section class="section" data-theme="paper" aria-labelledby="not-student-title">
-    <div class="container">
-      <SectionHead eyebrow={j.notStudent.eyebrow} index="02" headline={j.notStudent.headline} lede={j.notStudent.body} id="not-student-title">
-        <div class="btn-row">
-          <a class="btn btn--primary" href={site.links.email_list} target="_blank" rel="noopener">
-            {j.notStudent.primary}
-            <Icon name="external" />
-            <span class="visually-hidden">{` ${copy.newTab}`}</span>
-          </a>
-          <a class="btn btn--secondary" href="/contact">{j.notStudent.secondary}<Icon name="arrow" /></a>
-        </div>
-      </SectionHead>
+      <SectionHead eyebrow={j.paths.eyebrow} index="01" headline={j.paths.headline} id="paths-title" />
+      <div class="paths">
+        <article class="card path" data-reveal>
+          <div class="card__media path__media">
+            <Photo name="lovable-workshop" decorative sizes="(min-width: 900px) 46vw, calc(100vw - 32px)" widths={[480, 800, 1200]} />
+          </div>
+          <div class="card__body path__body">
+            <p class="eyebrow eyebrow--ink">{s.eyebrow}</p>
+            <h3 class="title title--lg">{s.title}</h3>
+            <p class="body">{s.body}</p>
+            <div class="btn-row path__actions">
+              <a class="btn btn--primary" href={site.links.shockersync} {...ext}>
+                {s.primary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span>
+              </a>
+              <a class="btn btn--secondary" href={site.links.groupme} {...ext}>
+                {s.secondary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span>
+              </a>
+            </div>
+          </div>
+        </article>
+        <article class="card path" data-reveal>
+          <div class="card__media path__media">
+            <Photo name="glass-wall-visit" decorative sizes="(min-width: 900px) 46vw, calc(100vw - 32px)" widths={[480, 800, 1200]} />
+          </div>
+          <div class="card__body path__body">
+            <p class="eyebrow eyebrow--ink">{e.eyebrow}</p>
+            <h3 class="title title--lg">{e.title}</h3>
+            <p class="body">{e.body}</p>
+            <div class="btn-row path__actions">
+              <a class="btn btn--primary" href={site.links.email_list} {...ext}>
+                {e.primary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span>
+              </a>
+              <a class="btn btn--secondary" href="/events">{e.secondary}<Icon name="arrow" /></a>
+            </div>
+            <p class="path__contact">
+              <a href="/contact">{e.contact}</a>
+            </p>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .member {
+  .channels {
+    display: grid;
+    gap: 12px;
     margin-top: clamp(32px, 5vw, 56px);
   }
-  .member__media {
+  @media (min-width: 640px) {
+    .channels {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .channel:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 900px) {
+    .channels {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    .channel {
+      grid-column: span 2;
+    }
+    .channel:nth-child(4),
+    .channel:nth-child(5) {
+      grid-column: span 3;
+    }
+  }
+  @media (min-width: 1200px) {
+    .channels {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .channel,
+    .channel:nth-child(4),
+    .channel:nth-child(5),
+    .channel:last-child {
+      grid-column: auto;
+    }
+  }
+  .channel .card__body {
+    gap: 8px;
+  }
+  .channel__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .channel__title {
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+    letter-spacing: -0.025em;
+  }
+  .channel__title a {
+    color: inherit;
+  }
+
+  .paths {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .paths {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+  .path__media {
     position: relative;
     aspect-ratio: 16 / 9;
-    overflow: hidden;
   }
-  .member__media :global(img) {
+  .path__media :global(img) {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .member__body {
-    gap: 14px;
-  }
-  .member .body-lg {
-    max-width: 34em;
+  .path__body {
+    gap: 12px;
   }
   @media (min-width: 1024px) {
-    .member {
-      display: grid;
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    }
-    .member__media {
-      aspect-ratio: auto;
-      min-height: 380px;
-    }
-    .member__body {
-      padding: 40px;
-      justify-content: center;
+    .path__body {
+      padding: 32px;
     }
   }
-  .join-strip {
-    margin-top: clamp(32px, 5vw, 56px);
+  .path .body {
+    max-width: 40em;
   }
-  .ways {
-    display: grid;
-    gap: 16px;
+  .path__actions {
+    padding-top: 8px;
   }
-  @media (min-width: 640px) {
-    .ways {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
+  .path__contact {
+    font-size: 15px;
+    font-weight: 600;
   }
-  @media (min-width: 1024px) {
-    .ways {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 24px;
-    }
-  }
-  .way .title a {
-    color: inherit;
+  .path__contact a {
+    position: relative;
+    z-index: 2;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
   }
 </style>

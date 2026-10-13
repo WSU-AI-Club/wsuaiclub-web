@@ -57,7 +57,7 @@ test('team.yaml is valid and every listed headshot exists', () => {
   const shane = people.filter((p) => p.name === 'Shane Vithana');
   assert.equal(shane.length, 2, 'Shane Vithana is listed as Technical Consultant and on the advisory board');
   assert.equal(team.homeOrder?.length, 12, 'the home page shows all 12 student leaders');
-  assert.deepEqual(team.homeOrder?.slice(0, 3), ['Samuel Doell', 'Michael Goldberg', 'Eniola (Zadok) Olaobaju']);
+  assert.deepEqual(team.homeOrder?.slice(0, 3), ['Michael Goldberg', 'Samuel Doell', 'Eniola (Zadok) Olaobaju']);
 });
 
 test('site.yaml is valid', () => {

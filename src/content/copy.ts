@@ -34,7 +34,7 @@ export const formats: Format[] = [
     id: 'student-led',
     eyebrow: 'Student-led workshops',
     title: 'Members teach what they built',
-    body: 'Students demo their own projects and show the room how they made them.',
+    body: 'Members demo their own projects and show the room how they made them.',
     photo: 'chatterbox-demo',
     href: '/events#upcoming',
   },
@@ -152,8 +152,8 @@ export const copy = {
 
   joinBand: {
     eyebrow: 'Join',
-    headline: 'Every major is welcome',
-    lede: 'Bring a laptop. No experience needed.',
+    headline: 'Open to anyone curious about AI',
+    lede: 'Students, faculty, alumni and the Wichita community are welcome. Bring a laptop. No experience needed.',
     primary: 'Join AI Club',
     secondary: 'Join the GroupMe',
   },
@@ -169,7 +169,7 @@ export const copy = {
       headline: 'Close the gap between class and work',
       body: [
         "Most of what you need to know about using AI at work isn't on a syllabus yet. So we bring in the people deploying it, run hands-on sessions with the tools they use, and leave time for the hard questions.",
-        'Every major is welcome, and so are faculty and people from the Wichita community.',
+        'Students of every major are welcome, and so are faculty, alumni, Wichita community members and anyone who wants to learn about AI.',
       ],
     },
     studentLed: {
@@ -226,7 +226,7 @@ export const copy = {
     hero: {
       eyebrow: 'Events · Fall 2026',
       headline: 'Weekly meetings at Woolsey Hall',
-      lede: 'Every major is welcome, and so is the Wichita community. Each event lists its own date, time and place.',
+      lede: 'Students, faculty, alumni and the Wichita community are welcome. Each event lists its own date, time and place.',
       primary: 'Join AI Club',
       secondary: 'All dates on ShockerSync',
     },
@@ -296,8 +296,13 @@ export const copy = {
       subjectLabel: 'Subject',
       items: [
         {
+          title: 'Consulting and projects',
+          body: 'Have a problem AI could help with? Our members take on paid consulting and project work. Tell us what you need.',
+          subject: 'Consulting project inquiry',
+        },
+        {
           title: 'Speak at a meeting',
-          body: 'Show students how you use AI at work. Meetings are Wednesdays, 5:00 to 7:00 PM.',
+          body: 'Show members how you use AI at work, then take their questions.',
           subject: 'Speaking at AI Club',
         },
         {
@@ -329,9 +334,9 @@ export const copy = {
     social: {
       eyebrow: 'Follow',
       headline: 'Find us online',
-      instagram: { title: 'Instagram', body: 'Event posts and photos', handle: '@wsuaiclub' },
-      linkedin: { title: 'LinkedIn', body: 'Speakers and recaps', handle: 'WSU AI Club' },
-      groupme: { title: 'GroupMe', body: 'The member chat', handle: 'AI Club' },
+      instagram: { title: 'Instagram', body: 'Photos and event posts', handle: '@wsuaiclub' },
+      linkedin: { title: 'LinkedIn', body: 'Speakers, partners and club news', handle: 'WSU AI Club' },
+      groupme: { title: 'GroupMe', body: 'Meeting reminders and quick updates', handle: 'AI Club' },
     },
   },
 
@@ -339,30 +344,33 @@ export const copy = {
     hero: {
       eyebrow: 'Join',
       headline: 'Pick your way in',
-      lede: 'Students join on ShockerSync. Anyone can follow along on GroupMe, the email list or social.',
+      lede: 'AI Club is for students, faculty, alumni, Wichita community members and anyone who wants to learn about AI. Use one of these or all five.',
     },
-    member: {
-      eyebrow: 'Students · Start here',
-      title: 'Become a member',
-      body: 'Join AI Club on ShockerSync, where Wichita State lists its student organizations and their events.',
-      cta: 'Join on ShockerSync',
+    channels: {
+      shockersync: { eyebrow: 'Membership', title: 'ShockerSync', body: 'Official membership for WSU students.', cta: 'Join on ShockerSync' },
+      groupme: { eyebrow: 'Group chat', title: 'GroupMe', body: 'Meeting reminders and quick updates.', cta: 'Join the GroupMe' },
+      email: { eyebrow: 'Email', title: 'Email list', body: 'Event announcements in your inbox.', cta: 'Sign up' },
+      instagram: { eyebrow: 'Social', title: 'Instagram', body: 'Photos and event posts.', cta: 'Follow @wsuaiclub' },
+      linkedin: { eyebrow: 'Social', title: 'LinkedIn', body: 'Speakers, partners and club news.', cta: 'Follow the club' },
     },
-    others: {
-      eyebrow: 'More ways in',
-      headline: 'Stay in the loop',
-      items: {
-        groupme: { eyebrow: 'Chat', title: 'Join the GroupMe', body: 'Talk with members between meetings.', cta: 'Open GroupMe' },
-        email: { eyebrow: 'Email', title: 'Get the email list', body: 'Meeting topics and event dates, by email.', cta: 'Sign up' },
-        instagram: { eyebrow: 'Instagram', title: 'Follow @wsuaiclub', body: 'Event posts and photos.', cta: 'Open Instagram' },
-        linkedin: { eyebrow: 'LinkedIn', title: 'Follow the club', body: 'Speaker announcements and recaps.', cta: 'Open LinkedIn' },
+    paths: {
+      eyebrow: 'Who it is for',
+      headline: 'Find your path',
+      students: {
+        eyebrow: 'Students · Start here',
+        title: 'Become a member',
+        body: 'Join on ShockerSync to become an official member, then join the GroupMe for reminders. Come to any meeting. No experience needed.',
+        primary: 'Join on ShockerSync',
+        secondary: 'Join the GroupMe',
       },
-    },
-    notStudent: {
-      eyebrow: 'Not a student?',
-      headline: 'Faculty and community are welcome',
-      body: 'Join the email list to hear about meetings, or write to us about speaking, partnering or sponsoring.',
-      primary: 'Join the email list',
-      secondary: 'Contact the officers',
+      everyone: {
+        eyebrow: 'Faculty, alumni and community',
+        title: 'No membership needed',
+        body: 'Join the email list and the GroupMe, follow us on Instagram and LinkedIn, and come to any event. You do not need ShockerSync.',
+        primary: 'Join the email list',
+        secondary: 'See events',
+        contact: 'Want to speak, partner or sponsor? Contact the officers',
+      },
     },
   },
 
@@ -400,11 +408,11 @@ export const copy = {
     },
     contact: {
       title: 'Contact | AI Club at Wichita State',
-      description: 'Email aiclub@wichita.edu to speak at a meeting, partner on an event or sponsor a hackathon.',
+      description: 'Email aiclub@wichita.edu about consulting projects, speaking at a meeting, partnering on an event or sponsoring a hackathon.',
     },
     join: {
       title: 'Join | AI Club at Wichita State',
-      description: 'Join AI Club on ShockerSync, the GroupMe or the email list. Every major is welcome. Bring a laptop. No experience needed.',
+      description: 'Join AI Club on ShockerSync, GroupMe or the email list. Open to students, faculty, alumni and the Wichita community. No experience needed.',
     },
     notFound: {
       title: 'Page not found | AI Club at Wichita State',
