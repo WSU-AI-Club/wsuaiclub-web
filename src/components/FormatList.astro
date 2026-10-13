@@ -1,0 +1,86 @@
+---
+/**
+ * The five formats as numbered rows with a small photo: used on About and
+ * Events, where the home page's big cards would repeat.
+ */
+import { formats } from '../content/copy';
+import Photo from './Photo.astro';
+interface Props {
+  idPrefix?: string;
+}
+const { idPrefix = 'format' } = Astro.props;
+---
+
+<ol class="flist" role="list">
+  {
+    formats.map((f, i) => (
+      <li class="flist__item" id={`${idPrefix}-${f.id}`} data-reveal>
+        <p class="flist__index eyebrow" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+        <div class="flist__text">
+          <p class="eyebrow">{f.eyebrow}</p>
+          <h3 class="title">{f.title}</h3>
+          <p class="body">{f.body}</p>
+        </div>
+        <div class="flist__media photo-frame">
+          <Photo name={f.photo} decorative sizes="(min-width: 900px) 280px, 100vw" widths={[320, 560, 840]} />
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .flist {
+    border-top: 1px solid var(--divider);
+  }
+  .flist__item {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 8px 16px;
+    padding-block: 24px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .flist__index {
+    padding-top: 1px;
+  }
+  .flist__text {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+  /* Phones skip the thumbnails (the home page shows the photos big). */
+  .flist__media {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .flist__item {
+      grid-template-columns: 48px minmax(0, 1fr) 200px;
+      gap: 24px;
+    }
+    .flist__media {
+      display: block;
+      grid-column: 3;
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (min-width: 900px) {
+    .flist__item {
+      grid-template-columns: 64px minmax(0, 1fr) 280px;
+      gap: 32px;
+      padding-block: 28px;
+    }
+    .flist__media {
+      aspect-ratio: 16 / 10;
+    }
+    .flist .title {
+      font-size: clamp(1.5rem, 1rem + 1.2vw, 2rem);
+      letter-spacing: -0.025em;
+    }
+  }
+  .flist__media :global(img) {
+    transition: transform 0.9s var(--ease-out);
+  }
+  .flist__item:hover .flist__media :global(img) {
+    transform: scale(1.04);
+  }
+</style>

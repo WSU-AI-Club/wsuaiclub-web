@@ -1,0 +1,149 @@
+---
+import Icon from '../components/Icon.astro';
+import NextMeeting from '../components/NextMeeting.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { copy } from '../content/copy';
+import { site } from '../lib/data';
+import Base from '../layouts/Base.astro';
+
+const j = copy.join;
+const o = j.others.items;
+const others = [
+  { ...o.groupme, href: site.links.groupme },
+  { ...o.email, href: site.links.email_list },
+  { ...o.instagram, href: site.links.instagram },
+  { ...o.linkedin, href: site.links.linkedin },
+];
+---
+
+<Base title={copy.meta.join.title} description={copy.meta.join.description} path="/join">
+  <PageHero eyebrow={j.hero.eyebrow} headline={j.hero.headline} lede={j.hero.lede} theme="ink">
+    <article class="member card" data-theme="paper" data-reveal>
+      <div class="member__media">
+        <Photo name="lovable-workshop" decorative sizes="(min-width: 1024px) 44vw, 100vw" widths={[480, 800, 1200, 1600]} />
+      </div>
+      <div class="card__body member__body">
+        <p class="eyebrow eyebrow--ink">{j.member.eyebrow}</p>
+        <h2 class="title title--lg">{j.member.title}</h2>
+        <p class="body body-lg">{j.member.body}</p>
+        <p class="card__foot">
+          <a class="btn btn--primary" href={site.links.shockersync} target="_blank" rel="noopener">
+            {j.member.cta}
+            <Icon name="external" />
+            <span class="visually-hidden">{` ${copy.newTab}`}</span>
+          </a>
+        </p>
+      </div>
+    </article>
+    <div class="join-strip">
+      <NextMeeting spark={false} />
+    </div>
+  </PageHero>
+
+  <section class="section" data-theme="paper" aria-labelledby="others-title">
+    <div class="container">
+      <SectionHead eyebrow={j.others.eyebrow} index="01" headline={j.others.headline} id="others-title" />
+      <ul class="ways" role="list">
+        {
+          others.map((w) => (
+            <li class="card way" data-reveal>
+              <div class="card__body">
+                <p class="eyebrow">{w.eyebrow}</p>
+                <h3 class="title">
+                  <a class="stretch" href={w.href} target="_blank" rel="noopener">
+                    {w.title}
+                    <span class="visually-hidden">{` ${copy.newTab}`}</span>
+                  </a>
+                </h3>
+                <p class="body">{w.body}</p>
+                <p class="card__foot">
+                  <span class="more">
+                    <span>{w.cta}</span>
+                    <Icon name="external" />
+                  </span>
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" data-theme="paper" aria-labelledby="not-student-title">
+    <div class="container">
+      <SectionHead eyebrow={j.notStudent.eyebrow} index="02" headline={j.notStudent.headline} lede={j.notStudent.body} id="not-student-title">
+        <div class="btn-row">
+          <a class="btn btn--primary" href={site.links.email_list} target="_blank" rel="noopener">
+            {j.notStudent.primary}
+            <Icon name="external" />
+            <span class="visually-hidden">{` ${copy.newTab}`}</span>
+          </a>
+          <a class="btn btn--secondary" href="/contact">{j.notStudent.secondary}<Icon name="arrow" /></a>
+        </div>
+      </SectionHead>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .member {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+  .member__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .member__media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .member__body {
+    gap: 14px;
+  }
+  .member .body-lg {
+    max-width: 34em;
+  }
+  @media (min-width: 1024px) {
+    .member {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+    .member__media {
+      aspect-ratio: auto;
+      min-height: 380px;
+    }
+    .member__body {
+      padding: 40px;
+      justify-content: center;
+    }
+  }
+  .join-strip {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+  .ways {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .ways {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .ways {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+  .way .title a {
+    color: inherit;
+  }
+</style>

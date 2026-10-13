@@ -1,0 +1,93 @@
+---
+import JoinBand from '../components/JoinBand.astro';
+import PageHero from '../components/PageHero.astro';
+import PersonCard from '../components/PersonCard.astro';
+import { copy } from '../content/copy';
+import { team } from '../lib/data';
+import Base from '../layouts/Base.astro';
+
+const t = copy.team;
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+---
+
+<Base title={copy.meta.team.title} description={copy.meta.team.description} path="/team">
+  <PageHero eyebrow={t.hero.eyebrow} headline={t.hero.headline} lede={t.hero.lede} />
+
+  {
+    team.groups.map((g, i) => (
+      <section class="section section--tight team-group" data-theme="paper" aria-labelledby={`g-${slug(g.name)}`}>
+        <div class="container">
+          <div class="team-group__bar" data-reveal>
+            <h2 class="title title--lg" id={`g-${slug(g.name)}`}>
+              {g.name}
+            </h2>
+            <p class="eyebrow">
+              {String(i + 1).padStart(2, '0')} · {g.people.length} {g.people.length === 1 ? 'person' : 'people'}
+            </p>
+          </div>
+          {g.note && (
+            <p class="lede team-group__note" data-reveal>
+              {g.note}
+            </p>
+          )}
+          <ul class:list={['team-grid', g.people.length === 1 && 'team-grid--solo']} role="list">
+            {g.people.map((p) => (
+              <PersonCard person={p} />
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <JoinBand />
+</Base>
+
+<style>
+  .team-group {
+    padding-top: 0;
+  }
+  .team-group__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-bottom: 14px;
+    border-bottom: var(--stroke-rule) solid var(--ink);
+    margin-bottom: 24px;
+  }
+  .team-group__note {
+    margin: -4px 0 24px;
+  }
+  .team-grid {
+    display: grid;
+    gap: 12px;
+  }
+  @media (min-width: 640px) {
+    .team-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    /* A group of one (the faculty advisor) gets a wider card for the long title. */
+    .team-grid--solo > :global(*) {
+      grid-column: span 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .team-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .team-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

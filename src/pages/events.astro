@@ -1,0 +1,245 @@
+---
+import EventList from '../components/EventList.astro';
+import FormatList from '../components/FormatList.astro';
+import Hackathons from '../components/Hackathons.astro';
+import Icon from '../components/Icon.astro';
+import JoinBand from '../components/JoinBand.astro';
+import NextMeeting from '../components/NextMeeting.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { copy } from '../content/copy';
+import { events, site } from '../lib/data';
+import type { PhotoName } from '../lib/photo-meta';
+import Base from '../layouts/Base.astro';
+
+const e = copy.events;
+const wide = new Set<PhotoName>(['chocolathon-parameters-talk']);
+const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).map(([name, caption]) => ({ name, caption, wide: wide.has(name) }));
+---
+
+<Base title={copy.meta.events.title} description={copy.meta.events.description} path="/events">
+  <PageHero eyebrow={e.hero.eyebrow} headline={e.hero.headline} lede={e.hero.lede} theme="ink">
+    <div class="ev-hero__ctas btn-row enter">
+      <a class="btn btn--primary" href="/join">{e.hero.primary}<Icon name="arrow" /></a>
+      <a class="btn btn--secondary" href={site.links.shockersync_events} target="_blank" rel="noopener">{e.hero.secondary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span></a>
+    </div>
+    <figure class="ev-hero__photo photo-frame scrim" data-reveal>
+      <div class="ev-hero__parallax" data-parallax="40">
+        <Photo name="chocolathon-parameters-talk" focus="42% 28%" priority sizes="(min-width: 1440px) 1296px, 100vw" widths={[640, 960, 1280, 1600, 2000, 2400]} />
+      </div>
+    </figure>
+    <div class="ev-hero__strip">
+      <NextMeeting />
+    </div>
+  </PageHero>
+
+  <section class="section" data-theme="paper" id="upcoming" aria-labelledby="upcoming-title">
+    <div class="container">
+      <SectionHead eyebrow={e.upcoming.eyebrow} index="01" headline={e.upcoming.headline} lede={e.upcoming.lede} id="upcoming-title" />
+      <EventList />
+    </div>
+  </section>
+
+  <section class="section" data-theme="paper" aria-labelledby="formats-title">
+    <div class="container">
+      <SectionHead eyebrow={e.formats.eyebrow} index="02" headline={e.formats.headline} id="formats-title" />
+      <FormatList idPrefix="format" />
+    </div>
+  </section>
+
+  <section class="section" data-theme="paper" id="hackathons" aria-labelledby="hack-title">
+    <div class="container">
+      <SectionHead eyebrow={e.hackathons.eyebrow} index="03" headline={e.hackathons.headline} id="hack-title" />
+      <Hackathons />
+    </div>
+  </section>
+
+  <section class="section" data-theme="ink" id="speakers" aria-labelledby="speakers-title">
+    <div class="container">
+      <SectionHead eyebrow={e.speakers.eyebrow} index="04" headline={e.speakers.headline} lede={e.speakers.lede} id="speakers-title" />
+      <div class="speakers">
+        {
+          events.speakers.map((g) => (
+            <div class="speakers__group" data-reveal>
+              <h3 class="eyebrow speakers__title">
+                {g.group} · {String(g.speakers.length).padStart(2, '0')}
+              </h3>
+              <ul role="list">
+                {g.speakers.map((s) => (
+                  <li class="speakers__row">
+                    <span class="speakers__name">{s.name}</span>
+                    {s.role && <span class="label">{s.role}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-theme="paper" aria-labelledby="gallery-title">
+    <div class="container">
+      <SectionHead eyebrow={e.gallery.eyebrow} index="05" headline={e.gallery.headline} id="gallery-title" />
+      <ul class="gallery" role="list">
+        {
+          gallery.map((g) => (
+            <li class:list={['gallery__item', g.wide && 'gallery__item--wide']} data-reveal>
+              <figure>
+                <div class="photo-frame gallery__frame">
+                  <Photo name={g.name} sizes={g.wide ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'} widths={[400, 640, 960, 1280, 1600]} />
+                </div>
+                <figcaption class="label">{g.caption}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <JoinBand />
+</Base>
+
+<style>
+  .ev-hero__ctas {
+    margin-top: 28px;
+  }
+  .ev-hero__photo {
+    position: relative;
+    margin-top: clamp(32px, 5vw, 56px);
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 640px) {
+    .ev-hero__photo {
+      aspect-ratio: 16 / 9;
+    }
+  }
+  @media (min-width: 1024px) {
+    .ev-hero__photo {
+      aspect-ratio: 21 / 9;
+    }
+    .ev-hero__ctas {
+      margin-top: 36px;
+    }
+  }
+  .ev-hero__parallax {
+    position: absolute;
+    inset: 0;
+  }
+  .ev-hero__parallax :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ev-hero__strip {
+    margin-top: clamp(28px, 4vw, 48px);
+  }
+
+  .speakers {
+    display: grid;
+    gap: 40px;
+  }
+  @media (min-width: 900px) {
+    .speakers {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 56px;
+    }
+  }
+  .speakers__title {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .speakers__row {
+    display: grid;
+    gap: 4px;
+    padding-block: 14px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .speakers__name {
+    font-family: var(--font-serif);
+    font-size: clamp(1.3125rem, 1.15rem + 0.6vw, 1.75rem);
+    line-height: 1.15;
+  }
+  @media (min-width: 900px) {
+    .speakers__group:first-child ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 32px;
+    }
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 12px;
+  }
+  .gallery figure {
+    display: grid;
+    gap: 8px;
+  }
+  .gallery__frame {
+    aspect-ratio: 1;
+  }
+  .gallery__item--wide {
+    grid-column: 1 / -1;
+  }
+  .gallery__item--wide .gallery__frame {
+    aspect-ratio: 16 / 10;
+  }
+  @media (max-width: 639px) {
+    .gallery figcaption {
+      font-size: 11px;
+      line-height: 14px;
+    }
+    .gallery__item:last-child {
+      grid-column: 1 / -1;
+    }
+    .gallery__item:last-child .gallery__frame {
+      aspect-ratio: 16 / 10;
+    }
+  }
+  @media (min-width: 640px) {
+    .gallery {
+      gap: 24px 20px;
+    }
+    .gallery__frame {
+      aspect-ratio: 4 / 3;
+    }
+    .gallery__item--wide .gallery__frame {
+      aspect-ratio: 21 / 9;
+    }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .gallery__item:last-child {
+      grid-column: 1 / -1;
+    }
+    .gallery__item:last-child .gallery__frame {
+      aspect-ratio: 21 / 9;
+    }
+  }
+  @media (min-width: 1024px) {
+    .gallery {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .gallery__item--wide {
+      grid-column: span 2;
+    }
+    .gallery__item--wide .gallery__frame {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+    .gallery__item--wide figure {
+      height: 100%;
+      grid-template-rows: 1fr auto;
+    }
+  }
+  .gallery__frame :global(img) {
+    transition: transform 0.9s var(--ease-out);
+  }
+  .gallery__item:hover .gallery__frame :global(img) {
+    transform: scale(1.03);
+  }
+</style>

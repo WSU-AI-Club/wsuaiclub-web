@@ -1,0 +1,58 @@
+---
+/**
+ * The horizontal lockup, exactly as supplied. On paper the black file is
+ * layered with the spark drawn separately (same geometry, same viewBox
+ * position) so the spark can make its one quarter-turn on load.
+ * On ink the reversed file is used as is.
+ */
+import { copy } from '../content/copy';
+interface Props { variant?: 'black' | 'reversed'; class?: string; animate?: boolean }
+const { variant = 'black', animate = false } = Astro.props;
+---
+{
+  variant === 'black' ? (
+    <span class:list={['logo', Astro.props.class]}>
+      <img src="/brand/lockup-horizontal-black-nospark.svg" alt={copy.brand.logoAlt} width="8568" height="3096" decoding="async" />
+      <svg class:list={["logo__spark", animate && "logo__spark--turn"]} aria-hidden="true" focusable="false"><use href="#spark" /></svg>
+    </span>
+  ) : (
+    <span class:list={['logo', Astro.props.class]}>
+      <img src="/brand/lockup-horizontal-reversed.svg" alt={copy.brand.logoAlt} width="8568" height="3096" decoding="async" loading="lazy" />
+    </span>
+  )
+}
+
+<style>
+  .logo {
+    position: relative;
+    display: block;
+    aspect-ratio: 8568 / 3096;
+  }
+  .logo img {
+    width: 100%;
+    height: 100%;
+  }
+  /* Spark box inside the lockup's viewBox (-84 -84 8568 3096): x 791..1637, y 8..855. */
+  .logo__spark {
+    position: absolute;
+    left: 10.212%;
+    top: 2.972%;
+    width: 9.874%;
+    height: 27.358%;
+    color: var(--brand-gold);
+    overflow: visible;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .logo__spark--turn {
+      animation: spark-turn 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+    }
+  }
+  @keyframes spark-turn {
+    from {
+      transform: rotate(-90deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+</style>

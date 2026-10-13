@@ -1,0 +1,36 @@
+---
+/**
+ * An event photo from src/assets/photos, as AVIF + WebP + JPEG at several
+ * widths. Alt text and the crop focal point come from src/lib/photo-meta.ts.
+ */
+import { Picture } from 'astro:assets';
+import { PHOTOS } from '../lib/data';
+import { PHOTO_META, type PhotoName } from '../lib/photo-meta';
+interface Props {
+  name: PhotoName;
+  sizes: string;
+  widths?: number[];
+  priority?: boolean;
+  focus?: string;
+  class?: string;
+  decorative?: boolean;
+}
+const { name, sizes, widths = [480, 800, 1200, 1600], priority = false, focus, decorative = false } = Astro.props;
+const src = PHOTOS[name];
+const meta = PHOTO_META[name];
+const usable = widths.filter((w) => w <= src.width);
+---
+<Picture
+  src={src}
+  alt={decorative ? '' : meta.alt}
+  widths={usable.length ? usable : [src.width]}
+  sizes={sizes}
+  formats={['avif', 'webp']}
+  quality={50}
+  priority={priority}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  class={Astro.props.class}
+  pictureAttributes={{ class: 'pic' }}
+  style={`object-position:${focus ?? meta.focus}`}
+/>

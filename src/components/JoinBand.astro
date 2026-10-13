@@ -1,0 +1,52 @@
+---
+import { copy } from '../content/copy';
+import { site } from '../lib/data';
+import Icon from './Icon.astro';
+import Spark from './Spark.astro';
+const t = copy.joinBand;
+---
+
+<section class="join-band section" data-theme="ink" aria-labelledby="join-band-title">
+  <div class="container">
+    <div class="join-band__bar" data-reveal>
+      <p class="eyebrow kicker"><Spark />{t.eyebrow}</p>
+    </div>
+    <div class="join-band__grid">
+      <h2 class="display" id="join-band-title" data-reveal>{t.headline}</h2>
+      <div class="join-band__aside" data-reveal>
+        <p class="lede">{t.lede}</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/join">{t.primary}<Icon name="arrow" /></a>
+          <a class="btn btn--secondary" href={site.links.groupme} target="_blank" rel="noopener">{t.secondary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .join-band__bar {
+    padding-bottom: 14px;
+    border-bottom: var(--stroke-rule) solid var(--ink);
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+  .join-band__grid {
+    display: grid;
+    gap: 24px;
+  }
+  .join-band .display {
+    max-width: 11ch;
+  }
+  .join-band__aside {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+  @media (min-width: 1024px) {
+    .join-band__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 56px;
+      align-items: end;
+    }
+  }
+</style>

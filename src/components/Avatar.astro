@@ -1,0 +1,26 @@
+---
+/** A black-and-white headshot from src/assets/team, or an initials tile. */
+import { Picture } from 'astro:assets';
+import { HEADSHOTS, initials } from '../lib/data';
+interface Props {
+  name: string;
+  photo?: string;
+  size?: number;
+  class?: string;
+}
+const { name, photo, size = 88 } = Astro.props;
+const img = photo ? HEADSHOTS[photo] : undefined;
+const style = `--size:${size}px`;
+---
+
+{
+  img ? (
+    <span class:list={['avatar', Astro.props.class]} style={style}>
+      <Picture src={img} alt="" widths={[Math.min(size, 256), Math.min(size * 2, 256)]} sizes={`${size}px`} formats={['avif']} fallbackFormat="webp" quality={75} loading="lazy" decoding="async" />
+    </span>
+  ) : (
+    <span class:list={['avatar', 'avatar--initials', Astro.props.class]} style={style} aria-hidden="true">
+      {initials(name)}
+    </span>
+  )
+}

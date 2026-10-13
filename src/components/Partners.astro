@@ -1,0 +1,74 @@
+---
+/** Partner names in a hairline grid, like a data strip. Logos can replace the names later. */
+import { site } from '../lib/data';
+---
+
+<ul class="partners" role="list">
+  {
+    site.partners.map((p) => (
+      <li class="partners__cell" data-reveal>
+        <p class="partners__name">
+          {p.link ? (
+            <a href={p.link} target="_blank" rel="noopener">
+              {p.name}
+            </a>
+          ) : (
+            p.name
+          )}
+        </p>
+        <p class="label">{p.kind}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .partners {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: var(--stroke-rule) solid var(--ink);
+  }
+  .partners__cell {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 20px 16px 22px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .partners__cell:nth-child(odd) {
+    padding-left: 0;
+  }
+  .partners__cell:nth-child(even) {
+    border-left: 1px solid var(--divider);
+  }
+  @media (min-width: 900px) {
+    .partners {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .partners__cell {
+      padding: 28px 24px 30px;
+    }
+    .partners__cell:nth-child(odd) {
+      padding-left: 24px;
+    }
+    .partners__cell:nth-child(even) {
+      border-left: 0;
+    }
+    .partners__cell:nth-child(3n + 1) {
+      padding-left: 0;
+    }
+    .partners__cell:not(:nth-child(3n + 1)) {
+      border-left: 1px solid var(--divider);
+    }
+  }
+  .partners__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.125rem, 1rem + 0.7vw, 1.625rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .partners__name a {
+    text-decoration: none;
+  }
+</style>

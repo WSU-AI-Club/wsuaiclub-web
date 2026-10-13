@@ -1,0 +1,161 @@
+---
+/**
+ * Upcoming events from src/data/events.yaml (today or later at build time).
+ * Each row carries its end time; site.ts hides rows that have ended and
+ * shows the empty state if none are left.
+ */
+import { copy } from '../content/copy';
+import { site, upcomingEvents } from '../lib/data';
+import Icon from './Icon.astro';
+
+const list = upcomingEvents();
+const t = copy.events.upcoming;
+const n = copy.nextMeeting;
+const typeLabel = copy.eventTypes;
+---
+
+<div class="events">
+  {
+    list.length > 0 && (
+      <ol class="events__list" role="list" data-event-list>
+        {list.map((e) => (
+          <li class="card event" data-ends={e.endsAt} data-reveal>
+            <p class="event__date" aria-hidden="true">
+              <span class="label">{e.weekday}</span>
+              <span class="event__day">{e.day}</span>
+              <span class="label">{e.month}</span>
+            </p>
+            <div class="event__body">
+              <p class="event__meta">
+                <span class="tag">{typeLabel[e.type]}</span>
+              </p>
+              <h3 class="title">
+                {e.link ? (
+                  <a class="stretch" href={e.link} target="_blank" rel="noopener">
+                    {e.title}
+                    <span class="visually-hidden">, {e.dateLabel}, on ShockerSync {copy.newTab}</span>
+                  </a>
+                ) : (
+                  e.title
+                )}
+              </h3>
+              <p class="data event__when">
+                <time datetime={e.startsAt}>{e.timeLabel}</time> · {e.place}
+              </p>
+              {e.note && <p class="body event__note">{e.note}</p>}
+            </div>
+            {e.link && (
+              <span class="event__go more" aria-hidden="true">
+                <span>{t.rsvp}</span>
+                <Icon name="external" />
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    )
+  }
+  <div class="card events__empty" data-event-empty hidden={list.length > 0 ? true : undefined}>
+    <p class="title">{n.empty}</p>
+    <a class="btn btn--secondary" href={site.links.shockersync_events} target="_blank" rel="noopener">{n.emptyLink}<Icon name="external" /></a>
+  </div>
+</div>
+
+<style>
+  .events__list {
+    display: grid;
+    gap: 12px;
+  }
+  .event {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 16px;
+    padding: 18px 16px;
+  }
+  .event[hidden] {
+    display: none;
+  }
+  .event__date {
+    align-self: start;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 2px;
+    padding: 10px 0 8px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-sunk);
+    text-align: center;
+  }
+  .event__day {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .event__body {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .event__meta {
+    display: flex;
+    gap: 8px;
+  }
+  .event .title a {
+    color: inherit;
+  }
+  .event__when {
+    color: var(--ink-muted);
+  }
+  .event__note {
+    max-width: 52ch;
+  }
+  .event__go {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 15px;
+  }
+  .event__go span:first-child {
+    display: none;
+  }
+  .event .title {
+    padding-right: 24px;
+  }
+  @media (min-width: 900px) {
+    .events__list {
+      gap: 16px;
+    }
+    .event {
+      grid-template-columns: 88px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 28px;
+      padding: 20px 28px 20px 20px;
+    }
+    .event__date {
+      padding: 12px 0 10px;
+    }
+    .event__day {
+      font-size: 2.25rem;
+    }
+    .event__go {
+      position: static;
+      grid-column: 3;
+    }
+    .event__go span:first-child {
+      display: inline;
+    }
+    .event .title {
+      padding-right: 0;
+    }
+  }
+  .events__empty {
+    padding: 28px;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .events__empty[hidden] {
+    display: none;
+  }
+</style>

@@ -1,0 +1,8 @@
+---
+/* A person's name that never line-breaks inside a hyphenated part ("Moore-Kirby"). */
+interface Props {
+  name: string;
+}
+const parts = Astro.props.name.split(' ');
+---
+{parts.map((p, i) => <Fragment>{i > 0 ? ' ' : ''}{p.includes('-') ? <span style="white-space:nowrap">{p}</span> : p}</Fragment>)}

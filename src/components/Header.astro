@@ -1,0 +1,319 @@
+---
+/**
+ * Site header: logo · About Us · Events · Contact · Join.
+ * Phones: logo, Join and a Menu button that opens a full-screen sheet
+ * (a modal <dialog>: focus stays inside, Esc closes, the page underneath
+ * does not scroll). Without JS the Menu button becomes a link to the footer
+ * navigation. Behavior lives in src/scripts/site.ts.
+ */
+import { copy } from '../content/copy';
+import { site } from '../lib/data';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+
+const nav = [
+  { href: '/about', label: copy.nav.about },
+  { href: '/events', label: copy.nav.events },
+  { href: '/contact', label: copy.nav.contact },
+];
+const sheet = [
+  { href: '/about', label: copy.nav.about },
+  { href: '/events', label: copy.nav.events },
+  { href: '/team', label: copy.nav.team },
+  { href: '/contact', label: copy.nav.contact },
+  { href: '/join', label: copy.nav.join },
+];
+const current = (href: string) => (path === href ? 'page' : undefined);
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__row">
+    <a href="/" class="site-header__home" aria-current={current('/')}>
+      <Logo animate class="site-header__logo" />
+    </a>
+
+    <nav class="site-nav" aria-label={copy.nav.primaryLabel}>
+      <ul>
+        {
+          nav.map((l) => (
+            <li>
+              <a href={l.href} aria-current={current(l.href)}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="btn btn--primary btn--sm site-header__join" href="/join" aria-current={current('/join')}>{copy.nav.join}</a>
+      <button class="menu-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-sheet" data-menu-open>
+        <Icon name="menu" />
+        <span>{copy.nav.menu}</span>
+      </button>
+      <a class="menu-btn menu-btn--fallback" href="#site-footer">{copy.nav.menu}</a>
+    </div>
+  </div>
+</header>
+
+<dialog id="menu-sheet" class="menu-sheet" data-theme="ink" aria-label={copy.nav.menu} data-menu>
+  <div class="menu-sheet__inner">
+    <div class="container menu-sheet__top">
+      <a href="/" class="menu-sheet__home"><Logo variant="reversed" class="menu-sheet__logo" /></a>
+      <button type="button" class="menu-btn" data-menu-close>
+        <Icon name="close" />
+        <span>{copy.nav.close}</span>
+      </button>
+    </div>
+    <nav class="container menu-sheet__nav" aria-label={copy.nav.menu}>
+      <ol>
+        {
+          sheet.map((l, i) => (
+            <li>
+              <a href={l.href} aria-current={current(l.href)}>
+                <span class="eyebrow">{String(i + 1).padStart(2, '0')}</span>
+                <span class="menu-sheet__label">{l.label}</span>
+                <Icon name="arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+    <div class="container menu-sheet__foot">
+      <a class="data" href={`mailto:${site.contact_email}`}>{site.contact_email}</a>
+      <p class="eyebrow">{site.meeting.day} · {site.meeting.time} · {site.meeting.place}</p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    background: color-mix(in srgb, var(--brand-ivory) 86%, transparent);
+    -webkit-backdrop-filter: saturate(1.6) blur(16px);
+    backdrop-filter: saturate(1.6) blur(16px);
+    border-bottom: 1px solid color-mix(in srgb, var(--line) 0%, transparent);
+    transition:
+      height 0.35s var(--ease-out),
+      border-color 0.35s,
+      background-color 0.35s;
+  }
+  .site-header.is-compact {
+    height: var(--header-compact);
+    border-bottom-color: var(--line);
+    background: color-mix(in srgb, var(--brand-ivory) 92%, transparent);
+  }
+  .site-header__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .site-header__home {
+    display: block;
+    border-radius: 4px;
+  }
+  .site-header__home :global(.site-header__logo) {
+    width: 138px;
+    transition: width 0.35s var(--ease-out);
+  }
+  .is-compact .site-header__home :global(.site-header__logo) {
+    width: 124px;
+  }
+  @media (min-width: 900px) {
+    .site-header__home :global(.site-header__logo) {
+      width: 156px;
+    }
+    .is-compact .site-header__home :global(.site-header__logo) {
+      width: 132px;
+    }
+  }
+
+  .site-nav {
+    display: none;
+  }
+  .site-nav ul {
+    display: flex;
+    gap: 4px;
+  }
+  .site-nav a {
+    position: relative;
+    display: block;
+    padding: 10px 14px;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+  }
+  .site-nav a::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-out);
+  }
+  .site-nav a:hover::after {
+    transform: scaleX(1);
+  }
+  .site-nav a[aria-current='page']::after {
+    background: var(--spark);
+    transform: scaleX(1);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: transparent;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .menu-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  :global(.js) .menu-btn--fallback {
+    display: none;
+  }
+  :global(html:not(.js)) [data-menu-open] {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .site-nav {
+      display: block;
+      margin-left: auto;
+    }
+    .menu-btn {
+      display: none !important;
+    }
+  }
+
+  /* ── phone menu sheet ─────────────────────────────────────────── */
+  .menu-sheet {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--surface);
+    color: var(--ink);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .menu-sheet::backdrop {
+    background: var(--brand-black);
+  }
+  .menu-sheet__inner {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+  .menu-sheet__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+  }
+  .menu-sheet__top .menu-btn {
+    border-color: var(--line-strong);
+  }
+  .menu-sheet__home :global(.menu-sheet__logo) {
+    width: 138px;
+  }
+  .menu-sheet__nav {
+    margin-top: 24px;
+    border-top: var(--stroke-rule) solid var(--ink);
+  }
+  .menu-sheet__nav a {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--divider);
+    text-decoration: none;
+  }
+  .menu-sheet__label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .menu-sheet__nav a svg {
+    width: 20px;
+    height: 20px;
+    color: var(--ink-muted);
+  }
+  .menu-sheet__nav a[aria-current='page'] .eyebrow {
+    color: var(--spark-text);
+  }
+  .menu-sheet__foot {
+    margin-top: auto;
+    padding-top: 40px;
+    display: grid;
+    gap: 8px;
+  }
+  .menu-sheet__foot a {
+    color: var(--ink);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-sheet[open] {
+      animation: sheet-in 0.4s var(--ease-out);
+    }
+    .menu-sheet[open] .menu-sheet__nav li {
+      animation: sheet-item 0.5s var(--ease-out) both;
+    }
+    .menu-sheet[open] .menu-sheet__nav li:nth-child(2) { animation-delay: 40ms; }
+    .menu-sheet[open] .menu-sheet__nav li:nth-child(3) { animation-delay: 80ms; }
+    .menu-sheet[open] .menu-sheet__nav li:nth-child(4) { animation-delay: 120ms; }
+    .menu-sheet[open] .menu-sheet__nav li:nth-child(5) { animation-delay: 160ms; }
+  }
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes sheet-item {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+</style>

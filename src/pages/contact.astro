@@ -1,0 +1,203 @@
+---
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { copy } from '../content/copy';
+import { site } from '../lib/data';
+import Base from '../layouts/Base.astro';
+
+const c = copy.contact;
+const mailto = (subject: string) => `mailto:${site.contact_email}?subject=${encodeURIComponent(subject)}`;
+const socials = [
+  { ...c.social.instagram, href: site.links.instagram },
+  { ...c.social.linkedin, href: site.links.linkedin },
+  { ...c.social.groupme, href: site.links.groupme },
+];
+---
+
+<Base title={copy.meta.contact.title} description={copy.meta.contact.description} path="/contact">
+  <PageHero eyebrow={c.hero.eyebrow} headline={c.hero.headline} lede={c.hero.lede}>
+    <div class="email enter">
+      <p class="label">{c.email.label}</p>
+      <div class="email__row">
+        <a class="email__address" href={`mailto:${site.contact_email}`}>{site.contact_email}</a>
+        <button class="btn btn--secondary btn--sm" type="button" data-copy={site.contact_email} data-copied={c.email.copied} hidden>
+          <Icon name="copy" />
+          <span data-copy-label>{c.email.copy}</span>
+        </button>
+      </div>
+    </div>
+  </PageHero>
+
+  <section class="section" data-theme="paper" aria-labelledby="topics-title">
+    <div class="container">
+      <SectionHead eyebrow={c.topics.eyebrow} index="01" headline={c.topics.headline} id="topics-title" />
+      <ul class="topics" role="list">
+        {
+          c.topics.items.map((t, i) => (
+            <li class="card topic" data-reveal>
+              <div class="card__body">
+                <p class="eyebrow">{String(i + 1).padStart(2, '0')}</p>
+                <h3 class="title">
+                  <a class="stretch" href={mailto(t.subject)}>
+                    {t.title}
+                  </a>
+                </h3>
+                <p class="body">{t.body}</p>
+                <p class="card__foot topic__subject">
+                  <span class="label">{c.topics.subjectLabel}</span>
+                  <span class="data">{t.subject}</span>
+                  <Icon name="mail" class="topic__icon" />
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" data-theme="ink" aria-labelledby="where-title">
+    <div class="container">
+      <SectionHead eyebrow={c.where.eyebrow} index="02" headline={c.where.headline} lede={c.where.note} id="where-title">
+        <a class="btn btn--secondary" href="/events">{c.where.cta}<Icon name="arrow" /></a>
+      </SectionHead>
+      <dl class="strip strip--wrap" data-reveal>
+        <div class="strip__cell">
+          <dt class="label">{c.where.day}</dt>
+          <dd class="strip__value">{site.meeting.day}</dd>
+        </div>
+        <div class="strip__cell">
+          <dt class="label">{c.where.time}</dt>
+          <dd class="strip__value">{site.meeting.time}</dd>
+        </div>
+        <div class="strip__cell">
+          <dt class="label">{c.where.place}</dt>
+          <dd class="strip__value">{site.meeting.place}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" data-theme="paper" aria-labelledby="social-title">
+    <div class="container">
+      <SectionHead eyebrow={c.social.eyebrow} index="03" headline={c.social.headline} id="social-title" />
+      <ul class="socials" role="list">
+        {
+          socials.map((s) => (
+            <li class="card social" data-reveal>
+              <div class="card__body">
+                <p class="eyebrow">{s.title}</p>
+                <h3 class="title">
+                  <a class="stretch" href={s.href} target="_blank" rel="noopener">
+                    {s.handle}
+                    <span class="visually-hidden">on {s.title} {copy.newTab}</span>
+                  </a>
+                </h3>
+                <p class="body">{s.body}</p>
+                <span class="social__go" aria-hidden="true"><Icon name="external" /></span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .email {
+    margin-top: clamp(32px, 5vw, 56px);
+    padding-top: 16px;
+    border-top: 1px solid var(--divider);
+    display: grid;
+    gap: 10px;
+  }
+  .email__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+  }
+  .email__address {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.625rem, 1rem + 3.4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat;
+    padding-bottom: 4px;
+    transition: background-size 0.4s var(--ease-out);
+  }
+  .email__address:hover {
+    background-size: 0 2px;
+    background-position: 100% 100%;
+  }
+  .email [hidden] {
+    display: none;
+  }
+
+  .topics {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .topics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+  .topic .title a,
+  .social .title a {
+    color: inherit;
+  }
+  .topic__subject {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 14px;
+    margin-top: 8px;
+    border-top: 1px solid var(--divider);
+  }
+  .topic__subject .data {
+    color: var(--ink);
+  }
+  .topic__subject :global(.topic__icon) {
+    margin-left: auto;
+    width: 18px;
+    height: 18px;
+    color: var(--ink-muted);
+  }
+
+  .socials {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .socials {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+  .social .card__body {
+    position: relative;
+    padding-right: 56px;
+  }
+  .social__go {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--ink-muted);
+    transition: color 0.2s, transform 0.3s var(--ease-out);
+  }
+  .social__go :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+  .social:hover .social__go {
+    color: var(--ink);
+    transform: translate(2px, -2px);
+  }
+</style>

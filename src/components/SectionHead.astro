@@ -1,0 +1,45 @@
+---
+/**
+ * The post anatomy, translated to a page section: a mono label row with an
+ * index at the right, a 3px rule, then the headline and an optional lede.
+ */
+import Spark from './Spark.astro';
+interface Props {
+  eyebrow: string;
+  index?: string;
+  headline: string;
+  lede?: string;
+  level?: 'h1' | 'h2';
+  spark?: boolean;
+  id?: string;
+  size?: 'display' | 'headline';
+  /** Desktop: line the aside up with the headline's top instead of its bottom. */
+  align?: 'end' | 'start';
+}
+const { eyebrow, index, headline, lede, level = 'h2', spark = false, id, size = level === 'h1' ? 'display' : 'headline', align = 'end' } = Astro.props;
+const Tag = level;
+const hasAside = Astro.slots.has('default');
+---
+<header class="sec-head">
+  <div class="sec-head__bar" data-reveal>
+    <p class:list={['eyebrow', spark && 'kicker eyebrow--ink']}>{spark && <Spark />}{eyebrow}</p>
+    {index && <p class="eyebrow" aria-hidden="true">{index}</p>}
+  </div>
+  <div class:list={['sec-head__body', !lede && !hasAside && 'sec-head__body--solo', align === 'start' && 'sec-head__body--start']}>
+    <Tag class={size} id={id} data-reveal>{headline}</Tag>
+    {(lede || hasAside) && (
+      <div class="sec-head__aside" data-reveal>
+        {lede && <p class="lede">{lede}</p>}
+        <slot />
+      </div>
+    )}
+  </div>
+</header>
+
+<style>
+  .sec-head__aside {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+</style>

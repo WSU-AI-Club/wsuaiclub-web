@@ -1,0 +1,89 @@
+---
+import { copy } from '../content/copy';
+import type { Person } from '../lib/schema';
+import Avatar from './Avatar.astro';
+import Icon from './Icon.astro';
+import Name from './Name.astro';
+interface Props {
+  person: Person;
+}
+const { person } = Astro.props;
+---
+
+<li class="card person" data-reveal>
+  <Avatar name={person.name} photo={person.photo} size={84} />
+  <div class="person__text">
+    <h3 class="person__name">
+      {
+        person.linkedin ? (
+          <a class="stretch" href={person.linkedin} target="_blank" rel="noopener">
+            <Name name={person.name} />
+            <span class="visually-hidden">, {copy.team.linkedin} {copy.newTab}</span>
+          </a>
+        ) : (
+          <Name name={person.name} />
+        )
+      }
+    </h3>
+    {person.role && <p class="label person__role">{person.role}</p>}
+  </div>
+  {
+    person.linkedin && (
+      <span class="person__in" aria-hidden="true">
+        in
+        <Icon name="external" />
+      </span>
+    )
+  }
+</li>
+
+<style>
+  .person {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    min-height: 116px;
+  }
+  .person__text {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    padding-right: 28px;
+  }
+  .person__name {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.3125rem;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  .person__name a {
+    color: inherit;
+  }
+  .person__role {
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+  .person__in {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--ink-muted);
+    transition: color 0.2s;
+  }
+  .person__in :global(svg) {
+    width: 12px;
+    height: 12px;
+  }
+  .person:hover .person__in {
+    color: var(--ink);
+  }
+</style>

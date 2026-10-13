@@ -1,0 +1,65 @@
+---
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import { copy } from '../content/copy';
+import Base from '../layouts/Base.astro';
+
+const n = copy.notFound;
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/events', label: copy.nav.events },
+  { href: '/about', label: copy.nav.about },
+  { href: '/join', label: copy.nav.join },
+];
+---
+
+<Base title={copy.meta.notFound.title} description={copy.meta.notFound.description} path="/404" noindex>
+  <PageHero eyebrow={n.eyebrow} headline={n.headline} lede={n.lede} theme="ink">
+    <ul class="nf enter" role="list">
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href}>
+              <span>{l.label}</span>
+              <Icon name="arrow" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="nf__choc">
+      <a class="more" href="/chocolathon"><span>{n.chocolathon}</span><Icon name="arrow" /></a>
+    </p>
+  </PageHero>
+</Base>
+
+<style>
+  .nf {
+    margin-top: clamp(32px, 5vw, 56px);
+    border-top: var(--stroke-rule) solid var(--ink);
+  }
+  .nf a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--divider);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.5rem);
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+  .nf a :global(svg) {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.25s var(--ease-out);
+  }
+  .nf a:hover :global(svg) {
+    transform: translateX(4px);
+  }
+  .nf__choc {
+    margin-top: 28px;
+    padding-bottom: 24px;
+  }
+</style>

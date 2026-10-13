@@ -1,0 +1,117 @@
+---
+/**
+ * "Next meeting": the first upcoming event from src/data/events.yaml as a
+ * data strip (EVENT · DATE · TIME · PLACE). The next few events ride along
+ * as JSON so the browser moves on to the following one once this one ends.
+ */
+import { copy } from '../content/copy';
+import { site, upcomingEvents } from '../lib/data';
+import Icon from './Icon.astro';
+import Spark from './Spark.astro';
+
+interface Props {
+  class?: string;
+  spark?: boolean;
+}
+const { spark = false } = Astro.props;
+const list = upcomingEvents().slice(0, 12);
+const next = list[0];
+const payload = JSON.stringify(
+  list.map((e) => ({ title: e.title, date: e.dateLabel, time: e.timeLabel, place: e.place, link: e.link, endsAt: e.endsAt })),
+);
+const t = copy.nextMeeting;
+---
+
+<div class:list={['next', Astro.props.class]} data-next-meeting={payload} data-reveal>
+  <div class="next__head">
+    <p class="eyebrow kicker">{spark && <Spark />}{t.eyebrow}</p>
+    {
+      next?.link && (
+        <a class="more next__link" href={next.link} data-field="link" data-next-filled target="_blank" rel="noopener">
+          <span>{t.details}</span>
+          <Icon name="external" />
+          <span class="visually-hidden">{` ${copy.newTab}`}</span>
+        </a>
+      )
+    }
+  </div>
+  {
+    next && (
+      <dl class="strip next__strip" data-next-filled>
+        <div class="strip__cell">
+          <dt class="label">{t.event}</dt>
+          <dd class="strip__value" data-field="title">{next.title}</dd>
+        </div>
+        <div class="strip__cell">
+          <dt class="label">{t.date}</dt>
+          <dd class="strip__value" data-field="date">{next.dateLabel}</dd>
+        </div>
+        <div class="strip__cell">
+          <dt class="label">{t.time}</dt>
+          <dd class="strip__value" data-field="time">{next.timeLabel}</dd>
+        </div>
+        <div class="strip__cell">
+          <dt class="label">{t.place}</dt>
+          <dd class="strip__value" data-field="place">{next.place}</dd>
+        </div>
+      </dl>
+    )
+  }
+  <p class="next__empty" data-next-empty hidden={next ? true : undefined}>
+    <span class="strip__value">{t.empty}</span>
+    <a class="more" href={site.links.shockersync_events} target="_blank" rel="noopener"><span>{t.emptyLink}</span><Icon name="external" /></a>
+  </p>
+</div>
+
+<style>
+  .next__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 12px;
+  }
+  .next__link {
+    font-size: 15px;
+  }
+  .next__strip {
+    --cols: 2;
+  }
+  .next__strip .strip__cell {
+    padding-bottom: 14px;
+  }
+  .next__strip .strip__cell:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .next__strip .strip__cell:nth-child(n + 3) {
+    padding-top: 14px;
+    border-top: 1px solid var(--divider);
+  }
+  @media (min-width: 900px) {
+    .next__strip {
+      --cols: 4;
+      grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(0, 1fr));
+    }
+    .next__strip .strip__cell:nth-child(odd):not(:first-child) {
+      padding-left: 16px;
+      border-left: 1px solid var(--divider);
+    }
+    .next__strip .strip__cell:nth-child(n + 3) {
+      padding-top: 14px;
+      border-top: 0;
+    }
+  }
+  .next__empty {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px 24px;
+    padding-top: 14px;
+    border-top: var(--stroke-rule) solid var(--ink);
+  }
+  .next__empty[hidden] {
+    display: none;
+  }
+</style>

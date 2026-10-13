@@ -1,0 +1,18 @@
+---
+/* A handful of 16px line icons. Decorative: always paired with a text label. */
+interface Props {
+  name: 'arrow' | 'external' | 'menu' | 'close' | 'copy' | 'check' | 'mail';
+  class?: string;
+}
+const { name } = Astro.props;
+const paths: Record<Props['name'], string> = {
+  arrow: 'M3 8h9.5M8.5 3.5 13 8l-4.5 4.5',
+  external: 'M5 11 11 5M6 4.5h5.5V10',
+  menu: 'M2.5 5.5h11M2.5 10.5h11',
+  close: 'M3.5 3.5l9 9M12.5 3.5l-9 9',
+  copy: 'M5.5 5.5V3h7.5v7.5h-2.5M3 5.5h7.5V13H3z',
+  check: 'M3 8.5 6.5 12 13 4.5',
+  mail: 'M2.5 4h11v8h-11zM2.5 4.5 8 9l5.5-4.5',
+};
+---
+<svg class:list={[Astro.props.class, name === 'external' && 'icon-ext']} viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={paths[name]} /></svg>

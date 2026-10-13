@@ -1,0 +1,150 @@
+---
+/**
+ * Hackathons band: the hosted events from events.yaml > past as feature
+ * cards (photo, blurb, data strip, link), partner events as a slim row.
+ */
+import { copy } from '../content/copy';
+import { longDate, pastEvents } from '../lib/data';
+import type { PhotoName } from '../lib/photo-meta';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+
+const hackathons = pastEvents.filter((e) => e.type === 'hackathon');
+const hosted = hackathons.filter((e) => e.role === 'host');
+const partnered = hackathons.filter((e) => e.role === 'partner');
+const t = copy.hackathon;
+const isExternal = (href: string) => /^https:/.test(href);
+---
+
+<div class="hack">
+  {
+    hosted.map((e) => (
+      <article class="card hack__feature" data-reveal>
+        {e.photo && (
+          <div class="card__media hack__media">
+            <Photo name={e.photo as PhotoName} sizes="(min-width: 1024px) 56vw, 100vw" widths={[480, 800, 1200, 1600]} />
+          </div>
+        )}
+        <div class="card__body hack__body">
+          <p class="eyebrow">
+            {t.hosted}
+            {e.date && ` · ${longDate(e.date)}`}
+          </p>
+          <h3 class="title title--lg">
+            {e.link ? (
+              <a class="stretch" href={e.link} {...(isExternal(e.link) ? { target: '_blank', rel: 'noopener' } : {})}>
+                {e.title}
+              </a>
+            ) : (
+              e.title
+            )}
+          </h3>
+          {e.blurb && <p class="body">{e.blurb}</p>}
+          {e.facts && (
+            <dl class="strip hack__facts">
+              {e.facts.map((f) => (
+                <div class="strip__cell">
+                  <dt class="label">{f.label}</dt>
+                  <dd class="strip__value">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {e.link && (
+            <p class="card__foot">
+              <span class="more">
+                <span>{t.cta}</span>
+                <Icon name="arrow" />
+              </span>
+            </p>
+          )}
+        </div>
+      </article>
+    ))
+  }
+  {
+    partnered.map((e) => (
+      <article class="card hack__partner" data-reveal>
+        <p class="eyebrow">{t.partner}</p>
+        <h3 class="title">
+          {e.link ? (
+            <a class="stretch" href={e.link} target="_blank" rel="noopener">
+              {e.title}
+            </a>
+          ) : (
+            e.title
+          )}
+        </h3>
+        {e.date && <p class="data">{longDate(e.date)}</p>}
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .hack {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 1024px) {
+    .hack {
+      gap: 24px;
+    }
+    .hack__feature {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  }
+  .hack__media {
+    aspect-ratio: 3 / 2;
+  }
+  @media (min-width: 1024px) {
+    .hack__media {
+      aspect-ratio: auto;
+      min-height: 460px;
+    }
+  }
+  .hack__media :global(img) {
+    position: absolute;
+    inset: 0;
+  }
+  .hack__body {
+    gap: 14px;
+  }
+  @media (min-width: 1024px) {
+    .hack__body {
+      padding: 32px;
+      justify-content: center;
+    }
+  }
+  .hack__facts {
+    --cols: 2;
+    margin-top: 8px;
+  }
+  .hack__facts .strip__cell {
+    padding-bottom: 14px;
+  }
+  .hack__facts .strip__cell:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .hack__facts .strip__cell:nth-child(n + 3) {
+    padding-top: 14px;
+    border-top: 1px solid var(--divider);
+  }
+  .hack__partner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 20px;
+    padding: 20px;
+  }
+  @media (min-width: 1024px) {
+    .hack__partner {
+      padding: 24px 32px;
+    }
+  }
+  .hack__partner .title a {
+    color: inherit;
+  }
+</style>

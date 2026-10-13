@@ -1,0 +1,150 @@
+---
+import { copy } from '../content/copy';
+import { site } from '../lib/data';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+
+const pages = [
+  { href: '/about', label: copy.nav.about },
+  { href: '/events', label: copy.nav.events },
+  { href: '/team', label: copy.nav.team },
+  { href: '/contact', label: copy.nav.contact },
+  { href: '/join', label: copy.nav.join },
+  // A plain link, not an Astro route: Vercel proxies /chocolathon to the event site.
+  { href: '/chocolathon', label: copy.nav.chocolathon },
+];
+const social = [
+  { href: site.links.instagram, label: 'Instagram' },
+  { href: site.links.linkedin, label: 'LinkedIn' },
+  { href: site.links.groupme, label: 'GroupMe' },
+  { href: site.links.shockersync, label: 'ShockerSync' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer id="site-footer" class="site-footer" data-theme="ink">
+  <div class="container">
+    <div class="site-footer__top">
+      <a href="/" class="site-footer__home"><Logo variant="reversed" class="site-footer__logo" /></a>
+      <p class="site-footer__tagline">{copy.footer.tagline}</p>
+    </div>
+
+    <div class="site-footer__cols">
+      <nav aria-label={copy.footer.site}>
+        <h2 class="eyebrow">{copy.footer.site}</h2>
+        <ul>
+          {pages.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={copy.footer.follow}>
+        <h2 class="eyebrow">{copy.footer.follow}</h2>
+        <ul>
+          {
+            social.map((s) => (
+              <li>
+                <a href={s.href} rel="noopener" target="_blank">
+                  {s.label}
+                  <Icon name="external" />
+                  <span class="visually-hidden">{` ${copy.newTab}`}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div>
+        <h2 class="eyebrow">{copy.footer.contact}</h2>
+        <ul>
+          <li><a href={`mailto:${site.contact_email}`}>{site.contact_email}</a></li>
+          <li class="site-footer__muted">{site.meeting.day}, {site.meeting.time}</li>
+          <li class="site-footer__muted">{site.meeting.place}, Wichita State University</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__base">
+      <p class="eyebrow">© {year} {copy.footer.copyright}</p>
+      <p class="eyebrow">wsuaiclub.com</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(56px, 8vw, 96px) 32px;
+    border-top: 1px solid var(--line);
+  }
+  .site-footer__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 32px;
+    border-bottom: var(--stroke-rule) solid var(--ink);
+  }
+  .site-footer__home {
+    display: block;
+  }
+  .site-footer__home :global(.site-footer__logo) {
+    width: 176px;
+  }
+  .site-footer__tagline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .site-footer__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 24px;
+    padding-block: 40px;
+  }
+  .site-footer__cols > :last-child {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 900px) {
+    .site-footer__cols {
+      grid-template-columns: 1fr 1fr 1.4fr;
+    }
+    .site-footer__cols > :last-child {
+      grid-column: auto;
+    }
+  }
+  .site-footer h2 {
+    margin-bottom: 16px;
+  }
+  .site-footer ul {
+    display: grid;
+    gap: 10px;
+  }
+  .site-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .site-footer a:hover {
+    text-decoration: underline;
+  }
+  .site-footer a svg {
+    width: 14px;
+    height: 14px;
+    color: var(--ink-muted);
+  }
+  .site-footer__muted {
+    color: var(--ink-muted);
+  }
+  .site-footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+</style>

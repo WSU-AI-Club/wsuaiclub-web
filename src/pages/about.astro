@@ -1,0 +1,256 @@
+---
+import Avatar from '../components/Avatar.astro';
+import FormatList from '../components/FormatList.astro';
+import Icon from '../components/Icon.astro';
+import JoinBand from '../components/JoinBand.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Stats from '../components/Stats.astro';
+import { copy } from '../content/copy';
+import { team } from '../lib/data';
+import Base from '../layouts/Base.astro';
+
+const a = copy.about;
+const advisor = team.groups.find((g) => /faculty/i.test(g.name))?.people[0];
+---
+
+<Base title={copy.meta.about.title} description={copy.meta.about.description} path="/about">
+  <PageHero eyebrow={a.hero.eyebrow} headline={a.hero.headline} lede={a.hero.lede}>
+    <figure class="about-photo photo-frame" data-reveal>
+      <div class="about-photo__parallax" data-parallax="40">
+        <Photo name="classroom-group" priority sizes="(min-width: 1440px) 1296px, 100vw" widths={[640, 960, 1280, 1600, 2000, 2400]} />
+      </div>
+    </figure>
+  </PageHero>
+
+  <section class="section" data-theme="paper" aria-labelledby="why-title">
+    <div class="container">
+      <SectionHead eyebrow={a.why.eyebrow} index="01" headline={a.why.headline} id="why-title" align="start">
+        <div class="why__text">
+          {a.why.body.map((p) => <p class="body-lg">{p}</p>)}
+        </div>
+      </SectionHead>
+    </div>
+  </section>
+
+  <section class="section" data-theme="ink" aria-labelledby="led-title">
+    <div class="container led">
+      <div class="led__text">
+        <SectionHead eyebrow={a.studentLed.eyebrow} index="02" headline={a.studentLed.headline} id="led-title" />
+        <div class="stack" style="--stack:16px">
+          {a.studentLed.body.map((p) => <p class="body-lg" data-reveal>{p}</p>)}
+        </div>
+        <p class="led__cta" data-reveal>
+          <a class="btn btn--primary" href="/team">{a.studentLed.cta}<Icon name="arrow" /></a>
+        </p>
+      </div>
+      <figure class="led__photo photo-frame" data-reveal>
+        <Photo name="student-led-workshop" sizes="(min-width: 1024px) 50vw, 100vw" widths={[480, 800, 1200, 1600, 2016]} />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" data-theme="paper" aria-labelledby="formats-title">
+    <div class="container">
+      <SectionHead eyebrow={a.formats.eyebrow} index="03" headline={a.formats.headline} id="formats-title" />
+      <FormatList idPrefix="about" />
+    </div>
+  </section>
+
+  <Stats eyebrow={a.numbers.eyebrow} headline={a.numbers.headline} index="04" />
+
+  <section class="section" data-theme="paper" id="partnerships" aria-labelledby="partnerships-title">
+    <div class="container">
+      <SectionHead eyebrow={a.partnerships.eyebrow} index="05" headline={a.partnerships.headline} id="partnerships-title" />
+      <ul class="thanks" role="list">
+        {
+          a.partnerships.items.map((p) => (
+            <li class="card thanks__card" data-reveal>
+              <div class="card__body">
+                <p class="eyebrow">{p.eyebrow}</p>
+                <h3 class="title">{p.title}</h3>
+                <p class="body">{p.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    advisor && (
+      <section class="section" data-theme="paper" aria-labelledby="advisor-title">
+        <div class="container">
+          <SectionHead eyebrow={a.advisor.eyebrow} index="06" headline={a.advisor.headline} id="advisor-title" />
+          <div class="advisor" data-reveal>
+            <Avatar name={advisor.name} photo={advisor.photo} size={120} />
+            <div class="advisor__text">
+              <p class="advisor__name">{advisor.name}</p>
+              {advisor.role && <p class="label">{advisor.role}</p>}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" data-theme="paper" aria-labelledby="meet-title">
+    <div class="container">
+      <a class="meet card" href="/team" data-reveal>
+        <div class="meet__media">
+          <Photo name="barton-atrium-group" sizes="(min-width: 1440px) 1296px, 100vw" widths={[640, 960, 1280, 1600, 2000]} decorative />
+        </div>
+        <div class="meet__text" data-theme="ink">
+          <p class="eyebrow">{a.teamCta.eyebrow}</p>
+          <h2 class="headline" id="meet-title">{a.teamCta.headline}</h2>
+          <span class="more"><span>{a.teamCta.cta}</span><Icon name="arrow" /></span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <JoinBand />
+</Base>
+
+<style>
+  .about-photo {
+    position: relative;
+    margin-top: clamp(32px, 5vw, 64px);
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 640px) {
+    .about-photo {
+      aspect-ratio: 16 / 9;
+    }
+  }
+  @media (min-width: 1024px) {
+    .about-photo {
+      aspect-ratio: 21 / 9;
+    }
+  }
+  .about-photo__parallax {
+    position: absolute;
+    inset: 0;
+  }
+  .about-photo__parallax :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .why__text {
+    display: grid;
+    gap: 20px;
+    max-width: 38em;
+  }
+  .why__text .body-lg {
+    color: var(--ink-muted);
+  }
+  @media (min-width: 960px) {
+    .why__text {
+      padding-top: 10px;
+    }
+  }
+
+  .led {
+    display: grid;
+    gap: 40px;
+  }
+  .led .body-lg {
+    color: var(--ink-muted);
+    max-width: 36em;
+  }
+  .led__cta {
+    margin-top: 28px;
+  }
+  .led__photo {
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 1024px) {
+    .led {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      gap: 56px;
+      align-items: end;
+    }
+    .led :global(.sec-head__body) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .thanks {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .thanks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+
+  .advisor {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 4px;
+  }
+  .advisor__text {
+    display: grid;
+    gap: 8px;
+  }
+  .advisor__name {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+    line-height: 1.05;
+  }
+  .advisor .label {
+    max-width: 40ch;
+    line-height: 1.5;
+  }
+
+  .meet {
+    display: grid;
+    text-decoration: none;
+    color: inherit;
+  }
+  .meet__media {
+    position: relative;
+    aspect-ratio: 6 / 5;
+    overflow: hidden;
+  }
+  .meet__media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease-out);
+  }
+  .meet:hover .meet__media :global(img) {
+    transform: scale(1.03);
+  }
+  .meet__text {
+    display: grid;
+    gap: 14px;
+    align-content: end;
+    justify-items: start;
+    padding: 24px;
+  }
+  .meet__text .headline {
+    max-width: 12ch;
+  }
+  @media (min-width: 900px) {
+    .meet {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+    .meet__media {
+      aspect-ratio: auto;
+      min-height: 480px;
+    }
+    .meet__text {
+      padding: 40px;
+    }
+  }
+</style>

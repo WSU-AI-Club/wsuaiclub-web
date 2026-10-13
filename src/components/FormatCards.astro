@@ -1,0 +1,117 @@
+---
+/**
+ * "What we do": the five formats as photo cards. Phones: one column.
+ * Tablets: two. Desktop: two large cards over three.
+ */
+import { formats } from '../content/copy';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+---
+
+<ul class="formats" role="list">
+  {
+    formats.map((f, i) => (
+      <li class:list={['card', 'format', i < 2 && 'format--lead']} data-reveal>
+        <div class="card__media format__media">
+          <Photo
+            name={f.photo}
+            decorative
+            sizes={i < 2 ? '(min-width: 1440px) 636px, (min-width: 1024px) 46vw, (min-width: 640px) 46vw, 100vw' : '(min-width: 1440px) 416px, (min-width: 1024px) 31vw, (min-width: 640px) 46vw, 100vw'}
+            widths={[400, 640, 900, 1280]}
+          />
+        </div>
+        <div class="card__body">
+          <div class="format__top">
+            <p class="eyebrow">{f.eyebrow}</p>
+            <p class="eyebrow" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+          </div>
+          <h3 class="title">
+            <a class="stretch" href={f.href}>{f.title}</a>
+          </h3>
+          <p class="body">{f.body}</p>
+          <span class="format__go" aria-hidden="true"><Icon name="arrow" /></span>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .formats {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .formats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .format:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1024px) {
+    .formats {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .format {
+      grid-column: span 2;
+    }
+    .format--lead {
+      grid-column: span 3;
+    }
+    .format:last-child {
+      grid-column: span 2;
+    }
+  }
+  .format__media {
+    aspect-ratio: 16 / 10;
+  }
+  @media (min-width: 1024px) {
+    .format--lead .format__media {
+      aspect-ratio: 16 / 9;
+    }
+    .format:not(.format--lead) .format__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  .format__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .format__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .format .title a {
+    color: inherit;
+  }
+  .format .card__body {
+    padding-right: 56px;
+    position: relative;
+  }
+  .format__go {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--line-strong);
+    color: var(--ink);
+    transition:
+      background-color 0.25s,
+      color 0.25s,
+      transform 0.35s var(--ease-out);
+  }
+  .format:hover .format__go {
+    background: var(--ink);
+    color: var(--surface-raised);
+    transform: translateX(2px);
+  }
+</style>
