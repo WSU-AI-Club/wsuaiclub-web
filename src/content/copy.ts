@@ -72,7 +72,6 @@ export const copy = {
     join: 'Join',
     chocolathon: 'Chocolathon',
     menu: 'Menu',
-    close: 'Close menu',
     /** The header dropdowns. Each trigger is also a plain link to its page without JS. */
     menus: {
       about: {

@@ -3,10 +3,11 @@
  * Site header: logo · About Us · Events · Contact (three dropdowns,
  * NavDropdown.astro) · Join. Each dropdown opens on hover, click/tap and
  * keyboard; without JS its label is a plain link to the page.
- * Phones: logo, Join and a Menu button that opens a full-screen sheet
- * (a modal <dialog>: focus stays inside, Esc closes, the page underneath
- * does not scroll). Without JS the Menu button becomes a link to the footer
- * navigation. Behavior lives in src/scripts/site.ts.
+ * Phones: logo, Join and a menu button (≡, turns into ✕) that drops a small
+ * panel under the header: the five pages and the email. The page stays in
+ * view, dimmed; a tap on it, Esc or a link closes the menu. Without JS the
+ * menu button is a link to the footer navigation. Behavior lives in
+ * src/scripts/site.ts.
  */
 import { copy } from '../content/copy';
 import { site } from '../lib/data';
@@ -31,8 +32,14 @@ const menus: Dropdown[] = [
     items: [...m.contact.items, { href: `mailto:${site.contact_email}`, title: m.contact.email, body: site.contact_email }],
   },
 ];
-// Phone sheet: each menu with its items as sub-links, then Join.
-const sheet = [...menus.map((d) => ({ href: d.href, label: d.label, children: d.items })), { href: '/join', label: copy.nav.join, children: undefined }];
+// Phone menu: the pages only. Join stays in the header; sections are a scroll away.
+const phonePages = [
+  { href: '/about', label: copy.nav.about },
+  { href: '/events', label: copy.nav.events },
+  { href: '/team', label: copy.nav.team },
+  { href: '/advisory-board', label: copy.nav.board },
+  { href: '/contact', label: copy.nav.contact },
+];
 const current = (href: string) => (!href.includes('#') && path === href ? 'page' : undefined);
 ---
 
@@ -50,57 +57,37 @@ const current = (href: string) => (!href.includes('#') && path === href ? 'page'
 
     <div class="site-header__actions">
       <a class="btn btn--primary btn--sm site-header__join" href="/join" aria-current={current('/join')}>{copy.nav.join}</a>
-      <button class="menu-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-sheet" data-menu-open>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" data-menu-toggle>
+        <svg class="menu-btn__icon" viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" focusable="false">
+          <path class="menu-btn__line menu-btn__line--top" d="M2.5 5.5h11"></path>
+          <path class="menu-btn__line menu-btn__line--bottom" d="M2.5 10.5h11"></path>
+        </svg>
+        <span class="visually-hidden">{copy.nav.menu}</span>
+      </button>
+      <a class="menu-btn menu-btn--fallback" href="#site-footer">
         <Icon name="menu" />
-        <span>{copy.nav.menu}</span>
-      </button>
-      <a class="menu-btn menu-btn--fallback" href="#site-footer">{copy.nav.menu}</a>
+        <span class="visually-hidden">{copy.nav.menu}</span>
+      </a>
     </div>
   </div>
-</header>
 
-<dialog id="menu-sheet" class="menu-sheet" data-theme="ink" aria-label={copy.nav.menu} data-menu>
-  <div class="menu-sheet__inner">
-    <div class="container menu-sheet__top">
-      <a href="/" class="menu-sheet__home"><Logo variant="reversed" class="menu-sheet__logo" /></a>
-      <button type="button" class="menu-btn" data-menu-close>
-        <Icon name="close" />
-        <span>{copy.nav.close}</span>
-      </button>
-    </div>
-    <nav class="container menu-sheet__nav" aria-label={copy.nav.menu}>
-      <ol>
-        {
-          sheet.map((l, i) => (
-            <li>
-              <a href={l.href} aria-current={current(l.href)}>
-                <span class="eyebrow">{String(i + 1).padStart(2, '0')}</span>
-                <span class="menu-sheet__label">{l.label}</span>
-                <Icon name="arrow" />
-              </a>
-              {l.children && (
-                <ul class="menu-sheet__sub">
-                  {l.children.map((c) => (
-                    <li>
-                      <a href={c.href} aria-current={current(c.href)}>
-                        <span class="menu-sheet__sublabel">{c.title}</span>
-                        <Icon name="arrow" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))
-        }
-      </ol>
-    </nav>
-    <div class="container menu-sheet__foot">
-      <a class="data" href={`mailto:${site.contact_email}`}>{site.contact_email}</a>
-      <p class="eyebrow">{site.meeting.day} · {site.meeting.time} · {site.meeting.place}</p>
-    </div>
-  </div>
-</dialog>
+  <nav id="menu-panel" class="menu-panel" data-theme="paper" aria-label={copy.nav.menu} data-menu>
+    <ul>
+      {
+        phonePages.map((p) => (
+          <li>
+            <a class="menu-panel__link" href={p.href} aria-current={current(p.href)}>
+              <span>{p.label}</span>
+              <Icon name="arrow" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a class="menu-panel__email data" href={`mailto:${site.contact_email}`}>{site.contact_email}</a>
+  </nav>
+</header>
+<div class="menu-scrim" aria-hidden="true" data-menu-scrim></div>
 
 <style>
   .site-header {
@@ -164,27 +151,46 @@ const current = (href: string) => (!href.includes('#') && path === href ? 'page'
   }
 
   .menu-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 40px;
-    padding: 0 12px;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-md);
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    border: 0;
+    border-radius: var(--radius-sm);
     background: transparent;
-    font-weight: 600;
-    font-size: 15px;
-    text-decoration: none;
     color: var(--ink);
   }
   .menu-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
+  }
+  /* Hover only where there is a real pointer: a tap would leave it on. */
+  @media (hover: hover) {
+    .menu-btn:hover {
+      background: var(--surface-sunk);
+    }
+  }
+  .menu-btn__line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.3s var(--ease-out);
+  }
+  /* ≡ folds into ✕ while the menu is open. */
+  .menu-btn[aria-expanded='true'] .menu-btn__line--top {
+    transform: translateY(2.5px) rotate(45deg);
+  }
+  .menu-btn[aria-expanded='true'] .menu-btn__line--bottom {
+    transform: translateY(-2.5px) rotate(-45deg);
   }
   :global(.js) .menu-btn--fallback {
     display: none;
   }
-  :global(html:not(.js)) [data-menu-open] {
+  :global(html:not(.js)) [data-menu-toggle] {
     display: none;
   }
 
@@ -198,130 +204,123 @@ const current = (href: string) => (!href.includes('#') && path === href ? 'page'
     }
   }
 
-  /* ── phone menu sheet ─────────────────────────────────────────── */
-  .menu-sheet {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: var(--surface);
+  /* ── phone menu: a panel under the header ─────────────────────── */
+  /* Hangs below the header (so it follows the compact height), lined up
+     with the menu button. Closed = invisible and unfocusable. */
+  .menu-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: var(--gutter);
+    width: min(calc(100% - 2 * var(--gutter)), 360px);
+    padding: 8px;
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
     color: var(--ink);
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    box-shadow:
+      0 0 0 1px var(--line),
+      var(--shadow-panel);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.18s ease,
+      transform 0.25s var(--ease-out),
+      visibility 0s linear 0.25s;
   }
-  .menu-sheet::backdrop {
-    background: var(--brand-black);
+  :global(.menu-open) .menu-panel {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.18s ease,
+      transform 0.25s var(--ease-out),
+      visibility 0s;
   }
-  .menu-sheet__inner {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  .menu-panel ul {
+    display: grid;
+    gap: 2px;
   }
-  .menu-sheet__top {
+  .menu-panel__link {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--header-h);
-  }
-  .menu-sheet__top .menu-btn {
-    border-color: var(--line-strong);
-  }
-  .menu-sheet__home :global(.menu-sheet__logo) {
-    width: 138px;
-  }
-  .menu-sheet__nav {
-    margin-top: 24px;
-    border-top: var(--stroke-rule) solid var(--ink);
-  }
-  .menu-sheet__nav a {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
-    align-items: center;
-    gap: 8px;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--divider);
-    text-decoration: none;
-  }
-  .menu-sheet__label {
-    font-family: var(--font-display);
+    min-height: 48px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
-    font-size: clamp(2rem, 9vw, 2.75rem);
-    line-height: 1;
-    letter-spacing: -0.035em;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--ink);
   }
-  .menu-sheet__nav a svg {
-    width: 20px;
-    height: 20px;
+  .menu-panel__link:hover,
+  .menu-panel__link:focus-visible {
+    background: var(--surface-sunk);
+  }
+  .menu-panel__link:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+  .menu-panel__link svg {
+    width: 16px;
+    height: 16px;
+    color: var(--ink-muted);
+  }
+  /* The page you are on: the spark dot, as in the desktop menus. */
+  .menu-panel__link[aria-current='page'] span::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 10px 3px 0;
+    border-radius: 50%;
+    background: var(--spark);
+  }
+  .menu-panel__email {
+    display: block;
+    margin: 8px 4px 0;
+    padding: 14px 8px;
+    border-top: 1px solid var(--divider);
     color: var(--ink-muted);
   }
 
-  /* Menu sub-items, indented under their parent. */
-  .menu-sheet__sub {
-    padding: 0 0 10px 48px;
-    border-bottom: 1px solid var(--divider);
+  /* Dims the page behind the open menu; a tap on it closes the menu. */
+  .menu-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 49;
+    background: color-mix(in srgb, var(--brand-black) 30%, transparent);
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      visibility 0s linear 0.25s;
   }
-  .menu-sheet__nav .menu-sheet__sub a {
-    grid-template-columns: 1fr auto;
-    padding: 7px 0;
-    border-bottom: 0;
+  :global(.menu-open) .menu-scrim {
+    visibility: visible;
+    opacity: 1;
+    transition:
+      opacity 0.25s ease,
+      visibility 0s;
   }
-  .menu-sheet__nav li:has(> .menu-sheet__sub) > a {
-    border-bottom: 0;
-    padding-bottom: 8px;
-  }
-  .menu-sheet__sublabel {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.125rem;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-  }
-  .menu-sheet__sub a[aria-current='page'] .menu-sheet__sublabel {
-    color: var(--spark-text);
-  }
-  .menu-sheet__nav .menu-sheet__sub svg {
-    width: 16px;
-    height: 16px;
-  }
-  .menu-sheet__nav a[aria-current='page'] .eyebrow {
-    color: var(--spark-text);
-  }
-  .menu-sheet__foot {
-    margin-top: auto;
-    padding-top: 40px;
-    display: grid;
-    gap: 8px;
-  }
-  .menu-sheet__foot a {
-    color: var(--ink);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .menu-sheet[open] {
-      animation: sheet-in 0.4s var(--ease-out);
-    }
-    .menu-sheet[open] .menu-sheet__nav li {
-      animation: sheet-item 0.5s var(--ease-out) both;
-    }
-    .menu-sheet[open] .menu-sheet__nav li:nth-child(2) { animation-delay: 40ms; }
-    .menu-sheet[open] .menu-sheet__nav li:nth-child(3) { animation-delay: 80ms; }
-    .menu-sheet[open] .menu-sheet__nav li:nth-child(4) { animation-delay: 120ms; }
-    .menu-sheet[open] .menu-sheet__nav li:nth-child(5) { animation-delay: 160ms; }
-  }
-  @keyframes sheet-in {
-    from {
-      opacity: 0;
+  @media (min-width: 900px) {
+    .menu-panel,
+    .menu-scrim {
+      display: none;
     }
   }
-  @keyframes sheet-item {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
+  @media (prefers-reduced-motion: reduce) {
+    .menu-panel,
+    .menu-scrim,
+    .menu-btn__line {
+      transform: none;
+      transition: none;
+    }
+    .menu-btn[aria-expanded='true'] .menu-btn__line--top {
+      transform: translateY(2.5px) rotate(45deg);
+    }
+    .menu-btn[aria-expanded='true'] .menu-btn__line--bottom {
+      transform: translateY(-2.5px) rotate(-45deg);
     }
   }
 </style>

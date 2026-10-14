@@ -5,7 +5,7 @@
  *   - slideshows: [data-slideshow] crossfades with pause/play (Slideshow.astro)
  *   - header compacts after 40px of scroll
  *   - light parallax on [data-parallax] photos
- *   - phone menu sheet (modal dialog, focus trap, Esc, scroll lock)
+ *   - the phone menu: a panel under the header (Esc, tap outside, scroll lock)
  *   - the header dropdowns: About Us, Events, Contact ([data-dropdown])
  *   - same-page anchors in the header and menu scroll smoothly below the header
  *   - hides events that have ended ([data-ends]) and keeps "Next meeting" current
@@ -94,64 +94,47 @@ reduced.addEventListener('change', () => {
   revealables.forEach((el) => el.classList.add('is-in', 'is-done'));
 });
 
-/* ── phone menu sheet ───────────────────────────────────────────────── */
+/* ── phone menu (a panel under the header) ──────────────────────────── */
+/* The menu button toggles the panel; the page stays in view, dimmed and
+   still. Esc closes it and returns focus to the button; a tap outside, a
+   link, tabbing out or a resize up to desktop also close it. */
 
-const sheet = document.querySelector<HTMLDialogElement>('[data-menu]');
-const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
-const closeBtn = document.querySelector<HTMLButtonElement>('[data-menu-close]');
-
-function focusables(container: HTMLElement) {
-  return Array.from(container.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')).filter((el) => el.offsetParent !== null);
-}
+const menu = document.querySelector<HTMLElement>('[data-menu]');
+const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+const scrim = document.querySelector<HTMLElement>('[data-menu-scrim]');
+const menuIsOpen = () => root.classList.contains('menu-open');
 
 function openMenu() {
-  if (!sheet || sheet.open) return;
-  sheet.showModal();
+  if (!menu || menuIsOpen()) return;
   root.classList.add('menu-open');
   root.style.overflow = 'hidden';
-  openBtn?.setAttribute('aria-expanded', 'true');
-  // Start on the first page link rather than the close button.
-  sheet.querySelector<HTMLElement>('nav a')?.focus();
+  menuBtn?.setAttribute('aria-expanded', 'true');
 }
 
-function closeMenu() {
-  if (!sheet?.open) return;
-  sheet.close();
-  root.style.removeProperty('overflow');
-}
-
-sheet?.addEventListener('close', () => {
+function closeMenu(returnFocus = false) {
+  if (!menuIsOpen()) return;
   root.classList.remove('menu-open');
   root.style.removeProperty('overflow');
-  openBtn?.setAttribute('aria-expanded', 'false');
-  // Back to the Menu button, unless a same-page link already moved focus on.
-  const active = document.activeElement;
-  if (!active || active === document.body || active === openBtn || sheet.contains(active)) openBtn?.focus();
-});
-openBtn?.addEventListener('click', openMenu);
-closeBtn?.addEventListener('click', closeMenu);
-sheet?.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
+  menuBtn?.setAttribute('aria-expanded', 'false');
+  if (returnFocus) menuBtn?.focus();
+}
+
+menuBtn?.addEventListener('click', () => (menuIsOpen() ? closeMenu() : openMenu()));
+scrim?.addEventListener('click', () => closeMenu());
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && menuIsOpen()) {
     e.preventDefault();
-    closeMenu();
-    return;
-  }
-  if (e.key !== 'Tab') return;
-  const items = focusables(sheet);
-  if (!items.length) return;
-  const first = items[0];
-  const last = items[items.length - 1];
-  if (e.shiftKey && document.activeElement === first) {
-    e.preventDefault();
-    last.focus();
-  } else if (!e.shiftKey && document.activeElement === last) {
-    e.preventDefault();
-    first.focus();
+    closeMenu(true);
   }
 });
-// A same-page link (or a resize up to desktop) closes the sheet.
-sheet?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => closeMenu()));
+menu?.addEventListener('focusout', (e) => {
+  const next = e.relatedTarget as Node | null;
+  if (next && next !== menuBtn && !menu.contains(next)) closeMenu();
+});
+menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => closeMenu()));
 window.matchMedia('(min-width: 900px)').addEventListener('change', (e) => e.matches && closeMenu());
+// Going back to a cached page: start closed.
+window.addEventListener('pageshow', () => closeMenu());
 
 /* ── events that have ended disappear, "Next meeting" stays current ── */
 
