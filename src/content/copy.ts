@@ -409,25 +409,6 @@ export const copy = {
       instagram: { eyebrow: 'Social', title: 'Instagram', body: 'Photos and event posts.', cta: 'Follow @wsuaiclub' },
       linkedin: { eyebrow: 'Social', title: 'LinkedIn', body: 'Speakers, partners and club news.', cta: 'Follow the club' },
     },
-    paths: {
-      eyebrow: 'Who it is for',
-      headline: 'Find your path',
-      students: {
-        eyebrow: 'Students · Start here',
-        title: 'Become a member',
-        body: 'Join on ShockerSync to become an official member, then join the GroupMe for reminders. Come to any meeting. No experience needed.',
-        primary: 'Join on ShockerSync',
-        secondary: 'Join the GroupMe',
-      },
-      everyone: {
-        eyebrow: 'Faculty, alumni and community',
-        title: 'No membership needed',
-        body: 'Join the email list and the GroupMe, follow us on Instagram and LinkedIn, and come to any event. You do not need ShockerSync.',
-        primary: 'Join the email list',
-        secondary: 'See events',
-        contact: 'Want to speak, partner or sponsor? Contact the officers',
-      },
-    },
   },
 
   notFound: {

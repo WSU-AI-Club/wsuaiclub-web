@@ -1,8 +1,6 @@
 ---
 import Icon from '../components/Icon.astro';
 import PageHero from '../components/PageHero.astro';
-import Photo from '../components/Photo.astro';
-import SectionHead from '../components/SectionHead.astro';
 import { copy } from '../content/copy';
 import { site } from '../lib/data';
 import Base from '../layouts/Base.astro';
@@ -16,8 +14,6 @@ const channels = [
   { ...c.instagram, href: site.links.instagram },
   { ...c.linkedin, href: site.links.linkedin },
 ];
-const s = j.paths.students;
-const e = j.paths.everyone;
 const ext = { target: '_blank', rel: 'noopener' };
 ---
 
@@ -52,50 +48,6 @@ const ext = { target: '_blank', rel: 'noopener' };
     </ul>
   </PageHero>
 
-  <section class="section" data-theme="paper" aria-labelledby="paths-title">
-    <div class="container">
-      <SectionHead eyebrow={j.paths.eyebrow} index="01" headline={j.paths.headline} id="paths-title" />
-      <div class="paths">
-        <article class="card path" data-reveal>
-          <div class="card__media path__media">
-            <Photo name="lovable-workshop" decorative sizes="(min-width: 900px) 46vw, calc(100vw - 32px)" widths={[480, 800, 1200]} />
-          </div>
-          <div class="card__body path__body">
-            <p class="eyebrow eyebrow--ink">{s.eyebrow}</p>
-            <h3 class="title title--lg">{s.title}</h3>
-            <p class="body">{s.body}</p>
-            <div class="btn-row path__actions">
-              <a class="btn btn--primary" href={site.links.shockersync} {...ext}>
-                {s.primary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span>
-              </a>
-              <a class="btn btn--secondary" href={site.links.groupme} {...ext}>
-                {s.secondary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span>
-              </a>
-            </div>
-          </div>
-        </article>
-        <article class="card path" data-reveal>
-          <div class="card__media path__media">
-            <Photo name="glass-wall-visit" decorative sizes="(min-width: 900px) 46vw, calc(100vw - 32px)" widths={[480, 800, 1200]} />
-          </div>
-          <div class="card__body path__body">
-            <p class="eyebrow eyebrow--ink">{e.eyebrow}</p>
-            <h3 class="title title--lg">{e.title}</h3>
-            <p class="body">{e.body}</p>
-            <div class="btn-row path__actions">
-              <a class="btn btn--primary" href={site.links.email_list} {...ext}>
-                {e.primary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span>
-              </a>
-              <a class="btn btn--secondary" href="/events">{e.secondary}<Icon name="arrow" /></a>
-            </div>
-            <p class="path__contact">
-              <a href="/contact">{e.contact}</a>
-            </p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -151,52 +103,5 @@ const ext = { target: '_blank', rel: 'noopener' };
   }
   .channel__title a {
     color: inherit;
-  }
-
-  .paths {
-    display: grid;
-    gap: 16px;
-  }
-  @media (min-width: 900px) {
-    .paths {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px;
-    }
-  }
-  .path__media {
-    position: relative;
-    aspect-ratio: 16 / 9;
-  }
-  .path__media :global(img) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .path__body {
-    gap: 12px;
-  }
-  @media (min-width: 1024px) {
-    .path__body {
-      padding: 32px;
-    }
-  }
-  .path .body {
-    max-width: 40em;
-  }
-  .path__actions {
-    padding-top: 8px;
-  }
-  .path__contact {
-    font-size: 15px;
-    font-weight: 600;
-  }
-  .path__contact a {
-    position: relative;
-    z-index: 2;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
   }
 </style>
