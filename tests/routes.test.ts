@@ -27,9 +27,12 @@ test('/chocolathon is proxied to the event site', () => {
 test('old event paths redirect (307) to /chocolathon, but never a club page', () => {
   const [r] = vercel.redirects;
   assert.equal(r.permanent, false);
-  assert.equal(r.destination, '/chocolathon/$1');
-  const re = new RegExp(`^${r.source}$`);
-  for (const old of ['/hq', '/prompts', '/competitors', '/people', '/judge-c7m2x9', '/upload-k4n8pq', '/results-m3v8tq', '/hq/']) {
+  assert.equal(r.destination, '/chocolathon/:page');
+  // Vercel's path syntax: a named param with an inline pattern. A bare `/?` is
+  // rejected at deploy, so `/hq/` is handled by `trailingSlash: false` instead.
+  assert.equal(vercel.trailingSlash, false);
+  const re = new RegExp(`^${r.source.replace(':page(', '(')}$`);
+  for (const old of ['/hq', '/prompts', '/competitors', '/people', '/judge-c7m2x9', '/upload-k4n8pq', '/results-m3v8tq']) {
     assert.ok(re.test(old), `${old} should redirect`);
   }
   for (const page of ['/', '/about', '/events', '/team', '/advisory-board', '/contact', '/join']) {
