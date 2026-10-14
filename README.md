@@ -78,6 +78,10 @@ Astro turns each photo into AVIF and WebP at several widths at build time.
 
 ## Deploy
 
+Live at https://www.wsuaiclub.com (Vercel team WSU AI Club, project
+`wsuaiclub`). Every push to `main` deploys on its own, including edits made in
+the GitHub web editor; a build that fails leaves the live site as it was.
+
 Vercel, framework preset Astro, output `dist`. `vercel.json` turns on clean
 URLs, keeps the 307 redirects from the old event paths to `/chocolathon/...`
 and proxies `/chocolathon` to `chocolathon.vercel.app`.
