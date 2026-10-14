@@ -1,9 +1,9 @@
 ---
-import Avatar from '../components/Avatar.astro';
 import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
-import Name from '../components/Name.astro';
 import PageHero from '../components/PageHero.astro';
+import PersonCard from '../components/PersonCard.astro';
+import PersonGrid from '../components/PersonGrid.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { copy } from '../content/copy';
 import { advisoryBoard } from '../lib/data';
@@ -14,36 +14,15 @@ const people = advisoryBoard?.people ?? [];
 ---
 
 <Base title={copy.meta.board.title} description={copy.meta.board.description} path="/advisory-board">
-  <PageHero eyebrow={b.hero.eyebrow} headline={b.hero.headline} lede={b.hero.lede} index={`${String(people.length).padStart(2, '0')} members`} theme="ink">
-    <ul class="board" role="list">
-      {
-        people.map((p, i) => (
-          <li class="card advisor" data-theme="paper" data-reveal>
-            <div class="advisor__head">
-              <Avatar name={p.name} photo={p.photo} size={128} class="advisor__photo" />
-              <p class="eyebrow advisor__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
-            </div>
-            <div class="advisor__text">
-              <h2 class="advisor__name">
-                <Name name={p.name} />
-              </h2>
-              {p.role && <p class="label advisor__role">{p.role}</p>}
-            </div>
-            {p.bio && <p class="body advisor__bio">{p.bio}</p>}
-            {p.linkedin && (
-              <p class="advisor__foot">
-                <a class="more" href={p.linkedin} target="_blank" rel="noopener">
-                  <span>{b.linkedin}</span>
-                  <Icon name="external" />
-                  <span class="visually-hidden">{`: ${p.name} ${copy.newTab}`}</span>
-                </a>
-              </p>
-            )}
-          </li>
-        ))
-      }
-    </ul>
-  </PageHero>
+  <PageHero eyebrow={b.hero.eyebrow} headline={b.hero.headline} lede={b.hero.lede} index={`${String(people.length).padStart(2, '0')} members`} />
+
+  <section class="section section--tight" data-theme="paper" aria-label={b.hero.eyebrow}>
+    <div class="container">
+      <PersonGrid>
+        {people.map((p) => <PersonCard person={p} />)}
+      </PersonGrid>
+    </div>
+  </section>
 
   <section class="section" data-theme="paper" aria-labelledby="board-contact-title">
     <div class="container">
@@ -55,98 +34,3 @@ const people = advisoryBoard?.people ?? [];
 
   <JoinBand />
 </Base>
-
-<style>
-  /* Phones: horizontal cards. 640px+: vertical cards, flex so an odd last row centers. */
-  .board {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    margin-top: clamp(36px, 5vw, 64px);
-    --cols: 1;
-    --gap: 16px;
-  }
-  .advisor {
-    flex: 0 1 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 0 16px;
-    padding: 20px;
-    align-content: start;
-    align-items: center;
-  }
-  .advisor :global(.advisor__photo) {
-    --size: 76px !important;
-  }
-  .advisor__index {
-    display: none;
-  }
-  .advisor__text {
-    display: grid;
-    gap: 8px;
-    align-content: start;
-  }
-  .advisor__name {
-    font-family: var(--font-serif);
-    font-weight: 400;
-    font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    text-wrap: balance;
-  }
-  .advisor__role {
-    line-height: 1.45;
-  }
-  .advisor__bio {
-    grid-column: 1 / -1;
-    margin-top: 16px;
-    text-wrap: pretty;
-  }
-  .advisor__foot {
-    grid-column: 1 / -1;
-    margin-top: 12px;
-  }
-  @media (min-width: 640px) {
-    .board {
-      --cols: 2;
-      --gap: 20px;
-      gap: var(--gap);
-    }
-    .advisor {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-      padding: 28px;
-    }
-    .advisor__head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 24px;
-    }
-    .advisor :global(.advisor__photo) {
-      --size: 128px !important;
-    }
-    .advisor__index {
-      display: block;
-    }
-    .advisor__foot {
-      margin-top: auto;
-      padding-top: 20px;
-    }
-    .advisor__bio {
-      margin-top: 14px;
-    }
-    .advisor__text {
-      gap: 10px;
-    }
-  }
-  @media (min-width: 1100px) {
-    .board {
-      --cols: 4;
-      --gap: 24px;
-    }
-  }
-</style>

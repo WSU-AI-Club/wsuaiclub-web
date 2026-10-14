@@ -1,0 +1,42 @@
+---
+/**
+ * The grid of PersonCards shared by /team (one per group) and /advisory-board.
+ * `solo` gives a group of one a wider card for a long title.
+ */
+interface Props {
+  solo?: boolean;
+}
+const { solo = false } = Astro.props;
+---
+
+<ul class:list={['team-grid', solo && 'team-grid--solo']} role="list">
+  <slot />
+</ul>
+
+<style>
+  .team-grid {
+    display: grid;
+    gap: 12px;
+  }
+  @media (min-width: 640px) {
+    .team-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    /* A group of one (the faculty advisor) gets a wider card for the long title. */
+    .team-grid--solo > :global(*) {
+      grid-column: span 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .team-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .team-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

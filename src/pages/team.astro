@@ -3,11 +3,14 @@ import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
 import PageHero from '../components/PageHero.astro';
 import PersonCard from '../components/PersonCard.astro';
+import PersonGrid from '../components/PersonGrid.astro';
 import { copy } from '../content/copy';
 import { team } from '../lib/data';
 import Base from '../layouts/Base.astro';
 
 const t = copy.team;
+// The industry advisory board has its own page; Team ends with a link to it.
+const groups = team.groups.filter((g) => !/advisory/i.test(g.name));
 const slug = (s: string) =>
   s
     .toLowerCase()
@@ -20,7 +23,7 @@ const slug = (s: string) =>
   <PageHero eyebrow={t.hero.eyebrow} headline={t.hero.headline} lede={t.hero.lede} />
 
   {
-    team.groups.map((g, i) => (
+    groups.map((g, i) => (
       <section class="section section--tight team-group" data-theme="paper" aria-labelledby={`g-${slug(g.name)}`}>
         <div class="container">
           <div class="team-group__bar" data-reveal>
@@ -36,23 +39,26 @@ const slug = (s: string) =>
               {g.note}
             </p>
           )}
-          <ul class:list={['team-grid', g.people.length === 1 && 'team-grid--solo']} role="list">
+          <PersonGrid solo={g.people.length === 1}>
             {g.people.map((p) => (
               <PersonCard person={p} />
             ))}
-          </ul>
-          {/advisory/i.test(g.name) && (
-            <p class="team-group__more" data-reveal>
-              <a class="btn btn--primary" href="/advisory-board">
-                {copy.board.teamLink}
-                <Icon name="arrow" />
-              </a>
-            </p>
-          )}
+          </PersonGrid>
         </div>
       </section>
     ))
   }
+
+  <section class="section section--tight team-group" data-theme="paper">
+    <div class="container">
+      <p data-reveal>
+        <a class="btn btn--primary" href="/advisory-board">
+          {copy.board.teamLink}
+          <Icon name="arrow" />
+        </a>
+      </p>
+    </div>
+  </section>
 
   <JoinBand />
 </Base>
@@ -71,35 +77,7 @@ const slug = (s: string) =>
     border-bottom: var(--stroke-rule) solid var(--ink);
     margin-bottom: 24px;
   }
-  .team-group__more {
-    margin-top: 24px;
-  }
   .team-group__note {
     margin: -4px 0 24px;
-  }
-  .team-grid {
-    display: grid;
-    gap: 12px;
-  }
-  @media (min-width: 640px) {
-    .team-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-    /* A group of one (the faculty advisor) gets a wider card for the long title. */
-    .team-grid--solo > :global(*) {
-      grid-column: span 2;
-    }
-  }
-  @media (min-width: 1024px) {
-    .team-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-    }
-  }
-  @media (min-width: 1280px) {
-    .team-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
   }
 </style>

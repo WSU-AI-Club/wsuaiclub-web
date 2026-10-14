@@ -13,7 +13,6 @@
 #   name      as they spell it on LinkedIn
 #   role      optional; leave it out rather than guess
 #   linkedin  optional, the full https://www.linkedin.com/in/... address
-#   bio       optional, one plain line (advisory board page), 24 words or fewer
 #   photo     optional, the file name of a square headshot in src/assets/team
 #             without ".webp" (e.g. michael-goldberg). Leave it out and the
 #             site draws an initials tile. Headshots show in black and white.
@@ -84,54 +83,36 @@ groups:
         role: Assistant Professor, Business Analytics, W. Frank Barton School of Business
         photo: murtaza-nasir
 
-  # The advisory board also has its own page, /advisory-board, in this order.
-  # bio is one plain line, about 20 words, built only from a public source;
-  # the source for each bio is in the comment above it.
+  # The advisory board is not on the Team page; it has its own page,
+  # /advisory-board, in this order (the Team page ends with a link to it).
   - name: Industry advisory board
     note: Professionals who connect the club to industry and help close the gap between the classroom and real work.
     people:
-      # Source: https://news.wichita.edu/2025/04/09/join-this-years-grasp-symposium-for-keynote-speaker-dylan-thiessen/
       - name: Dylan Thiessen
         role: Innovation Design Leader, Koch
-        bio: Innovation design leader at Koch and the keynote speaker on continuous learning at Wichita State's 2025 GRASP Symposium.
         linkedin: https://www.linkedin.com/in/dylanthiessen/
         photo: dylan-thiessen
-      # Source: https://www.startlandnews.com/2025/01/grant-johnson-chatterbox
       - name: Grant Johnson
         role: "Creator of Chatterbox: Language Learning"
-        bio: Built Chatterbox, a Wichita-made language-learning app where AI tutors teach through games and practice conversations.
         linkedin: https://www.linkedin.com/in/grant-johnson15/
         photo: grant-johnson
-      # Sources: title and founder role confirmed by Michael Goldberg (2026-10-13);
-      #          https://www.wichita.edu/profiles/academics/business/launchprep/LaunchPrep_Mentors/Wentling-Nic.php
-      #          https://startlandnews.com/2025/08/nxtus-nxtstage-enterprise/
       - name: Nic Wentling
         role: CEO & Founder, Moonbase Labs
-        bio: Founder and CEO of Moonbase Labs in Wichita, a Wichita State mechanical engineering graduate and a LaunchPrep mentor at WSU.
         linkedin: https://www.linkedin.com/in/nic-wentling/
         photo: nic-wentling
-      # Source: the club's Chocolathon speaker list (chocolathon repo, api/_content.ts)
       - name: Ramsey Jamoul
         role: Founder & CEO, Unified
-        bio: Founded Unified, which runs the National AI Prompt Championship.
         linkedin: https://www.linkedin.com/in/ramsey-jamoul-423682b8/
         photo: ramsey-jamoul
-      # Source: the club's Chocolathon speaker list (chocolathon repo, api/_content.ts)
       - name: Fareeha Amber Ansari
         role: AI Governance Lead, Cargill
-        bio: "Leads AI governance at Cargill. At the Chocolathon she spoke on open source, open weights and open questions."
         linkedin: https://www.linkedin.com/in/ansarifa/
         photo: fareeha-amber-ansari
-      # Sources: https://exploration.org/2026/05/19/volunteer-of-the-year-jessica-hinel/
-      #          employer (Boeing) confirmed by Michael Goldberg (2026-10-13)
       - name: Jessica Hinel
         role: AI System Architect, Boeing
-        bio: AI system architect at Boeing in Wichita, named Exploration Place's 2026 Volunteer of the Year after more than 330 volunteer hours.
         linkedin: https://www.linkedin.com/in/jessicahinel/
         photo: jessica-hinel
-      # Source: Provided by Michael, 2026-10-13
       - name: Shane Vithana
         role: Founder / AI & Systems Architect, Maison Tergado
-        bio: Founder and AI and systems architect at Maison Tergado. He designs AI and multi-agent systems that turn business problems into working tools.
         linkedin: https://www.linkedin.com/in/shanvithana/
         photo: shane-vithana

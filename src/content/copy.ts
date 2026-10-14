@@ -317,7 +317,6 @@ export const copy = {
       headline: 'The people who keep us close to industry',
       lede: 'Professionals who use AI at work. They connect the club to industry and help close the gap between the classroom and real work.',
     },
-    linkedin: 'LinkedIn',
     teamLink: 'Meet the advisory board',
     contact: {
       eyebrow: 'Work with us',

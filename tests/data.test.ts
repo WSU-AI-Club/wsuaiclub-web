@@ -63,10 +63,10 @@ test('team.yaml is valid and every listed headshot exists', () => {
   );
   for (const p of board) {
     assert.ok(p.photo && headshots.includes(p.photo), `${p.name} has a headshot`);
-    assert.ok(p.bio && p.bio.split(/\s+/).length <= 24, `${p.name} has a one-line bio`);
+    assert.ok(p.role, `${p.name} has a role line`);
     assert.ok(p.linkedin, `${p.name} has a LinkedIn link`);
   }
-  assert.match(read('src/data/team.yaml'), /# Sources?: https:\/\/exploration\.org\//, 'bios cite their sources');
+  assert.ok(!/^\s*bio:/m.test(read('src/data/team.yaml')), 'advisory board cards are short: no bios');
 });
 
 test('site.yaml is valid', () => {

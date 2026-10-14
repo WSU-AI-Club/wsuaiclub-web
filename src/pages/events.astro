@@ -24,7 +24,7 @@ const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).ma
 ---
 
 <Base title={copy.meta.events.title} description={copy.meta.events.description} path="/events">
-  <PageHero eyebrow={e.hero.eyebrow} headline={e.hero.headline} lede={e.hero.lede} theme="ink">
+  <PageHero eyebrow={e.hero.eyebrow} headline={e.hero.headline} lede={e.hero.lede}>
     <div class="ev-hero__ctas btn-row enter">
       <a class="btn btn--primary" href="/join">{e.hero.primary}<Icon name="arrow" /></a>
       <a class="btn btn--secondary" href={site.links.shockersync_events} target="_blank" rel="noopener">{e.hero.secondary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span></a>
@@ -60,7 +60,7 @@ const gallery = (Object.entries(e.gallery.captions) as [PhotoName, string][]).ma
     </div>
   </section>
 
-  <section class="section" data-theme="ink" id="speakers" aria-labelledby="speakers-title">
+  <section class="section" data-theme="paper" id="speakers" aria-labelledby="speakers-title">
     <div class="container">
       <SectionHead eyebrow={e.speakers.eyebrow} index="04" headline={e.speakers.headline} lede={e.speakers.lede} id="speakers-title" />
       <div class="speakers">

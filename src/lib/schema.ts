@@ -126,12 +126,6 @@ const person = z.strictObject({
       .regex(/^https:\/\/(www\.)?linkedin\.com\/[^\s]+$/, { error: 'linkedin must be a full https://www.linkedin.com/... address' }),
   ),
   photo: optionalText,
-  bio: blank(
-    z
-      .string()
-      .trim()
-      .refine((v) => v.split(/\s+/).length <= 24, { error: 'bio must be one short line (24 words or fewer)' }),
-  ),
 });
 
 export const teamSchema = z.strictObject({
