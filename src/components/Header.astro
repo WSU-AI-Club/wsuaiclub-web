@@ -21,13 +21,12 @@ const { path } = Astro.props;
 
 const m = copy.nav.menus;
 const menus: Dropdown[] = [
-  { id: 'about', label: copy.nav.about, href: '/about', align: 'start', ...m.about },
-  { id: 'events', label: copy.nav.events, href: '/events', align: 'end', ...m.events },
+  { id: 'about', label: copy.nav.about, href: '/about', ...m.about },
+  { id: 'events', label: copy.nav.events, href: '/events', ...m.events },
   {
     id: 'contact',
     label: copy.nav.contact,
     href: '/contact',
-    align: 'end',
     eyebrow: m.contact.eyebrow,
     items: [...m.contact.items, { href: `mailto:${site.contact_email}`, title: m.contact.email, body: site.contact_email }],
   },

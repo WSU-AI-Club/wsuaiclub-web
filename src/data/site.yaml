@@ -22,7 +22,7 @@ links:
   # DTMedia, the club's media partner (photos, video, the logo). Footer credit and About.
   dtmedia: https://dt-media.vercel.app/
 
-# The regular weekly meeting, shown on Contact and in page footers.
+# The regular weekly meeting, shown on Contact and in the phone menu.
 meeting:
   day: Wednesdays
   time: 5:00–7:00 PM

@@ -1,6 +1,5 @@
 ---
 import { copy } from '../content/copy';
-import { site } from '../lib/data';
 import Icon from './Icon.astro';
 import Spark from './Spark.astro';
 const t = copy.joinBand;
@@ -17,7 +16,6 @@ const t = copy.joinBand;
         <p class="lede">{t.lede}</p>
         <div class="btn-row">
           <a class="btn btn--primary" href="/join">{t.primary}<Icon name="arrow" /></a>
-          <a class="btn btn--secondary" href={site.links.groupme} target="_blank" rel="noopener">{t.secondary}<Icon name="external" /><span class="visually-hidden">{` ${copy.newTab}`}</span></a>
         </div>
       </div>
     </div>

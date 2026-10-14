@@ -182,7 +182,6 @@ export const copy = {
     headline: 'Open to anyone curious about AI',
     lede: 'Students, faculty, alumni and the Wichita community are welcome. Bring a laptop. No experience needed.',
     primary: 'Join AI Club',
-    secondary: 'Join the GroupMe',
   },
 
   about: {

@@ -2,8 +2,9 @@
 /**
  * One header dropdown (About Us, Events, Contact). The trigger is a button
  * that opens a one-column menu on hover, click/tap and keyboard; without JS
- * the trigger is a plain link to the page. Behavior: src/scripts/site.ts
- * ("header dropdowns"). Items come from copy.ts > nav.menus.
+ * the trigger is a plain link to the page. The panel is centered under its
+ * trigger. Behavior: src/scripts/site.ts ("header dropdowns"). Items come
+ * from copy.ts > nav.menus.
  */
 export type DropdownItem = { href: string; title: string; body?: string };
 export type Dropdown = {
@@ -11,8 +12,6 @@ export type Dropdown = {
   label: string;
   href: string;
   eyebrow?: string;
-  /** Which edge of the trigger the panel lines up with. */
-  align?: 'start' | 'end';
   items: DropdownItem[];
 };
 interface Props {
@@ -27,7 +26,7 @@ const active = path === menu.href || menu.items.some((i) => !i.href.startsWith('
 const panelId = `${menu.id}-menu`;
 ---
 
-<li class:list={['nav-drop', menu.align === 'end' && 'nav-drop--end']} data-dropdown>
+<li class="nav-drop" data-dropdown>
   <a class:list={['nav-drop__link', active && 'is-section']} href={menu.href} aria-current={current(menu.href)}>{menu.label}</a>
   <button class:list={['nav-drop__trigger', active && 'is-section']} type="button" aria-expanded="false" aria-controls={panelId} data-dropdown-trigger>
     {menu.label}
@@ -115,30 +114,27 @@ const panelId = `${menu.id}-menu`;
     transform: rotate(180deg);
   }
 
-  /* The panel's padding-top bridges trigger and card, so moving the pointer
-     down never crosses a gap. Closed = invisible and unfocusable. */
+  /* Centered under the trigger. The panel's padding-top bridges trigger and
+     card, so moving the pointer down never crosses a gap. Closed = invisible
+     and unfocusable. */
   .nav-drop__panel {
     position: absolute;
     top: 100%;
-    left: -8px;
+    left: 50%;
     z-index: 60;
     padding-top: 6px;
     visibility: hidden;
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translate(-50%, -6px);
     transition:
       opacity 0.18s ease,
       transform 0.22s var(--ease-out),
       visibility 0s linear 0.22s;
   }
-  .nav-drop--end .nav-drop__panel {
-    left: auto;
-    right: -8px;
-  }
   .nav-drop.is-open .nav-drop__panel {
     visibility: visible;
     opacity: 1;
-    transform: none;
+    transform: translate(-50%, 0);
     transition:
       opacity 0.18s ease,
       transform 0.22s var(--ease-out),
@@ -147,7 +143,7 @@ const panelId = `${menu.id}-menu`;
   @media (prefers-reduced-motion: reduce) {
     .nav-drop__panel,
     .nav-drop.is-open .nav-drop__panel {
-      transform: none;
+      transform: translateX(-50%);
       transition: none;
     }
   }

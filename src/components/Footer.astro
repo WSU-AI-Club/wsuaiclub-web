@@ -57,8 +57,6 @@ const year = new Date().getFullYear();
         <h2 class="eyebrow">{copy.footer.contact}</h2>
         <ul>
           <li><a href={`mailto:${site.contact_email}`}>{site.contact_email}</a></li>
-          <li class="site-footer__muted">{site.meeting.day}, {site.meeting.time}</li>
-          <li class="site-footer__muted">{site.meeting.place}, Wichita State University</li>
         </ul>
       </div>
     </div>
@@ -141,9 +139,6 @@ const year = new Date().getFullYear();
   .site-footer a svg {
     width: 14px;
     height: 14px;
-    color: var(--ink-muted);
-  }
-  .site-footer__muted {
     color: var(--ink-muted);
   }
   .site-footer__base .site-footer__credit {
