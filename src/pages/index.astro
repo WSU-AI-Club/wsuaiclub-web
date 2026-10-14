@@ -3,7 +3,6 @@ import FormatCards from '../components/FormatCards.astro';
 import Hackathons from '../components/Hackathons.astro';
 import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
-import Partners from '../components/Partners.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Slideshow from '../components/Slideshow.astro';
 import Spark from '../components/Spark.astro';
@@ -53,24 +52,18 @@ const jsonLd = {
 
   <section class="section" data-theme="paper" aria-labelledby="formats-title">
     <div class="container">
-      <SectionHead eyebrow={h.formats.eyebrow} index="01 / 03" headline={h.formats.headline} lede={h.formats.lede} id="formats-title" />
+      <SectionHead eyebrow={h.formats.eyebrow} index="01 / 02" headline={h.formats.headline} lede={h.formats.lede} id="formats-title" />
       <FormatCards />
     </div>
   </section>
 
   <section class="section" data-theme="paper" aria-labelledby="hack-title">
     <div class="container">
-      <SectionHead eyebrow={h.hackathons.eyebrow} index="02 / 03" headline={h.hackathons.headline} lede={h.hackathons.lede} id="hack-title" />
+      <SectionHead eyebrow={h.hackathons.eyebrow} index="02 / 02" headline={h.hackathons.headline} lede={h.hackathons.lede} id="hack-title" />
       <Hackathons />
     </div>
   </section>
 
-  <section class="section" data-theme="paper" aria-labelledby="partners-title">
-    <div class="container">
-      <SectionHead eyebrow={h.partners.eyebrow} index="03 / 03" headline={h.partners.headline} lede={h.partners.lede} id="partners-title" />
-      <Partners />
-    </div>
-  </section>
 
   <JoinBand />
 </Base>

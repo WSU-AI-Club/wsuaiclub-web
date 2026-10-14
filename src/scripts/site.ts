@@ -207,7 +207,7 @@ function initSlideshow(root: HTMLElement) {
   const counter = root.querySelector<HTMLElement>('[data-show-current]');
   const frame = root.querySelector<HTMLElement>('[data-show-frame]');
   if (slides.length < 2 || !toggle) return;
-  const interval = Number(root.dataset.interval) || 5000;
+  const interval = Number(root.dataset.interval) || 4000;
   let index = 0;
   let seq = 0;
   let userPaused = !motionOK(); // reduced motion: never auto-advance on its own

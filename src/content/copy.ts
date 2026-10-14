@@ -96,7 +96,7 @@ export const copy = {
         eyebrow: 'Contact',
         items: [
           { href: '/contact#consulting', title: 'Consulting and projects', body: 'Paid AI projects with our members' },
-          { href: '/contact#speak', title: 'Speak at a meeting', body: 'Share how you use AI at work' },
+          { href: '/contact#speak', title: 'Speak at a meeting', body: 'Share how you use AI' },
           { href: '/contact#partner', title: 'Partner or sponsor', body: 'Co-host an event or sponsor a hackathon' },
         ],
         /** Last item: a mailto to site.yaml > contact_email, which is also its line. */
@@ -128,18 +128,13 @@ export const copy = {
     },
     formats: {
       eyebrow: 'What we do',
-      headline: 'Learn it, build it, argue about it',
+      headline: 'Learn it, build it, discuss it',
       lede: 'Every week at Woolsey Hall, the AI Club brings a speaker, a workshop, or a build night. Every major and all community members are welcome.',
     },
     hackathons: {
       eyebrow: 'Hackathons',
       headline: 'Hackathons we run and join',
       lede: 'We host hackathons with partners and show up for the ones others run.',
-    },
-    partners: {
-      eyebrow: 'Partners',
-      headline: 'Thank you to our partners',
-      lede: 'The schools, clubs and companies we worked with in 2026.',
     },
   },
 

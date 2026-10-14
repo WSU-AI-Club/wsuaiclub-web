@@ -56,7 +56,7 @@ Astro turns each photo into AVIF and WebP at several widths at build time.
 
 - **Astro 7, static output.** No framework on the client. One small script
   (`src/scripts/site.ts`, about 3 KB gzipped) runs the scroll reveals, the
-  photo slideshows (`src/components/Slideshow.astro`: crossfade every 5 s,
+  photo slideshows (`src/components/Slideshow.astro`: crossfade every 4 s,
   pause/play, arrows, pauses on hover, focus, hidden tab or offscreen),
   header compaction, the phone menu and the "hide past events" filter. Every page is complete without it, and under
   `prefers-reduced-motion` nothing moves.

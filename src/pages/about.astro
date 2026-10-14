@@ -11,6 +11,7 @@ import { copy } from '../content/copy';
 import { site, team } from '../lib/data';
 import { Image } from 'astro:assets';
 import dtmediaMark from '../assets/partners/dtmedia.png';
+import Partners from '../components/Partners.astro';
 import type { PhotoName } from '../lib/photo-meta';
 import Base from '../layouts/Base.astro';
 
@@ -85,6 +86,9 @@ const heroPhotos: PhotoName[] = ['classroom-group', 'glass-wall-visit', 'chocola
           ))
         }
       </ul>
+      <div class="partners-strip">
+        <Partners />
+      </div>
     </div>
   </section>
 
@@ -202,6 +206,10 @@ const heroPhotos: PhotoName[] = ['classroom-group', 'glass-wall-visit', 'chocola
   .thanks {
     display: grid;
     gap: 16px;
+  }
+  /* Every partner by name, under the thank-you cards. */
+  .partners-strip {
+    margin-top: clamp(40px, 5vw, 64px);
   }
   @media (min-width: 768px) {
     .thanks {

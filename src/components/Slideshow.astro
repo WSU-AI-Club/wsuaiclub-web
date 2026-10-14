@@ -3,7 +3,7 @@
  * A crossfading photo slideshow, used for the home hero, the About hero and
  * the Chocolathon card.
  *
- * - Advances about every 5 s; pauses on hover, on keyboard focus, when the
+ * - Advances about every 4 s; pauses on hover, on keyboard focus, when the
  *   tab is hidden and when it is scrolled offscreen.
  * - A visible pause/play button (WCAG 2.2.2), previous/next buttons, the
  *   arrow keys, and a mono counter ("01 / 06").
@@ -30,7 +30,7 @@ interface Props {
   interval?: number;
   class?: string;
 }
-const { photos, label, sizes, widths = [640, 960, 1280, 1600, 2000], priority = false, interval = 5000 } = Astro.props;
+const { photos, label, sizes, widths = [640, 960, 1280, 1600, 2000], priority = false, interval = 4000 } = Astro.props;
 const t = copy.slideshow;
 const total = String(photos.length).padStart(2, '0');
 ---
